@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>MotoGP</title>
+<link rel="stylesheet" href="diseno.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<header>
+
+<h1>HORARIOS MOTOGP</h1>
+
+<nav class="navbar">
+<ul class="menu">
+<li><a href="index.html">INICIO</a></li>
+<li><a href="directos.html">DIRECTOS</a></li>
+<li><a href="F1.html">F1</a></li>
+<li><a href="MotoGP.html">MotoGP</a></li>
+<li><a href="videos.html">VIDEOS</a></li>
+<li><a href="deportes.html">FÚTBOL</a></li>
+<li><a href="sobremi.html">SOBRE MÍ</a></li>
+<li><a href="noticias.html">NOTICIAS</a></li>
+<li><a href="mas.html">MÁS</a></li>
+</ul>
+</nav>
+
+</header>
+
+
+<section class="horarios">
+
+<h2>🏍️ GP Brasil - Horarios</h2>
+
+<ul>
+<li>FP1 — 15:05</li>
+<li>PRÁCTICA — 19:20</li>
+<li>CLASIFICACIÓN — 14:50</li>
+<li>SPRINT — 19:00</li>
+<li>CARRERA — 19:00</li>
+</ul>
+
+</section>
+
+
+<div class="countdown">
+
+<h3>Próxima sesión</h3>
+
+<p id="session-name"></p>
+
+<div id="countdown"></div>
+
+</div>
+
+
+<!-- SEMÁFORO -->
+
+<div class="start-lights">
+<div class="light" id="light1"></div>
+<div class="light" id="light2"></div>
+<div class="light" id="light3"></div>
+<div class="light" id="light4"></div>
+<div class="light" id="light5"></div>
+</div>
+
+<div id="go-text"></div>
+
+
+<script>
+/* ===== CALENDARIO MOTOGP 2026 =====
+   Fechas del calendario oficial verificadas.
+   Brasil lleva horarios oficiales de sesiones.
+   El resto, de momento, cuenta al INICIO DEL GP hasta que MotoGP publique horarios.
+*/
+
+const gps = [
+
+{
+name:"GP Brasil 🇧🇷",
+sessions:[
+{ name:"FP1", date:"2026-03-20T15:05:00"},
+{ name:"PRACTICE", date:"2026-03-20T19:20:00"},
+{ name:"FP2", date:"2026-03-21T14:10:00"},
+{ name:"Q1", date:"2026-03-21T14:50:00"},
+{ name:"Q2", date:"2026-03-21T15:15:00"},
+{ name:"SPRINT", date:"2026-03-21T19:00:00"},
+{ name:"WARM UP", date:"2026-03-22T10:40:00"},
+{ name:"CARRERA", date:"2026-03-22T19:00:00"}
+]
+},
+
+{
+name:"GP Americas 🇺🇸",
+sessions:[
+{ name:"INICIO GP", date:"2026-03-27T00:00:00"}
+]
+},
+
+{
+name:"GP España 🇪🇸",
+sessions:[
+{ name:"INICIO GP", date:"2026-04-24T00:00:00"}
+]
+},
+
+{
+name:"GP Francia 🇫🇷",
+sessions:[
+{ name:"INICIO GP", date:"2026-05-08T00:00:00"}
+]
+},
+
+{
+name:"GP Cataluña 🇪🇸",
+sessions:[
+{ name:"INICIO GP", date:"2026-05-15T00:00:00"}
+]
+},
+
+{
+name:"GP Italia 🇮🇹",
+sessions:[
+{ name:"INICIO GP", date:"2026-05-29T00:00:00"}
+]
+},
+
+{
+name:"GP Hungría 🇭🇺",
+sessions:[
+{ name:"INICIO GP", date:"2026-06-05T00:00:00"}
+]
+},
+
+{
+name:"GP Chequia 🇨🇿",
+sessions:[
+{ name:"INICIO GP", date:"2026-06-19T00:00:00"}
+]
+},
+
+{
+name:"GP Países Bajos 🇳🇱",
+sessions:[
+{ name:"INICIO GP", date:"2026-06-26T00:00:00"}
+]
+},
+
+{
+name:"GP Alemania 🇩🇪",
+sessions:[
+{ name:"INICIO GP", date:"2026-07-10T00:00:00"}
+]
+},
+
+{
+name:"GP Gran Bretaña 🇬🇧",
+sessions:[
+{ name:"INICIO GP", date:"2026-08-07T00:00:00"}
+]
+},
+
+{
+name:"GP Aragón 🇪🇸",
+sessions:[
+{ name:"INICIO GP", date:"2026-08-28T00:00:00"}
+]
+},
+
+{
+name:"GP San Marino 🇸🇲",
+sessions:[
+{ name:"INICIO GP", date:"2026-09-11T00:00:00"}
+]
+},
+
+{
+name:"GP Austria 🇦🇹",
+sessions:[
+{ name:"INICIO GP", date:"2026-09-18T00:00:00"}
+]
+},
+
+{
+name:"GP Japón 🇯🇵",
+sessions:[
+{ name:"INICIO GP", date:"2026-10-02T00:00:00"}
+]
+},
+
+{
+name:"GP Indonesia 🇮🇩",
+sessions:[
+{ name:"INICIO GP", date:"2026-10-09T00:00:00"}
+]
+},
+
+{
+name:"GP Australia 🇦🇺",
+sessions:[
+{ name:"INICIO GP", date:"2026-10-16T00:00:00"}
+]
+},
+
+{
+name:"GP Malasia 🇲🇾",
+sessions:[
+{ name:"INICIO GP", date:"2026-10-23T00:00:00"}
+]
+},
+
+{
+name:"GP Portugal 🇵🇹",
+sessions:[
+{ name:"INICIO GP", date:"2026-11-06T00:00:00"}
+]
+},
+
+{
+name:"GP Qatar 🇶🇦",
+sessions:[
+{ name:"INICIO GP", date:"2026-11-08T00:00:00"}
+]
+},
+
+{
+name:"GP Valencia 🇪🇸",
+sessions:[
+{ name:"INICIO GP", date:"2026-11-20T00:00:00"}
+]
+}
+
+];
+
+
+/* ===== DETECTAR SIGUIENTE SESIÓN ===== */
+
+function getNextSession(){
+
+const now = new Date().getTime();
+
+for(let g=0; g<gps.length; g++){
+
+let sessions = gps[g].sessions;
+
+for(let i=0;i<sessions.length;i++){
+
+const time = new Date(sessions[i].date).getTime();
+
+if(time > now){
+
+return {
+gp:gps[g].name,
+session:sessions[i]
+};
+
+}
+
+}
+
+}
+
+return null;
+
+}
+
+
+/* ===== SEMÁFORO ===== */
+
+let lightsStarted = false;
+
+function startLights(){
+
+if(lightsStarted) return;
+
+lightsStarted = true;
+
+let lights = [
+document.getElementById("light1"),
+document.getElementById("light2"),
+document.getElementById("light3"),
+document.getElementById("light4"),
+document.getElementById("light5")
+];
+
+let i = 0;
+
+let interval = setInterval(()=>{
+
+if(i < lights.length){
+
+lights[i].classList.add("active");
+i++;
+
+}else{
+
+clearInterval(interval);
+
+setTimeout(()=>{
+
+lights.forEach(light => light.classList.remove("active"));
+
+document.getElementById("go-text").innerHTML="GO GO GO";
+
+},1000);
+
+}
+
+},800);
+
+}
+
+
+/* ===== CONTADOR ===== */
+
+function updateCountdown(){
+
+const result = getNextSession();
+
+if(!result){
+
+document.getElementById("countdown").innerHTML="Temporada finalizada";
+return;
+
+}
+
+document.getElementById("session-name").innerHTML =
+result.gp + " — " + result.session.name;
+
+const now = new Date().getTime();
+const distance = new Date(result.session.date).getTime()-now;
+
+const days = Math.floor(distance/(1000*60*60*24));
+const hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+const minutes = Math.floor((distance%(1000*60*60))/(1000*60));
+const seconds = Math.floor((distance%(1000*60))/1000);
+
+document.getElementById("countdown").innerHTML =
+days+"d "+hours+"h "+minutes+"m "+seconds+"s";
+
+if(distance <= 10000){
+startLights();
+}
+
+}
+
+setInterval(updateCountdown,1000);
+updateCountdown();
+</script>
+<canvas id="particles"></canvas>
+<script src="particles.js"></script>
+<!-- =========================
+     PARTICULAS
+========================= -->
+
+<script>
+
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<70;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+size:Math.random()*3+1,
+speedX:(Math.random()-0.5)*0.5,
+speedY:(Math.random()-0.5)*0.5
+});
+}
+
+function animate(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#a200ff";
+
+particles.forEach(p=>{
+
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+ctx.fill();
+
+p.x+=p.speedX;
+p.y+=p.speedY;
+
+if(p.x<0||p.x>canvas.width)p.speedX*=-1;
+if(p.y<0||p.y>canvas.height)p.speedY*=-1;
+
+});
+
+for(let a=0;a<particles.length;a++){
+for(let b=a;b<particles.length;b++){
+
+let dx=particles[a].x-particles[b].x;
+let dy=particles[a].y-particles[b].y;
+let dist=Math.sqrt(dx*dx+dy*dy);
+
+if(dist<120){
+ctx.strokeStyle="rgba(162,0,255,0.2)";
+ctx.lineWidth=1;
+ctx.beginPath();
+ctx.moveTo(particles[a].x,particles[a].y);
+ctx.lineTo(particles[b].x,particles[b].y);
+ctx.stroke();
+}
+
+}
+
+}
+
+requestAnimationFrame(animate);
+
+}
+
+animate();
+
+</script>
+<footer>
+
+<p>© 2025 WOLFGAMES - Todos los derechos reservados</p>
+
+</footer>
+</body>
+</html>

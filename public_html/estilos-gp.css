@@ -1,0 +1,604 @@
+/* ===================================================== */
+/* ESTILOS PERSONALIZADOS F1 - WOLFGAMES                 */
+/* IDs alineados con tus archivos HTML reales            */
+/* ===================================================== */
+
+body[id] {
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+body[id] .gp-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+body[id] .gp-container h1 {
+  letter-spacing: 1px;
+}
+
+body[id] .session-list li {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+body[id] .session-list li:hover {
+  transform: translateY(-2px);
+}
+
+body[id] #countdown {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* ===================================================== */
+/* 🇯🇵 SUZUKA */
+/* archivo: suzuka.html */
+/* ===================================================== */
+
+#suzuka {
+  background: linear-gradient(135deg, #7f1d1d, #111827);
+}
+
+#suzuka .gp-container h1 {
+  color: #fca5a5;
+  text-shadow: 0 0 12px rgba(252, 165, 165, 0.35);
+}
+
+#suzuka .gp-container h2 {
+  color: #e5e7eb;
+}
+
+#suzuka .session-list li {
+  background: rgba(17, 24, 39, 0.9);
+  border-left: 5px solid #ef4444;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.18);
+}
+
+#suzuka #countdown {
+  color: #f87171;
+  text-shadow: 0 0 10px rgba(248, 113, 113, 0.35);
+}
+
+/* ===================================================== */
+/* 🇺🇸 MIAMI */
+/* archivo: miami.html */
+/* ===================================================== */
+
+#miami {
+  background: linear-gradient(135deg, #0ea5e9, #1e3a8a);
+}
+
+#miami .gp-container h1 {
+  color: #38bdf8;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+}
+
+#miami .gp-container h2 {
+  color: #dbeafe;
+}
+
+#miami .session-list li {
+  background: rgba(15, 23, 42, 0.9);
+  border-left: 5px solid #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+}
+
+#miami #countdown {
+  color: #38bdf8;
+}
+
+/* ===================================================== */
+/* 🇨🇦 CANADÁ */
+/* archivo: canada.html */
+/* ===================================================== */
+
+#canada {
+  background: linear-gradient(135deg, #991b1b, #1f2937);
+}
+
+#canada .gp-container h1 {
+  color: #ef4444;
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+#canada .gp-container h2 {
+  color: #e5e7eb;
+}
+
+#canada .session-list li {
+  background: rgba(31, 41, 55, 0.9);
+  border-left: 5px solid #ef4444;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.15);
+}
+
+#canada #countdown {
+  color: #ef4444;
+}
+
+/* ===================================================== */
+/* 🇲🇨 MÓNACO */
+/* archivo: monaco.html */
+/* ===================================================== */
+
+#monaco {
+  background: linear-gradient(135deg, #0b0b0b, #1f1a17);
+}
+
+#monaco .gp-container h1 {
+  color: #f5d06f;
+  text-shadow: 0 0 15px rgba(245, 208, 111, 0.5);
+}
+
+#monaco .gp-container h2 {
+  color: #e7d7a0;
+}
+
+#monaco .session-list li {
+  background: rgba(20, 20, 20, 0.9);
+  border: 1px solid rgba(245, 208, 111, 0.35);
+  box-shadow: 0 0 12px rgba(245, 208, 111, 0.08);
+}
+
+#monaco #countdown {
+  color: #f5d06f;
+}
+
+/* ===================================================== */
+/* 🇪🇸 BARCELONA-CATALUNYA */
+/* archivo: barcelona.html */
+/* ===================================================== */
+
+#barcelona {
+  background: linear-gradient(135deg, #b91c1c, #facc15);
+}
+
+#barcelona .gp-container h1 {
+  color: #fff7cc;
+  text-shadow: 0 0 10px rgba(255, 247, 204, 0.35);
+}
+
+#barcelona .gp-container h2 {
+  color: #fff1a6;
+}
+
+#barcelona .session-list li {
+  background: rgba(153, 27, 27, 0.88);
+  border-left: 5px solid #fde047;
+  box-shadow: 0 0 10px rgba(253, 224, 71, 0.14);
+}
+
+#barcelona #countdown {
+  color: #fde047;
+}
+
+/* ===================================================== */
+/* 🇦🇹 AUSTRIA */
+/* archivo: austria.html */
+/* ===================================================== */
+
+#austria {
+  background: linear-gradient(135deg, #dc2626, #ffffff);
+  color: #111827;
+}
+
+#austria .gp-container h1 {
+  color: #b91c1c;
+  text-shadow: 0 0 10px rgba(185, 28, 28, 0.25);
+}
+
+#austria .gp-container h2 {
+  color: #374151;
+}
+
+#austria .session-list li {
+  background: rgba(255, 255, 255, 0.92);
+  color: #111827;
+  border-left: 5px solid #b91c1c;
+  box-shadow: 0 0 10px rgba(185, 28, 28, 0.08);
+}
+
+#austria #countdown {
+  color: #b91c1c;
+}
+
+/* ===================================================== */
+/* 🇬🇧 GRAN BRETAÑA */
+/* archivo: silverstone.html */
+/* ===================================================== */
+
+#silverstone {
+  background: linear-gradient(135deg, #1e3a8a, #b91c1c);
+}
+
+#silverstone .gp-container h1 {
+  color: #bfdbfe;
+  text-shadow: 0 0 12px rgba(191, 219, 254, 0.35);
+}
+
+#silverstone .gp-container h2 {
+  color: #e5e7eb;
+}
+
+#silverstone .session-list li {
+  background: rgba(30, 58, 138, 0.9);
+  border-left: 5px solid #93c5fd;
+  box-shadow: 0 0 10px rgba(147, 197, 253, 0.18);
+}
+
+#silverstone #countdown {
+  color: #93c5fd;
+  text-shadow: 0 0 10px rgba(147, 197, 253, 0.35);
+}
+
+/* ===================================================== */
+/* 🇧🇪 BÉLGICA */
+/* archivo: spa.html */
+/* ===================================================== */
+
+#spa {
+  background: linear-gradient(135deg, #0f172a, #78350f);
+}
+
+#spa .gp-container h1 {
+  color: #facc15;
+  text-shadow: 0 0 12px rgba(250, 204, 21, 0.35);
+}
+
+#spa .gp-container h2 {
+  color: #f3f4f6;
+}
+
+#spa .session-list li {
+  background: rgba(15, 23, 42, 0.92);
+  border-left: 5px solid #facc15;
+  box-shadow: 0 0 10px rgba(250, 204, 21, 0.14);
+}
+
+#spa #countdown {
+  color: #fde047;
+  text-shadow: 0 0 10px rgba(253, 224, 71, 0.35);
+}
+
+/* ===================================================== */
+/* 🇭🇺 HUNGRÍA */
+/* archivo: hungria.html */
+/* ===================================================== */
+
+#hungria {
+  background: linear-gradient(135deg, #991b1b, #065f46);
+}
+
+#hungria .gp-container h1 {
+  color: #dcfce7;
+  text-shadow: 0 0 12px rgba(220, 252, 231, 0.28);
+}
+
+#hungria .gp-container h2 {
+  color: #d1fae5;
+}
+
+#hungria .session-list li {
+  background: rgba(127, 29, 29, 0.9);
+  border-left: 5px solid #34d399;
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.15);
+}
+
+#hungria #countdown {
+  color: #34d399;
+  text-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
+}
+
+/* ===================================================== */
+/* 🇳🇱 HOLANDA */
+/* archivo: holanda.html */
+/* ===================================================== */
+
+#holanda {
+  background: linear-gradient(135deg, #ea580c, #7c2d12);
+}
+
+#holanda .gp-container h1 {
+  color: #fdba74;
+  text-shadow: 0 0 10px rgba(253, 186, 116, 0.35);
+}
+
+#holanda .gp-container h2 {
+  color: #ffedd5;
+}
+
+#holanda .session-list li {
+  background: rgba(154, 52, 18, 0.9);
+  border-left: 5px solid #f97316;
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.18);
+}
+
+#holanda #countdown {
+  color: #f97316;
+}
+
+/* ===================================================== */
+/* 🇮🇹 ITALIA */
+/* archivo: monza.html */
+/* ===================================================== */
+
+#monza {
+  background: linear-gradient(135deg, #991b1b, #166534);
+}
+
+#monza .gp-container h1 {
+  color: #fca5a5;
+  text-shadow: 0 0 12px rgba(252, 165, 165, 0.3);
+}
+
+#monza .gp-container h2 {
+  color: #dcfce7;
+}
+
+#monza .session-list li {
+  background: rgba(153, 27, 27, 0.9);
+  border-left: 5px solid #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.15);
+}
+
+#monza #countdown {
+  color: #22c55e;
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.28);
+}
+
+/* ===================================================== */
+/* 🇪🇸 ESPAÑA */
+/* archivo: madrid.html */
+/* ===================================================== */
+
+#madrid {
+  background: linear-gradient(135deg, #b91c1c, #facc15);
+}
+
+#madrid .gp-container h1 {
+  color: #fff7cc;
+  text-shadow: 0 0 12px rgba(255, 247, 204, 0.35);
+}
+
+#madrid .gp-container h2 {
+  color: #fff1a6;
+}
+
+#madrid .session-list li {
+  background: rgba(185, 28, 28, 0.9);
+  border-left: 5px solid #fde047;
+  box-shadow: 0 0 10px rgba(253, 224, 71, 0.16);
+}
+
+#madrid #countdown {
+  color: #fde047;
+  text-shadow: 0 0 10px rgba(253, 224, 71, 0.35);
+}
+
+/* ===================================================== */
+/* 🇦🇿 AZERBAIYÁN */
+/* archivo: baku.html */
+/* ===================================================== */
+
+#baku {
+  background: linear-gradient(135deg, #1d4ed8, #16a34a);
+}
+
+#baku .gp-container h1 {
+  color: #bfdbfe;
+  text-shadow: 0 0 12px rgba(191, 219, 254, 0.35);
+}
+
+#baku .gp-container h2 {
+  color: #dcfce7;
+}
+
+#baku .session-list li {
+  background: rgba(30, 64, 175, 0.9);
+  border-left: 5px solid #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.15);
+}
+
+#baku #countdown {
+  color: #22c55e;
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+}
+
+/* ===================================================== */
+/* 🇸🇬 SINGAPUR */
+/* archivo: singapore.html */
+/* ===================================================== */
+
+#singapore {
+  background: linear-gradient(135deg, #4c1d95, #db2777);
+}
+
+#singapore .gp-container h1 {
+  color: #f0abfc;
+  text-shadow: 0 0 15px rgba(240, 171, 252, 0.65);
+}
+
+#singapore .gp-container h2 {
+  color: #f5d0fe;
+}
+
+#singapore .session-list li {
+  background: rgba(76, 29, 149, 0.9);
+  border-left: 5px solid #f0abfc;
+  box-shadow: 0 0 12px rgba(240, 171, 252, 0.2);
+}
+
+#singapore #countdown {
+  color: #f0abfc;
+}
+
+/* ===================================================== */
+/* 🇺🇸 EEUU */
+/* archivo: cota.html */
+/* ===================================================== */
+
+#cota {
+  background: linear-gradient(135deg, #1e3a8a, #dc2626);
+}
+
+#cota .gp-container h1 {
+  color: #dbeafe;
+  text-shadow: 0 0 10px rgba(219, 234, 254, 0.3);
+}
+
+#cota .gp-container h2 {
+  color: #f3f4f6;
+}
+
+#cota .session-list li {
+  background: rgba(30, 58, 138, 0.9);
+  border-left: 5px solid #ef4444;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.14);
+}
+
+#cota #countdown {
+  color: #ef4444;
+}
+
+/* ===================================================== */
+/* 🇲🇽 MÉXICO */
+/* archivo: mexico.html */
+/* ===================================================== */
+
+#mexico {
+  background: linear-gradient(135deg, #166534, #dc2626);
+}
+
+#mexico .gp-container h1 {
+  color: #dcfce7;
+  text-shadow: 0 0 10px rgba(220, 252, 231, 0.25);
+}
+
+#mexico .gp-container h2 {
+  color: #fee2e2;
+}
+
+#mexico .session-list li {
+  background: rgba(22, 101, 52, 0.9);
+  border-left: 5px solid #ef4444;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.12);
+}
+
+#mexico #countdown {
+  color: #ef4444;
+}
+
+/* ===================================================== */
+/* 🇧🇷 BRASIL */
+/* archivo: brazil.html */
+/* ===================================================== */
+
+#brazil {
+  background: linear-gradient(135deg, #166534, #facc15);
+}
+
+#brazil .gp-container h1 {
+  color: #fef08a;
+  text-shadow: 0 0 10px rgba(254, 240, 138, 0.3);
+}
+
+#brazil .gp-container h2 {
+  color: #dcfce7;
+}
+
+#brazil .session-list li {
+  background: rgba(22, 101, 52, 0.9);
+  border-left: 5px solid #fde047;
+  box-shadow: 0 0 10px rgba(253, 224, 71, 0.15);
+}
+
+#brazil #countdown {
+  color: #fde047;
+}
+
+/* ===================================================== */
+/* 🇺🇸 LAS VEGAS */
+/* archivo: vegas.html */
+/* ===================================================== */
+
+#vegas {
+  background: linear-gradient(135deg, #581c87, #db2777);
+}
+
+#vegas .gp-container h1 {
+  color: #f472b6;
+  text-shadow: 0 0 20px rgba(244, 114, 182, 0.7);
+}
+
+#vegas .gp-container h2 {
+  color: #fbcfe8;
+}
+
+#vegas .session-list li {
+  background: rgba(88, 28, 135, 0.9);
+  border-left: 5px solid #f472b6;
+  box-shadow: 0 0 14px rgba(244, 114, 182, 0.22);
+}
+
+#vegas #countdown {
+  color: #f472b6;
+}
+
+/* ===================================================== */
+/* 🇶🇦 QATAR */
+/* archivo: qatar.html */
+/* ===================================================== */
+
+#qatar {
+  background: linear-gradient(135deg, #7c2d12, #facc15);
+}
+
+#qatar .gp-container h1 {
+  color: #fde68a;
+  text-shadow: 0 0 10px rgba(253, 230, 138, 0.3);
+}
+
+#qatar .gp-container h2 {
+  color: #fef3c7;
+}
+
+#qatar .session-list li {
+  background: rgba(124, 45, 18, 0.9);
+  border-left: 5px solid #fde047;
+  box-shadow: 0 0 10px rgba(253, 224, 71, 0.14);
+}
+
+#qatar #countdown {
+  color: #fde047;
+}
+
+/* ===================================================== */
+/* 🇦🇪 ABU DHABI */
+/* archivo: abudhabi.html */
+/* ===================================================== */
+
+#abudhabi {
+  background: linear-gradient(135deg, #0f172a, #facc15);
+}
+
+#abudhabi .gp-container h1 {
+  color: #fde68a;
+  text-shadow: 0 0 12px rgba(253, 230, 138, 0.35);
+}
+
+#abudhabi .gp-container h2 {
+  color: #f8fafc;
+}
+
+#abudhabi .session-list li {
+  background: rgba(15, 23, 42, 0.9);
+  border-left: 5px solid #fde047;
+  box-shadow: 0 0 10px rgba(253, 224, 71, 0.14);
+}
+
+#abudhabi #countdown {
+  color: #fde047;
+}

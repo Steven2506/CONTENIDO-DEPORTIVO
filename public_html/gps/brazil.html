@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GP Brasil</title>
+<link rel="stylesheet" href="../diseno.css">
+<link rel="stylesheet" href="../estilos-gp.css">
+
+<style>
+.gp-container {
+max-width: 900px;
+margin: auto;
+padding: 40px 20px;
+text-align: center;
+}
+.gp-container h1 {
+font-size: 32px;
+margin-bottom: 10px;
+}
+.gp-container h2 {
+margin-bottom: 25px;
+}
+.session-list {
+list-style: none;
+padding: 0;
+margin-top: 20px;
+}
+.session-list li {
+padding: 15px;
+margin-bottom: 10px;
+border-radius: 10px;
+}
+#countdown {
+font-size: 28px;
+margin-top: 25px;
+font-weight: bold;
+}
+</style>
+</head>
+
+<body id="brazil">
+
+<header>
+<h1>Bienvenidos a <span class="neon">WOLFGAMES</span></h1>
+<nav class="navbar">
+<ul class="menu">
+<li><a href="../index.html">INICIO</a></li>
+<li><a href="../directos.html">DIRECTOS</a></li>
+<li><a href="../F1.html">F1</a></li>
+<li><a href="../MotoGP.html">MotoGP</a></li>
+<li><a href="../videos.html">VIDEOS</a></li>
+<li><a href="../deportes.html">FÚTBOL</a></li>
+<li><a href="../sobremi.html">SOBRE MÍ</a></li>
+<li><a href="../noticias.html">NOTICIAS</a></li>
+<li><a href="../mas.html">MÁS</a></li>
+</ul>
+</nav>
+</header>
+
+<section class="gp-container">
+<h1>🇧🇷 GP BRASIL</h1>
+<h2>Autódromo José Carlos Pace</h2>
+
+<h2>HORARIOS</h2>
+<ul class="session-list">
+<li>FP1 — 6 NOV 16:30</li>
+<li>FP2 — 6 NOV 20:00</li>
+<li>FP3 — 7 NOV 15:30</li>
+<li>QUALY — 7 NOV 19:00</li>
+<li>CARRERA — 8 NOV 18:00</li>
+</ul>
+
+<h2>⏳ Cuenta atrás FP1</h2>
+<div id="countdown">Cargando...</div>
+</section>
+
+<script src="../f1calendar.js"></script>
+<script>
+const targetDate = new Date("2026-11-06T16:30:00").getTime();
+startCountdown(targetDate, "countdown");
+</script>
+
+</body>
+</html>
