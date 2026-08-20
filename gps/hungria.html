@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GP Hungría</title>
+
+<link rel="stylesheet" href="../diseno.css">
+<link rel="stylesheet" href="../estilos-gp.css">
+
+<style>
+.gp-container { max-width: 900px; margin: auto; padding: 40px 20px; text-align: center; }
+.gp-container h1 { font-size: 32px; margin-bottom: 10px; }
+.gp-container h2 { color: #9ca3af; margin-bottom: 25px; }
+.session-list { list-style: none; padding: 0; margin-top: 20px; }
+.session-list li { background: #111827; padding: 15px; margin-bottom: 10px; border-radius: 10px; }
+#countdown { font-size: 28px; margin-top: 25px; font-weight: bold; }
+</style>
+</head>
+
+<body id="hungria">
+<header>
+<h1>Bienvenidos a <span class="neon">WOLFGAMES</span></h1>
+<nav class="navbar">
+<ul class="menu">
+<li><a href="../index.html">INICIO</a></li>
+<li><a href="../directos.html">DIRECTOS</a></li>
+<li><a href="../F1.html">F1</a></li>
+<li><a href="../MotoGP.html">MotoGP</a></li>
+<li><a href="../videos.html">VIDEOS</a></li>
+<li><a href="../deportes.html">FÚTBOL</a></li>
+<li><a href="../sobremi.html">SOBRE MÍ</a></li>
+<li><a href="../noticias.html">NOTICIAS</a></li>
+<li><a href="../mas.html">MÁS</a></li>
+</ul>
+</nav>
+</header>
+
+<section class="gp-container">
+<h1>🇭🇺 GP HUNGRÍA</h1>
+<h2>Hungaroring</h2>
+<h2>HORARIOS</h2>
+
+<ul class="session-list">
+<li>FP1 — 24 JUL 13:30</li>
+<li>FP2 — 24 JUL 17:00</li>
+<li>FP3 — 25 JUL 12:30</li>
+<li>QUALY — 25 JUL 16:00</li>
+<li>CARRERA — 26 JUL 15:00</li>
+</ul>
+
+<h2>⏳ Cuenta atrás FP1</h2>
+<div id="countdown">Cargando...</div>
+</section>
+
+<script src="../f1calendar.js"></script>
+<script>
+/* HUNGRÍA */
+const targetDate =
+new Date("2026-07-24T13:30:00").getTime();
+
+startCountdown(
+targetDate,
+"countdown"
+);
+</script>
+</body>
+</html>

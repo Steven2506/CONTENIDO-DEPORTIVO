@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WOLFGAMES</title>
+
+<link rel="stylesheet" href="diseno.css">
+
+<style>
+
+/* =========================
+   PROXIMOS EVENTOS INDEX
+========================= */
+
+.next-events-section {
+  max-width: 1100px;
+  margin: 40px auto 20px auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.next-events-section h2 {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: white;
+  text-shadow: 0 0 10px rgba(162, 0, 255, 0.25);
+}
+
+.next-events-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.event-card {
+  background: rgba(17, 24, 39, 0.88);
+  border: 1px solid rgba(162, 0, 255, 0.25);
+  border-radius: 18px;
+  padding: 22px 20px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 0 18px rgba(162, 0, 255, 0.10);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  backdrop-filter: blur(6px);
+}
+
+.event-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 22px rgba(162, 0, 255, 0.18);
+}
+
+.event-label {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #c084fc;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.event-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.event-card p {
+  color: #d1d5db;
+  margin-bottom: 14px;
+}
+
+.event-countdown {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #a855f7;
+  margin-bottom: 16px;
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.28);
+}
+
+.btn-link {
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+  background: rgba(162, 0, 255, 0.18);
+  border: 1px solid rgba(162, 0, 255, 0.35);
+  padding: 10px 16px;
+  border-radius: 10px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-link:hover {
+  background: rgba(162, 0, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.f1-card .event-countdown {
+  color: #f87171;
+  text-shadow: 0 0 10px rgba(248, 113, 113, 0.25);
+}
+
+.motogp-card .event-countdown {
+  color: #38bdf8;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .next-events-section h2 {
+    font-size: 1.6rem;
+  }
+
+  .event-card {
+    max-width: 100%;
+  }
+
+  .event-countdown {
+    font-size: 1.5rem;
+  }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>
+Bienvenidos a
+<span class="neon">WOLFGAMES</span>
+</h1>
+
+<p class="tagline">
+🔥 Streams, Motor, Fútbol y mucho más 🔥
+</p>
+
+<nav class="navbar">
+
+<ul class="menu">
+
+<li><a href="index.html">INICIO</a></li>
+<li><a href="directos.html">DIRECTOS</a></li>
+<li><a href="F1.html">F1</a></li>
+<li><a href="MotoGP.html">MotoGP</a></li>
+<li><a href="videos.html">VIDEOS</a></li>
+<li><a href="deportes.html">FÚTBOL</a></li>
+<li><a href="sobremi.html">SOBRE MÍ</a></li>
+<li><a href="noticias.html">NOTICIAS</a></li>
+<li><a href="mas.html">MÁS</a></li>
+
+</ul>
+
+</nav>
+
+</header>
+
+<section class="next-events-section">
+
+<h2>PRÓXIMOS EVENTOS</h2>
+
+<div class="next-events-container">
+
+<div class="event-card f1-card">
+<p class="event-label">🏎️ FÓRMULA 1</p>
+<h3 id="f1-next-name">Cargando F1...</h3>
+<p id="f1-circuit">📍 Próximo circuito</p>
+<div class="event-countdown" id="f1-countdown">--:--</div>
+<a href="F1.html" class="btn-link">Ver calendario F1 →</a>
+</div>
+
+<div class="event-card motogp-card">
+<p class="event-label">🏍️ MOTOGP</p>
+<h3 id="motogp-name">Cargando MotoGP...</h3>
+<p id="motogp-circuit">📍 Próximo circuito</p>
+<div class="event-countdown" id="motogp-countdown">--:--</div>
+<a href="MotoGP.html" class="btn-link">Ver calendario MotoGP →</a>
+</div>
+
+</div>
+
+</section>
+
+<main>
+
+<section class="quick-sections">
+
+<h2>Explora el contenido</h2>
+
+<div class="quick-container">
+
+<a href="F1.html" class="quick-card">
+<h3>🏎️ Fórmula 1</h3>
+<p>
+CALENDARIO 
+</p>
+</a>
+
+<a href="MotoGP.html" class="quick-card">
+<h3>🏍️ MotoGP</h3>
+<p>
+CALENDARIO
+</p>
+</a>
+
+<a href="deportes.html" class="quick-card">
+<h3>⚽ Fútbol</h3>
+<p>
+LaLiga y Champions League
+</p>
+</a>
+
+</div>
+
+</section>
+
+</main>
+
+<footer>
+
+<p>
+© 2026 WOLFGAMES
+Todos los derechos reservados
+</p>
+
+</footer>
+
+<!-- INDICADOR DIRECTO -->
+<div id="live-indicator" class="offline">
+
+<span class="dot"></span>
+
+<a href="https://www.twitch.tv/wolfgames2506" target="_blank">
+EN DIRECTO
+</a>
+
+</div>
+
+<canvas id="particles"></canvas>
+
+<!-- =========================
+     PARTICULAS
+========================= -->
+
+<script>
+
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<70;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+size:Math.random()*3+1,
+speedX:(Math.random()-0.5)*0.5,
+speedY:(Math.random()-0.5)*0.5
+});
+}
+
+function animate(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#a200ff";
+
+particles.forEach(p=>{
+
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+ctx.fill();
+
+p.x+=p.speedX;
+p.y+=p.speedY;
+
+if(p.x<0||p.x>canvas.width)p.speedX*=-1;
+if(p.y<0||p.y>canvas.height)p.speedY*=-1;
+
+});
+
+for(let a=0;a<particles.length;a++){
+for(let b=a;b<particles.length;b++){
+
+let dx=particles[a].x-particles[b].x;
+let dy=particles[a].y-particles[b].y;
+let dist=Math.sqrt(dx*dx+dy*dy);
+
+if(dist<120){
+ctx.strokeStyle="rgba(162,0,255,0.2)";
+ctx.lineWidth=1;
+ctx.beginPath();
+ctx.moveTo(particles[a].x,particles[a].y);
+ctx.lineTo(particles[b].x,particles[b].y);
+ctx.stroke();
+}
+
+}
+
+}
+
+requestAnimationFrame(animate);
+
+}
+
+animate();
+
+</script>
+
+<!-- CALENDARIOS -->
+<script src="f1calendar.js"></script>
+<script src="motogpcalendar.js"></script>
+
+<!-- ACTIVAR F1 -->
+<script>
+
+const nextRace = getNextRace();
+
+if(nextRace){
+
+document.getElementById("f1-next-name").innerHTML =
+nextRace.name;
+
+document.getElementById("f1-circuit").innerHTML =
+"📍 " + nextRace.circuit;
+
+startCountdown(
+new Date(nextRace.date).getTime(),
+"f1-countdown"
+);
+
+}
+
+</script>
+
+<!-- MOTOGP -->
+<script>
+
+const nextMotoGP = getNextMotoGP();
+
+if(nextMotoGP){
+
+document.getElementById("motogp-name").innerHTML =
+nextMotoGP.name;
+
+document.getElementById("motogp-circuit").innerHTML =
+"📍 " + nextMotoGP.circuit;
+
+startMotoCountdown(
+new Date(nextMotoGP.date).getTime(),
+"motogp-countdown"
+);
+
+}
+
+</script>
+
+</body>
+
+</html>
