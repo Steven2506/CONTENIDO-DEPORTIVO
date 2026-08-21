@@ -1,14 +1,14 @@
 const footballData={
-  updated:"21 de agosto de 2026 · resultados verificados tras el final de los partidos",
+  updated:"21 de agosto de 2026 · resultados y designaciones CTA verificados",
   timezone:"Hora peninsular española (CEST, UTC+2)",
   currentRound:2,
   laligaRounds:{
     2:[
-      {date:"Jueves 20 de agosto",time:"21:00",iso:"2026-08-20T21:00:00+02:00",home:"Rayo Vallecano",away:"Deportivo Alavés",venue:"Butarque",status:"Finalizado",state:"finished",homeScore:1,awayScore:1,referee:null,var:null},
-      {date:"Viernes 21 de agosto",time:"21:00",iso:"2026-08-21T21:00:00+02:00",home:"Real Betis",away:"Real Sociedad",venue:"La Cartuja",status:"Finalizado",state:"finished",homeScore:1,awayScore:0,referee:null,var:null},
-      {date:"Sábado 22 de agosto",time:"17:00",iso:"2026-08-22T17:00:00+02:00",home:"Athletic Club",away:"Sevilla FC",venue:"San Mamés",status:"Próximo",referee:null,var:null},
-      {date:"Sábado 22 de agosto",time:"19:30",iso:"2026-08-22T19:30:00+02:00",home:"Valencia CF",away:"Celta",venue:"Mestalla",status:"Próximo",referee:null,var:null},
-      {date:"Sábado 22 de agosto",time:"21:30",iso:"2026-08-22T21:30:00+02:00",home:"RCD Espanyol de Barcelona",away:"Real Madrid",venue:"RCDE Stadium",status:"Próximo",referee:null,var:null},
+      {date:"Jueves 20 de agosto",time:"21:00",iso:"2026-08-20T21:00:00+02:00",home:"Rayo Vallecano",away:"Deportivo Alavés",venue:"Butarque",status:"Finalizado",state:"finished",homeScore:1,awayScore:1,referee:"José Luis Munuera",var:"Iván Caparrós"},
+      {date:"Viernes 21 de agosto",time:"21:00",iso:"2026-08-21T21:00:00+02:00",home:"Real Betis",away:"Real Sociedad",venue:"La Cartuja",status:"Finalizado",state:"finished",homeScore:1,awayScore:0,referee:"Isidro Díaz de Mera",var:"Carlos del Cerro"},
+      {date:"Sábado 22 de agosto",time:"17:00",iso:"2026-08-22T17:00:00+02:00",home:"Athletic Club",away:"Sevilla FC",venue:"San Mamés",status:"Próximo",referee:"César Soto",var:"Valentín Pizarro"},
+      {date:"Sábado 22 de agosto",time:"19:30",iso:"2026-08-22T19:30:00+02:00",home:"Valencia CF",away:"Celta",venue:"Mestalla",status:"Próximo",referee:"Jesús Gil",var:"David Gálvez"},
+      {date:"Sábado 22 de agosto",time:"21:30",iso:"2026-08-22T21:30:00+02:00",home:"RCD Espanyol de Barcelona",away:"Real Madrid",venue:"RCDE Stadium",status:"Próximo",referee:"José María Sánchez",var:"Jorge Figueroa"},
       {date:"Domingo 23 de agosto",time:"17:00",iso:"2026-08-23T17:00:00+02:00",home:"Atlético de Madrid",away:"Villarreal CF",venue:"Riyadh Air Metropolitano",status:"Próximo",referee:null,var:null},
       {date:"Domingo 23 de agosto",time:"19:30",iso:"2026-08-23T19:30:00+02:00",home:"Getafe CF",away:"R. Racing Club",venue:"Coliseum",status:"Próximo",referee:null,var:null},
       {date:"Domingo 23 de agosto",time:"21:30",iso:"2026-08-23T21:30:00+02:00",home:"Elche CF",away:"FC Barcelona",venue:"Martínez Valero",status:"Próximo",referee:null,var:null},
