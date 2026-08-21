@@ -22,3 +22,4 @@ const footballData={
   f1Standings:[{pos:1,name:"Kimi Antonelli",team:"Mercedes",points:219},{pos:2,name:"Lewis Hamilton",team:"Ferrari",points:169},{pos:3,name:"George Russell",team:"Mercedes",points:160},{pos:4,name:"Charles Leclerc",team:"Ferrari",points:138},{pos:5,name:"Lando Norris",team:"McLaren",points:128}],
   latest:{f1:"GP Hungría: clasificación y resultados disponibles en F1.com",motogp:"GP Gran Bretaña: resultados disponibles en MotoGP.com",football:"LaLiga 2026/27 ya está en marcha"}
 };
+Object.entries(laligaCalendar).forEach(([round,matches])=>{if(!footballData.laligaRounds[round])footballData.laligaRounds[round]=matches;});
