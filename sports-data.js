@@ -1,5 +1,6 @@
 const footballData={
-  updated:"21 de agosto de 2026",
+  updated:"21 de agosto de 2026 · horarios verificados con LaLiga",
+  timezone:"Hora peninsular española (CEST, UTC+2)",
   currentRound:2,
   laligaRounds:{
     2:[
