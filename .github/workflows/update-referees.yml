@@ -1,0 +1,48 @@
+name: Actualizar árbitros RFEF
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-referees
+  cancel-in-progress: false
+
+jobs:
+  update-referees:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar lector RFEF
+        run: python -m pip install -r scripts/requirements-referees.txt
+
+      - name: Buscar designaciones oficiales
+        run: python scripts/update_referees.py
+
+      - name: Validar JavaScript
+        run: node --check sports-data.js
+
+      - name: Publicar solo si hay datos nuevos
+        run: |
+          if git diff --quiet -- sports-data.js; then
+            echo "No hay designaciones nuevas."
+            exit 0
+          fi
+          git config user.name "WOLFGAMES Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -- sports-data.js
+          git commit -m "Actualiza designaciones arbitrales RFEF"
+          git push
