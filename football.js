@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("champions-dates").innerHTML=footballData.champions.rounds.map(round=>`<li>${round}</li>`).join("");
   document.getElementById("laliga-standing-note").textContent=footballData.standingsNote;
   document.querySelectorAll("[data-tab]").forEach(button=>button.addEventListener("click",()=>{const target=button.dataset.tab;document.querySelectorAll("[data-tab]").forEach(item=>{item.classList.toggle("active",item===button);item.setAttribute("aria-selected",String(item===button));});document.querySelectorAll("[data-panel]").forEach(panel=>{panel.hidden=panel.dataset.panel!==target;});}));
-  document.querySelectorAll(".share-event").forEach(button=>button.addEventListener("click",async()=>{const data={title:"WOLFGAMES",text:button.dataset.share,url:location.href};if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(`${data.text} ${data.url}`);button.textContent="¡Copiado!";}}));
 });
 function calendarStamp(date){return date.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z/,"Z");}
 function calendarUrl(match){const start=new Date(match.iso),end=new Date(start.getTime()+2*3600000);return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`${match.home} vs ${match.away}`)}&dates=${calendarStamp(start)}/${calendarStamp(end)}&location=${encodeURIComponent(match.venue)}`;}

@@ -36,4 +36,8 @@
   const footer = document.querySelector("[data-site-footer]");
   if (footer) footer.innerHTML = `<footer><p>© ${new Date().getFullYear()} WOLFGAMES · Contenido deportivo y gaming</p><p class="footer-note">Horarios mostrados en hora peninsular española · Datos sujetos a cambios oficiales</p></footer>`;
   document.querySelectorAll('a[target="_blank"]').forEach(link => { link.rel = "noopener noreferrer"; });
+  document.querySelectorAll("[data-share]").forEach(button => button.addEventListener("click", async () => {
+    const data={title:"WOLFGAMES",text:button.dataset.share,url:location.href};
+    if(navigator.share) await navigator.share(data); else { await navigator.clipboard.writeText(`${data.text} ${data.url}`); button.textContent="¡Copiado!"; }
+  }));
 })();
