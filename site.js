@@ -1,5 +1,9 @@
 (() => {
   const root = document.body.dataset.root || "";
+  const preferences = document.createElement("script");
+  preferences.src = `${root}preferences.js`;
+  preferences.defer = true;
+  document.head.append(preferences);
   if (!document.querySelector('link[rel="icon"]')) {
     const favicon = document.createElement("link");
     favicon.rel = "icon";
