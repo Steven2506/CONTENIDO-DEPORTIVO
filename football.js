@@ -1,18 +1,10 @@
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("football-updated").textContent = "Actualizado: " + footballData.updated;
-  document.getElementById("laliga-matches").innerHTML = footballData.laliga.map(match => `
-    <article class="match-card">
-      <div class="match-meta"><span>${match.date}</span><span class="status">${match.status}</span></div>
-      <div class="teams"><strong>${match.home}</strong><span>VS</span><strong>${match.away}</strong></div>
-      <p>⏰ ${match.time} · 📍 ${match.venue}</p>
-    </article>`).join("");
-  document.getElementById("champions-dates").innerHTML = footballData.champions.rounds.map(round => `<li>${round}</li>`).join("");
-  document.querySelectorAll("[data-tab]").forEach(button => button.addEventListener("click", () => {
-    const target = button.dataset.tab;
-    document.querySelectorAll("[data-tab]").forEach(item => {
-      item.classList.toggle("active", item === button);
-      item.setAttribute("aria-selected", String(item === button));
-    });
-    document.querySelectorAll("[data-panel]").forEach(panel => { panel.hidden = panel.dataset.panel !== target; });
-  }));
+document.addEventListener("DOMContentLoaded",()=>{
+  document.getElementById("football-updated").textContent=`Actualizado: ${footballData.updated}`;
+  document.getElementById("laliga-matches").innerHTML=footballData.laliga.map(match=>`<article class="match-card"><div class="match-meta"><span>${match.date}</span><span class="status">${match.status}</span></div><div class="teams"><strong>${match.home}</strong><span>VS</span><strong>${match.away}</strong></div><p>⏰ ${match.time} · 📍 ${match.venue}</p><div class="referee-box"><strong>Designación arbitral</strong><span>Árbitro: ${match.referee||"Pendiente de publicación oficial"}</span><span>VAR: ${match.var||"Pendiente de publicación oficial"}</span></div><div class="card-actions"><button class="btn-link share-event" data-share="${match.home} vs ${match.away} · ${match.date}, ${match.time}">Compartir</button><a class="btn-link" href="${calendarUrl(match)}">Añadir al calendario</a></div></article>`).join("");
+  document.getElementById("champions-dates").innerHTML=footballData.champions.rounds.map(round=>`<li>${round}</li>`).join("");
+  document.getElementById("laliga-standing-note").textContent=footballData.standingsNote;
+  document.querySelectorAll("[data-tab]").forEach(button=>button.addEventListener("click",()=>{const target=button.dataset.tab;document.querySelectorAll("[data-tab]").forEach(item=>{item.classList.toggle("active",item===button);item.setAttribute("aria-selected",String(item===button));});document.querySelectorAll("[data-panel]").forEach(panel=>{panel.hidden=panel.dataset.panel!==target;});}));
+  document.querySelectorAll(".share-event").forEach(button=>button.addEventListener("click",async()=>{const data={title:"WOLFGAMES",text:button.dataset.share,url:location.href};if(navigator.share)await navigator.share(data);else{await navigator.clipboard.writeText(`${data.text} ${data.url}`);button.textContent="¡Copiado!";}}));
 });
+function calendarStamp(date){return date.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z/,"Z");}
+function calendarUrl(match){const start=new Date(match.iso),end=new Date(start.getTime()+2*3600000);return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`${match.home} vs ${match.away}`)}&dates=${calendarStamp(start)}/${calendarStamp(end)}&location=${encodeURIComponent(match.venue)}`;}

@@ -1,5 +1,12 @@
 (() => {
   const root = document.body.dataset.root || "";
+  if (!document.querySelector('link[rel="icon"]')) {
+    const favicon = document.createElement("link");
+    favicon.rel = "icon";
+    favicon.type = "image/svg+xml";
+    favicon.href = `${root}favicon.svg`;
+    document.head.append(favicon);
+  }
   const links = [
     ["index.html", "INICIO"], ["directos.html", "DIRECTOS"], ["F1.html", "F1"],
     ["MotoGP.html", "MotoGP"], ["videos.html", "VÍDEOS"], ["deportes.html", "FÚTBOL"],
@@ -27,6 +34,6 @@
     });
   }
   const footer = document.querySelector("[data-site-footer]");
-  if (footer) footer.innerHTML = `<footer><p>© ${new Date().getFullYear()} WOLFGAMES · Contenido deportivo y gaming</p></footer>`;
+  if (footer) footer.innerHTML = `<footer><p>© ${new Date().getFullYear()} WOLFGAMES · Contenido deportivo y gaming</p><p class="footer-note">Horarios mostrados en hora peninsular española · Datos sujetos a cambios oficiales</p></footer>`;
   document.querySelectorAll('a[target="_blank"]').forEach(link => { link.rel = "noopener noreferrer"; });
 })();

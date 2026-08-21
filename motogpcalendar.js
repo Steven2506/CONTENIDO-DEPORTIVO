@@ -22,9 +22,10 @@ const motogpCalendar = [
   ["GP Portugal 🇵🇹","Portimão","2026-11-20T09:00:00+00:00","20–22 NOV"],
   ["GP Valencia 🇪🇸","Ricardo Tormo","2026-11-27T09:00:00+01:00","27–29 NOV"]
 ].map(([name,circuit,date,label],i)=>({round:i+1,name,circuit,date,label}));
-function getNextMotoGP(){return motogpCalendar.find(r=>new Date(r.date).getTime()>Date.now())||null;}
+function motoWeekendEnd(race){return new Date(new Date(race.date).getTime()+3*86400000).getTime();}
+function getNextMotoGP(){return motogpCalendar.find(r=>motoWeekendEnd(r)>Date.now())||null;}
 function startMotoCountdown(time,id){const el=document.getElementById(id);if(!el)return;const update=()=>{const ms=time-Date.now();if(ms<=0){el.textContent="🏁 En marcha";return;}const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000);el.textContent=`${d} d · ${h} h · ${m} min`;};update();setInterval(update,60000);}
 function renderMotoCalendar(id="motogp-calendar"){
   const box=document.getElementById(id);if(!box)return;const next=getNextMotoGP();
-  box.innerHTML=motogpCalendar.map(r=>{const past=new Date(r.date)<new Date(),isNext=next===r;return `<article class="race-card${past?" is-past":""}${isNext?" is-next":""}"><span class="race-round">ROUND ${r.round}</span>${isNext?'<span class="race-status">SIGUIENTE</span>':""}<h3>${r.name}</h3><p>${r.circuit}</p><p class="race-date">${r.label}</p></article>`;}).join("");
+  box.innerHTML=motogpCalendar.map(r=>{const past=motoWeekendEnd(r)<Date.now(),isNext=next===r;return `<article class="race-card${past?" is-past":""}${isNext?" is-next":""}"><span class="race-round">ROUND ${r.round}</span>${isNext?'<span class="race-status">SIGUIENTE</span>':""}<h3>${r.name}</h3><p>${r.circuit}</p><p class="race-date">${r.label}</p></article>`;}).join("");
 }
