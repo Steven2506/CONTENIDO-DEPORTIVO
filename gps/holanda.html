@@ -4,38 +4,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Horarios y cuenta atrás del GP de holanda 2026 en WOLFGAMES.">
 <title>GP Holanda</title>
 
 <link rel="stylesheet" href="../diseno.css">
 <link rel="stylesheet" href="../estilos-gp.css">
 
-<style>
-.gp-container { max-width: 900px; margin: auto; padding: 40px 20px; text-align: center; }
-.gp-container h1 { font-size: 32px; margin-bottom: 10px; }
-.gp-container h2 { color: #9ca3af; margin-bottom: 25px; }
-.session-list { list-style: none; padding: 0; margin-top: 20px; }
-.session-list li { background: #111827; padding: 15px; margin-bottom: 10px; border-radius: 10px; }
-#countdown { font-size: 28px; margin-top: 25px; font-weight: bold; }
-</style>
+
+<script src="../site.js" defer></script>
+<script src="../particles.js" defer></script>
 </head>
 
-<body id="holanda">
-<header>
-<h1>Bienvenidos a <span class="neon">WOLFGAMES</span></h1>
-<nav class="navbar">
-<ul class="menu">
-<li><a href="../index.html">INICIO</a></li>
-<li><a href="../directos.html">DIRECTOS</a></li>
-<li><a href="../F1.html">F1</a></li>
-<li><a href="../MotoGP.html">MotoGP</a></li>
-<li><a href="../videos.html">VIDEOS</a></li>
-<li><a href="../deportes.html">FÚTBOL</a></li>
-<li><a href="../sobremi.html">SOBRE MÍ</a></li>
-<li><a href="../noticias.html">NOTICIAS</a></li>
-<li><a href="../mas.html">MÁS</a></li>
-</ul>
-</nav>
-</header>
+<body id="holanda" data-root="../">
+<div data-site-header data-title="GRAN PREMIO"></div>
 
 <section class="gp-container">
 <h1>🇳🇱 GP HOLANDA</h1>
@@ -65,5 +46,6 @@ targetDate,
 "countdown"
 );
 </script>
+<div data-site-footer></div><canvas id="particles" aria-hidden="true"></canvas>
 </body>
 </html>
