@@ -1,0 +1,32 @@
+(() => {
+  const root = document.body.dataset.root || "";
+  const links = [
+    ["index.html", "INICIO"], ["directos.html", "DIRECTOS"], ["F1.html", "F1"],
+    ["MotoGP.html", "MotoGP"], ["videos.html", "VÍDEOS"], ["deportes.html", "FÚTBOL"],
+    ["sobremi.html", "SOBRE MÍ"], ["noticias.html", "NOTICIAS"], ["mas.html", "MÁS"]
+  ];
+  const current = location.pathname.split("/").pop() || "index.html";
+  const header = document.querySelector("[data-site-header]");
+  if (header) {
+    const title = header.dataset.title || "WOLFGAMES";
+    const menuLinks = links.map(([href, label]) => {
+      const active = current.toLowerCase() === href.toLowerCase();
+      return `<li><a href="${root}${href}"${active ? ' class="active" aria-current="page"' : ""}>${label}</a></li>`;
+    }).join("");
+    header.innerHTML = `<header class="site-header">
+      <a class="brand" href="${root}index.html" aria-label="WOLFGAMES, inicio"><span class="brand-mark">WG</span><span>${title}</span></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu"><span aria-hidden="true">☰</span><span class="sr-only">Abrir menú</span></button>
+      <nav class="navbar" aria-label="Navegación principal"><ul class="menu" id="main-menu">${menuLinks}</ul></nav>
+    </header>`;
+    const button = header.querySelector(".menu-toggle");
+    const menu = header.querySelector(".menu");
+    button?.addEventListener("click", () => {
+      const open = button.getAttribute("aria-expanded") === "true";
+      button.setAttribute("aria-expanded", String(!open));
+      menu.classList.toggle("open", !open);
+    });
+  }
+  const footer = document.querySelector("[data-site-footer]");
+  if (footer) footer.innerHTML = `<footer><p>© ${new Date().getFullYear()} WOLFGAMES · Contenido deportivo y gaming</p></footer>`;
+  document.querySelectorAll('a[target="_blank"]').forEach(link => { link.rel = "noopener noreferrer"; });
+})();
