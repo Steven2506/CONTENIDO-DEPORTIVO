@@ -1,33 +1,24 @@
-const f1Races = [
-  [1,"GP Australia","Albert Park","2026-03-06T12:00:00+11:00","6–8 MAR",null],
-  [2,"GP China","Shanghai International Circuit","2026-03-13T12:00:00+08:00","13–15 MAR",null],
-  [3,"GP Japón","Suzuka Circuit","2026-03-27T12:30:00+09:00","27–29 MAR","gps/suzuka.html"],
-  [4,"GP Miami","Miami International Autodrome","2026-05-01T12:30:00-04:00","1–3 MAY","gps/miami.html"],
-  [5,"GP Canadá","Circuit Gilles Villeneuve","2026-05-22T12:30:00-04:00","22–24 MAY","gps/canada.html"],
-  [6,"GP Mónaco","Circuit de Monaco","2026-06-05T13:30:00+02:00","5–7 JUN","gps/monaco.html"],
-  [7,"GP Barcelona-Catalunya","Circuit de Barcelona-Catalunya","2026-06-12T13:30:00+02:00","12–14 JUN","gps/barcelona.html"],
-  [8,"GP Austria","Red Bull Ring","2026-06-26T13:30:00+02:00","26–28 JUN","gps/austria.html"],
-  [9,"GP Gran Bretaña","Silverstone Circuit","2026-07-03T12:30:00+01:00","3–5 JUL","gps/silverstone.html"],
-  [10,"GP Bélgica","Spa-Francorchamps","2026-07-17T13:30:00+02:00","17–19 JUL","gps/spa.html"],
-  [11,"GP Hungría","Hungaroring","2026-07-24T13:30:00+02:00","24–26 JUL","gps/hungria.html"],
-  [12,"GP Países Bajos","Circuit Zandvoort","2026-08-21T12:30:00+02:00","21–23 AGO","gps/holanda.html"],
-  [13,"GP Italia","Autodromo Nazionale Monza","2026-09-04T12:30:00+02:00","4–6 SEP","gps/monza.html"],
-  [14,"GP España","Madring","2026-09-11T13:30:00+02:00","11–13 SEP","gps/madrid.html"],
-  [15,"GP Azerbaiyán","Baku City Circuit","2026-09-24T10:30:00+04:00","24–26 SEP","gps/baku.html"],
-  [16,"GP Baréin","Circuito internacional de Sepang","2026-10-02T12:00:00+08:00","2–4 OCT",null],
-  [17,"GP Singapur","Marina Bay Street Circuit","2026-10-09T10:30:00+08:00","9–11 OCT","gps/singapore.html"],
-  [18,"GP Estados Unidos","Circuit of the Americas","2026-10-23T12:30:00-05:00","23–25 OCT","gps/cota.html"],
-  [19,"GP México","Autódromo Hermanos Rodríguez","2026-10-30T12:30:00-06:00","30 OCT–1 NOV","gps/mexico.html"],
-  [20,"GP São Paulo","Interlagos","2026-11-06T12:30:00-03:00","6–8 NOV","gps/brazil.html"],
-  [21,"GP Las Vegas","Las Vegas Strip Circuit","2026-11-19T12:30:00-08:00","19–21 NOV","gps/vegas.html"],
-  [22,"GP Qatar","Lusail International Circuit","2026-11-27T12:30:00+03:00","27–29 NOV","gps/qatar.html"],
-  [23,"GP Abu Dhabi","Yas Marina Circuit","2026-12-04T12:30:00+04:00","4–6 DIC","gps/abudhabi.html"]
-].map(([round,name,circuit,date,label,url])=>({round,name,circuit,date,label,url}));
-
-function getNextRace(){const now=Date.now();return f1Races.find(r=>new Date(r.date).getTime()>now)||null;}
-function formatCountdown(ms){if(ms<=0)return "🏁 En marcha";const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000);return d?`${d} d · ${h} h · ${m} min`:`${h} h · ${m} min`;}
-function startCountdown(time,id){const el=document.getElementById(id);if(!el)return;const update=()=>el.textContent=formatCountdown(time-Date.now());update();setInterval(update,60000);}
-function renderF1Calendar(id="f1-calendar"){
-  const box=document.getElementById(id);if(!box)return;const next=getNextRace();
-  box.innerHTML=f1Races.map(r=>{const past=new Date(r.date)<new Date(),isNext=next===r;const tag=r.url?"a":"article";const href=r.url?` href="${r.url}"`:"";return `<${tag}${href} class="race-card${past?" is-past":""}${isNext?" is-next":""}"><span class="race-round">ROUND ${r.round}</span>${isNext?'<span class="race-status">SIGUIENTE</span>':""}<h3>${r.name}</h3><p>${r.circuit}</p><p class="race-date">${r.label}</p></${tag}>`;}).join("");
+const F1_API = "https://api.jolpi.ca/ergast/f1/2026.json";
+const F1_SESSION_LENGTH = {"Libres 1":60,"Libres 2":60,"Libres 3":60,"Clasificación Sprint":50,"Sprint":60,"Clasificación":70,"Carrera":150};
+const F1_FALLBACK = [
+  {round:12,name:"GP Países Bajos",circuit:"Circuit Zandvoort",label:"21–23 AGO",url:"gps/holanda.html",sessions:[["Libres 1","2026-08-21T12:30:00+02:00"],["Clasificación Sprint","2026-08-21T16:30:00+02:00"],["Sprint","2026-08-22T12:00:00+02:00"],["Clasificación","2026-08-22T16:00:00+02:00"],["Carrera","2026-08-23T15:00:00+02:00"]]},
+  {round:13,name:"GP Italia",circuit:"Autodromo Nazionale Monza",label:"4–6 SEP",url:"gps/monza.html",sessions:[["Libres 1","2026-09-04T12:30:00+02:00"],["Libres 2","2026-09-04T16:00:00+02:00"],["Libres 3","2026-09-05T12:30:00+02:00"],["Clasificación","2026-09-05T16:00:00+02:00"],["Carrera","2026-09-06T15:00:00+02:00"]]},
+  {round:14,name:"GP España",circuit:"Madring",label:"11–13 SEP",url:"gps/madrid.html",sessions:[["Libres 1","2026-09-11T13:30:00+02:00"],["Libres 2","2026-09-11T17:00:00+02:00"],["Libres 3","2026-09-12T12:30:00+02:00"],["Clasificación","2026-09-12T16:00:00+02:00"],["Carrera","2026-09-13T15:00:00+02:00"]]},
+  {round:15,name:"GP Azerbaiyán",circuit:"Baku City Circuit",label:"24–26 SEP",url:"gps/baku.html",sessions:[["Libres 1","2026-09-24T10:30:00+02:00"],["Libres 2","2026-09-24T14:00:00+02:00"],["Libres 3","2026-09-25T10:30:00+02:00"],["Clasificación","2026-09-25T14:00:00+02:00"],["Carrera","2026-09-26T13:00:00+02:00"]]}
+];
+let f1Races = F1_FALLBACK;
+const toIso = value => value?.date ? `${value.date}T${value.time || "00:00:00Z"}` : null;
+function normalizeF1Race(race){
+  const raw=[["Libres 1",race.FirstPractice],["Libres 2",race.SecondPractice],["Libres 3",race.ThirdPractice],["Clasificación Sprint",race.SprintQualifying||race.SprintShootout],["Sprint",race.Sprint],["Clasificación",race.Qualifying],["Carrera",{date:race.date,time:race.time}]];
+  return {round:Number(race.round),name:race.raceName.replace("Grand Prix","GP"),circuit:race.Circuit.circuitName,label:new Intl.DateTimeFormat("es-ES",{day:"numeric",month:"short"}).format(new Date(`${race.date}T12:00:00Z`)).toUpperCase(),url:null,sessions:raw.map(([name,value])=>[name,toIso(value)]).filter(([,date])=>date)};
 }
+async function loadF1Data(){try{const response=await fetch(F1_API);if(!response.ok)throw new Error("API");const json=await response.json();const races=json?.MRData?.RaceTable?.Races;if(races?.length)f1Races=races.map(normalizeF1Race);}catch(error){console.info("Usando calendario F1 local.");}document.dispatchEvent(new CustomEvent("f1dataready"));return f1Races;}
+function f1SessionEnd(session){return new Date(session[1]).getTime()+(F1_SESSION_LENGTH[session[0]]||90)*60000;}
+function getF1State(now=Date.now()){for(const race of f1Races){const next=race.sessions.find(session=>f1SessionEnd(session)>now);if(next){const start=new Date(next[1]).getTime(),end=f1SessionEnd(next);return {race,session:next,status:now>=start&&now<end?"live":"upcoming",start,end};}}return {race:null,session:null,status:"finished"};}
+function formatCountdown(ms){if(ms<=0)return "🔴 En curso";const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000);return d?`${d} d · ${h} h · ${m} min`:`${h} h · ${m} min · ${s} s`;}
+function formatSpainTime(iso){return new Intl.DateTimeFormat("es-ES",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit",timeZone:"Europe/Madrid"}).format(new Date(iso));}
+function f1CalendarUrl(race,session){const stamp=date=>new Date(date).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z/,"Z"),start=new Date(session[1]),end=new Date(f1SessionEnd(session));return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`${race.name} · ${session[0]}`)}&dates=${stamp(start)}/${stamp(end)}&location=${encodeURIComponent(race.circuit)}`;}
+function startCountdown(time,id){const el=document.getElementById(id);if(!el)return;const update=()=>el.textContent=formatCountdown(time-Date.now());update();setInterval(update,1000);}
+function renderSessionList(race,id="f1-sessions"){const box=document.getElementById(id);if(!box||!race)return;const now=Date.now();box.innerHTML=race.sessions.map(session=>{const start=new Date(session[1]).getTime(),end=f1SessionEnd(session);const state=now>=start&&now<end?"En curso":end<=now?"Finalizada":"Próxima";return `<li class="session-row ${state==="En curso"?"is-live":""}"><span><strong>${session[0]}</strong><small>${formatSpainTime(session[1])}</small></span><span class="session-actions"><span class="status">${state}</span><a class="mini-action" href="${f1CalendarUrl(race,session)}" target="_blank" aria-label="Añadir ${session[0]} al calendario">＋ Calendario</a></span></li>`;}).join("");}
+function renderF1Calendar(id="f1-calendar"){const box=document.getElementById(id);if(!box)return;const state=getF1State();box.innerHTML=f1Races.map(r=>{const isNext=state.race===r,past=r.sessions.every(s=>f1SessionEnd(s)<Date.now()),tag=r.url?"a":"article",href=r.url?` href="${r.url}"`:"";return `<${tag}${href} class="race-card${past?" is-past":""}${isNext?" is-next":""}"><span class="race-round">ROUND ${r.round}</span>${isNext?'<span class="race-status">SIGUIENTE</span>':""}<h3>${r.name}</h3><p>${r.circuit}</p><p class="race-date">${r.label}</p></${tag}>`;}).join("");}
+window.f1Ready=loadF1Data();

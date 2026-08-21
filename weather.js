@@ -1,0 +1,6 @@
+const CIRCUIT_COORDS={"Circuit Zandvoort":[52.3888,4.5409],"Autodromo Nazionale Monza":[45.6156,9.2811],"Madring":[40.468,-3.617],"Baku City Circuit":[40.3725,49.8533],"MotorLand Aragón":[41.078, -0.202]};
+async function renderRaceWeather(race,id="race-weather"){
+  const box=document.getElementById(id);if(!box||!race)return;const coords=CIRCUIT_COORDS[race.circuit],raceDate=new Date(race.sessions?.at(-1)?.[1]||race.date),days=(raceDate-Date.now())/86400000;
+  if(!coords||days>16){box.textContent="La previsión aparecerá cuando falten 16 días para el evento.";return;}
+  try{const url=`https://api.open-meteo.com/v1/forecast?latitude=${coords[0]}&longitude=${coords[1]}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=16`,response=await fetch(url);if(!response.ok)throw new Error("weather");const data=await response.json(),date=raceDate.toISOString().slice(0,10),i=data.daily.time.indexOf(date);if(i<0)throw new Error("range");box.innerHTML=`🌡️ ${Math.round(data.daily.temperature_2m_min[i])}–${Math.round(data.daily.temperature_2m_max[i])} °C · 🌧️ ${data.daily.precipitation_probability_max[i]}% de lluvia <small>Previsión orientativa</small>`;}catch(error){box.textContent="Previsión no disponible en este momento.";}
+}

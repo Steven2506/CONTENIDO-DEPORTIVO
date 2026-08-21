@@ -1,19 +1,8 @@
-document.addEventListener("DOMContentLoaded", () => {
-  function setEvent(prefix, event, countdown) {
-    const name = document.getElementById(prefix + "-name");
-    const place = document.getElementById(prefix + "-circuit");
-    const timer = document.getElementById(prefix + "-countdown");
-    if (!name || !place || !timer) return;
-    if (!event) {
-      name.textContent = "Temporada finalizada";
-      place.textContent = "Consulta el calendario completo";
-      timer.textContent = "🏁";
-      return;
-    }
-    name.textContent = event.name;
-    place.textContent = "📍 " + event.circuit;
-    countdown(new Date(event.date).getTime(), timer.id);
-  }
-  setEvent("f1", getNextRace(), startCountdown);
-  setEvent("motogp", getNextMotoGP(), startMotoCountdown);
+document.addEventListener("DOMContentLoaded", async () => {
+  await window.f1Ready;
+  const state=getF1State(),name=document.getElementById("f1-name"),place=document.getElementById("f1-circuit"),session=document.getElementById("f1-next-session"),timer=document.getElementById("f1-countdown");
+  if(state.race){name.textContent=state.race.name;place.textContent=`📍 ${state.race.circuit}`;session.textContent=`${state.status==="live"?"🔴":"⏱️"} ${state.session[0]} · ${formatSpainTime(state.session[1])}`;renderSessionList(state.race);startCountdown(state.start,timer.id);}else{name.textContent="Temporada finalizada";timer.textContent="🏁";}
+  const moto=getNextMotoGP(),mName=document.getElementById("motogp-name"),mPlace=document.getElementById("motogp-circuit"),mTimer=document.getElementById("motogp-countdown");if(moto){mName.textContent=moto.name;mPlace.textContent=`📍 ${moto.circuit}`;startMotoCountdown(new Date(moto.date).getTime(),mTimer.id);}
+  renderEventHub();
 });
+function renderEventHub(){const box=document.getElementById("event-hub");if(!box)return;const f1=getF1State(),moto=getNextMotoGP(),events=[];if(f1.race)events.push({icon:"🏎️",title:`${f1.race.name} · ${f1.session[0]}`,time:f1.start,url:"F1.html"});if(moto)events.push({icon:"🏍️",title:moto.name,time:new Date(moto.date).getTime(),url:"MotoGP.html"});footballData.laliga.forEach(match=>events.push({icon:"⚽",title:`${match.home} – ${match.away}`,time:new Date(match.iso).getTime(),url:"deportes.html",teams:`${match.home}|${match.away}`}));box.innerHTML=events.filter(e=>e.time>Date.now()-10800000).sort((a,b)=>a.time-b.time).slice(0,3).map(e=>`<a class="timeline-event" href="${e.url}"${e.teams?` data-teams="${e.teams}"`:""}><span>${e.icon}</span><span><strong>${e.title}</strong><small>${new Intl.DateTimeFormat("es-ES",{weekday:"long",day:"numeric",hour:"2-digit",minute:"2-digit",timeZone:"Europe/Madrid"}).format(new Date(e.time))}</small></span><span class="event-state">${e.time-Date.now()<86400000?"HOY":"PRÓXIMO"}</span></a>`).join("")||"<p>No hay eventos próximos confirmados.</p>";requestAnimationFrame(()=>window.applyTeamPreference?.());}
