@@ -20,9 +20,9 @@ HOME_FILE = ROOT / "index.html"
 RESULTS_URL = "https://www.laliga.com/laliga-easports/resultados/2026-27/jornada-{round}"
 MATCH_URL = "https://www.laliga.com/partido/{slug}"
 WEBVIEW_URL = "https://apim.laliga.com/webview"
-WEBVIEW_KEY = "ee7fcd5c543f4485ba2a48856fc7ece9"
 HEADERS = {"User-Agent": "WOLFGAMES-results-sync/1.0 (+https://github.com/Steven2506/CONTENIDO-DEPORTIVO)"}
 TIMEOUT = 30
+_WEBVIEW_KEY: str | None = None
 
 TEAM_ALIASES = {
     "rayo vallecano de madrid": "Rayo Vallecano",
@@ -82,11 +82,28 @@ def next_payload(url: str) -> dict:
     return json.loads(match.group(1))
 
 
+def runtime_webview_key() -> str:
+    global _WEBVIEW_KEY
+    if _WEBVIEW_KEY:
+        return _WEBVIEW_KEY
+    response = requests.get("https://www.laliga.com", headers=HEADERS, timeout=TIMEOUT)
+    response.raise_for_status()
+    match = re.search(r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>', response.text, re.S)
+    if not match:
+        raise RuntimeError("LALIGA no publicó su configuración web")
+    payload = json.loads(match.group(1))
+    _WEBVIEW_KEY = payload.get("runtimeConfig", {}).get("webviewSubscription")
+    if not _WEBVIEW_KEY:
+        raise RuntimeError("LALIGA no publicó la suscripción de su servicio web")
+    return _WEBVIEW_KEY
+
+
 def webview_payload(path: str) -> dict:
+    key = runtime_webview_key()
     response = requests.get(
         f"{WEBVIEW_URL}{path}",
-        headers={**HEADERS, "Ocp-Apim-Subscription-Key": WEBVIEW_KEY, "Content-Language": "es"},
-        params={"subscription-key": WEBVIEW_KEY, "contentLanguage": "es", "countryCode": "ES"},
+        headers={**HEADERS, "Ocp-Apim-Subscription-Key": key, "Content-Language": "es"},
+        params={"subscription-key": key, "contentLanguage": "es", "countryCode": "ES"},
         timeout=TIMEOUT,
     )
     if response.status_code in {403, 404, 410}:
@@ -172,6 +189,9 @@ def lineup_team(items: list, formation: str | None) -> dict:
 
 
 def match_details(match: dict) -> dict:
+    if match.get("slug") and (not match.get("id") or not match.get("opta_id") or not match.get("home_formation")):
+        detail = next_payload(MATCH_URL.format(slug=match["slug"])).get("props", {}).get("pageProps", {}).get("match", {})
+        match = {**match, **detail}
     match_id, opta_id = match.get("id"), match.get("opta_id")
     if not match_id or not opta_id:
         return {}
@@ -225,13 +245,18 @@ def match_details(match: dict) -> dict:
     }
 
 
-def patch_for(match: dict) -> dict | None:
+def patch_for(match: dict, include_details: bool = False) -> dict | None:
     status = match.get("status")
     home_score, away_score = match.get("home_score"), match.get("away_score")
     if status in FINISHED_STATES:
         if not isinstance(home_score, int) or not isinstance(away_score, int):
             return None
-        return {"status": "Finalizado", "state": "finished", "homeScore": home_score, "awayScore": away_score}
+        patch = {"status": "Finalizado", "state": "finished", "homeScore": home_score, "awayScore": away_score}
+        if include_details:
+            details = match_details(match)
+            if details:
+                patch["details"] = details
+        return patch
     if status in LIVE_STATES:
         if not isinstance(home_score, int) or not isinstance(away_score, int):
             return None
@@ -256,7 +281,7 @@ def apply(source: str, round_number: int, matches: list[dict]) -> tuple[str, int
     official = {}
     for match in matches:
         home, away = team_name(match["home_team"]), team_name(match["away_team"])
-        official[(home, away)] = patch_for(match)
+        official[(home, away)] = match
 
     in_round = False
     seen = set()
@@ -274,7 +299,8 @@ def apply(source: str, round_number: int, matches: list[dict]) -> tuple[str, int
         if key not in official:
             continue
         seen.add(key)
-        patch = official[key]
+        match = official[key]
+        patch = patch_for(match, include_details="details:" not in line)
         if not patch:
             continue
         updated = line
@@ -311,12 +337,17 @@ def bust_browser_cache() -> None:
 def main() -> int:
     source = DATA_FILE.read_text(encoding="utf-8")
     round_number = current_round(source)
-    matches = official_matches(round_number)
-    updated, changes = apply(source, round_number, matches)
+    updated, changes = source, 0
+    verified = 0
+    for target_round in range(1, round_number + 1):
+        matches = official_matches(target_round)
+        updated, round_changes = apply(updated, target_round, matches)
+        changes += round_changes
+        verified += len(matches)
     if changes:
         DATA_FILE.write_text(update_timestamp(updated), encoding="utf-8")
         bust_browser_cache()
-    print(f"Jornada {round_number}: 10 partidos verificados · cambios: {changes}")
+    print(f"Jornadas 1–{round_number}: {verified} partidos verificados · cambios: {changes}")
     return 0
 
 
