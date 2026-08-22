@@ -1,5 +1,5 @@
 const footballData={
-  updated:"21 de agosto de 2026 · jornada 1 auditada con fuentes oficiales",
+  updated:"22 de agosto de 2026 · resultados LALIGA sincronizados",
   timezone:"Hora peninsular española (CEST, UTC+2)",
   currentRound:2,
   laligaRounds:{
@@ -18,7 +18,7 @@ const footballData={
     2:[
       {date:"Jueves 20 de agosto",time:"21:00",iso:"2026-08-20T21:00:00+02:00",home:"Rayo Vallecano",away:"Deportivo Alavés",venue:"Butarque",status:"Finalizado",state:"finished",homeScore:1,awayScore:1,referee:"José Luis Munuera",var:"Iván Caparrós"},
       {date:"Viernes 21 de agosto",time:"21:00",iso:"2026-08-21T21:00:00+02:00",home:"Real Betis",away:"Real Sociedad",venue:"La Cartuja",status:"Finalizado",state:"finished",homeScore:1,awayScore:0,referee:"Isidro Díaz de Mera",var:"Carlos del Cerro"},
-      {date:"Sábado 22 de agosto",time:"17:00",iso:"2026-08-22T17:00:00+02:00",home:"Athletic Club",away:"Sevilla FC",venue:"San Mamés",status:"Próximo",referee:"César Soto",var:"Valentín Pizarro"},
+      {date:"Sábado 22 de agosto",time:"17:00",iso:"2026-08-22T17:00:00+02:00",home:"Athletic Club",away:"Sevilla FC",venue:"San Mamés",status:"En directo",referee:"César Soto",var:"Valentín Pizarro",state:"live",homeScore:0,awayScore:0,period:"FirstHalf",periodStart:"2026-08-22T15:00:44+00:00",periodBase:0,minute:13},
       {date:"Sábado 22 de agosto",time:"19:30",iso:"2026-08-22T19:30:00+02:00",home:"Valencia CF",away:"Celta",venue:"Mestalla",status:"Próximo",referee:"Jesús Gil",var:"David Gálvez"},
       {date:"Sábado 22 de agosto",time:"21:30",iso:"2026-08-22T21:30:00+02:00",home:"RCD Espanyol de Barcelona",away:"Real Madrid",venue:"RCDE Stadium",status:"Próximo",referee:"José María Sánchez",var:"Jorge Figueroa"},
       {date:"Domingo 23 de agosto",time:"17:00",iso:"2026-08-23T17:00:00+02:00",home:"Atlético de Madrid",away:"Villarreal CF",venue:"Riyadh Air Metropolitano",status:"Próximo",referee:null,var:null},
