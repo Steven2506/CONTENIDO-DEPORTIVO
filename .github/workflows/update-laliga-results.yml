@@ -10,7 +10,7 @@ permissions:
 
 concurrency:
   group: football-data-sync
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   update-results:
@@ -30,7 +30,7 @@ jobs:
       - name: Instalar cliente HTTP
         run: python -m pip install -r scripts/requirements-referees.txt
 
-      - name: Sincronizar jornada actual
+      - name: Sincronizar jornadas y partidos activos
         run: python scripts/update_laliga_results.py
 
       - name: Validar datos publicados
