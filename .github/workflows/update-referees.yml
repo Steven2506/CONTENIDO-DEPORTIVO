@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: update-referees
+  group: football-data-sync
   cancel-in-progress: false
 
 jobs:
@@ -37,12 +37,12 @@ jobs:
 
       - name: Publicar solo si hay datos nuevos
         run: |
-          if git diff --quiet -- sports-data.js; then
+          if git diff --quiet -- sports-data.js deportes.html; then
             echo "No hay designaciones nuevas."
             exit 0
           fi
           git config user.name "WOLFGAMES Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -- sports-data.js
+          git add -- sports-data.js deportes.html
           git commit -m "Actualiza designaciones arbitrales RFEF"
           git push
