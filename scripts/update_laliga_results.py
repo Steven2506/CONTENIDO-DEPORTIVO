@@ -7,7 +7,7 @@ import json
 import re
 import sys
 import unicodedata
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -125,8 +125,6 @@ def patch_for(match: dict) -> dict | None:
         if period_start:
             patch["periodStart"] = period_start
             patch["periodBase"] = period_bases.get(status, 0)
-            start = datetime.fromisoformat(period_start.replace("Z", "+00:00"))
-            patch["minute"] = max(1, patch["periodBase"] + int((datetime.now(timezone.utc) - start).total_seconds() // 60) + 1)
         return patch
     if status in POSTPONED_STATES:
         return {"status": "Aplazado", "state": "postponed"}
