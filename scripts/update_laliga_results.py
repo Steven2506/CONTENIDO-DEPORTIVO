@@ -7,7 +7,7 @@ import json
 import re
 import sys
 import unicodedata
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "sports-data.js"
 HTML_FILE = ROOT / "deportes.html"
 RESULTS_URL = "https://www.laliga.com/laliga-easports/resultados/2026-27/jornada-{round}"
+MATCH_URL = "https://www.laliga.com/partido/{slug}"
 HEADERS = {"User-Agent": "WOLFGAMES-results-sync/1.0 (+https://github.com/Steven2506/CONTENIDO-DEPORTIVO)"}
 TIMEOUT = 30
 
@@ -69,16 +70,26 @@ def current_round(source: str) -> int:
     return int(match.group(1))
 
 
-def official_matches(round_number: int) -> list[dict]:
-    response = requests.get(RESULTS_URL.format(round=round_number), headers=HEADERS, timeout=TIMEOUT)
+def next_payload(url: str) -> dict:
+    response = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
     response.raise_for_status()
     match = re.search(r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>', response.text, re.S)
     if not match:
         raise RuntimeError("LALIGA cambió el formato de la página: falta __NEXT_DATA__")
-    payload = json.loads(match.group(1))
+    return json.loads(match.group(1))
+
+
+def official_matches(round_number: int) -> list[dict]:
+    payload = next_payload(RESULTS_URL.format(round=round_number))
     matches = payload.get("props", {}).get("pageProps", {}).get("matches")
     if not isinstance(matches, list) or len(matches) != 10:
         raise RuntimeError(f"La jornada oficial no contiene 10 partidos (recibidos: {len(matches or [])})")
+    for match in matches:
+        if match.get("status") in LIVE_STATES:
+            detail = next_payload(MATCH_URL.format(slug=match["slug"])).get("props", {}).get("pageProps", {}).get("match", {})
+            for key in ("status", "home_score", "away_score", "period_started"):
+                if key in detail:
+                    match[key] = detail[key]
     return matches
 
 
@@ -107,7 +118,16 @@ def patch_for(match: dict) -> dict | None:
     if status in LIVE_STATES:
         if not isinstance(home_score, int) or not isinstance(away_score, int):
             return None
-        return {"status": "En directo", "state": "live", "homeScore": home_score, "awayScore": away_score}
+        patch = {"status": "En directo", "state": "live", "homeScore": home_score, "awayScore": away_score, "period": status}
+        period_started = match.get("period_started", {})
+        period_start = period_started.get(status, {}).get("start")
+        period_bases = {"FirstHalf": 0, "SecondHalf": 45, "ExtraTime": 90, "Penalties": 120}
+        if period_start:
+            patch["periodStart"] = period_start
+            patch["periodBase"] = period_bases.get(status, 0)
+            start = datetime.fromisoformat(period_start.replace("Z", "+00:00"))
+            patch["minute"] = max(1, patch["periodBase"] + int((datetime.now(timezone.utc) - start).total_seconds() // 60) + 1)
+        return patch
     if status in POSTPONED_STATES:
         return {"status": "Aplazado", "state": "postponed"}
     return None
