@@ -17,6 +17,7 @@ from pypdf import PdfReader
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "sports-data.js"
 HTML_FILE = ROOT / "deportes.html"
+HOME_FILE = ROOT / "index.html"
 RFEF_FILES = "https://rfef.es/sites/default/files/"
 HEADERS = {"User-Agent": "WOLFGAMES-referee-sync/1.0 (+https://github.com/Steven2506/CONTENIDO-DEPORTIVO)"}
 TIMEOUT = 25
@@ -166,13 +167,14 @@ def apply_updates(source: str, updates: dict[tuple[str, str], dict[str, str]]) -
 
 
 def bust_browser_cache() -> None:
-    html = HTML_FILE.read_text(encoding="utf-8")
     from datetime import datetime, timezone
     token = datetime.now(timezone.utc).strftime("referees-%Y%m%d-%H%M%S")
-    updated, count = re.subn(r'sports-data\.js\?v=[^"\']+', f'sports-data.js?v={token}', html, count=1)
-    if count != 1:
-        raise RuntimeError("No se encontró la versión de sports-data.js en deportes.html")
-    HTML_FILE.write_text(updated, encoding="utf-8")
+    for path in (HTML_FILE, HOME_FILE):
+        html = path.read_text(encoding="utf-8")
+        updated, count = re.subn(r'sports-data\.js(?:\?v=[^"\']+)?', f'sports-data.js?v={token}', html, count=1)
+        if count != 1:
+            raise RuntimeError(f"No se encontró sports-data.js en {path.name}")
+        path.write_text(updated, encoding="utf-8")
 
 
 def main() -> int:

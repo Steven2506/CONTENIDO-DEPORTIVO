@@ -38,12 +38,12 @@ jobs:
 
       - name: Publicar solo si hay cambios
         run: |
-          if git diff --quiet -- sports-data.js deportes.html; then
+          if git diff --quiet -- sports-data.js deportes.html index.html; then
             echo "No hay cambios oficiales."
             exit 0
           fi
           git config user.name "WOLFGAMES Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -- sports-data.js deportes.html
+          git add -- sports-data.js deportes.html index.html
           git commit -m "Actualiza resultados oficiales de LALIGA"
           git push
