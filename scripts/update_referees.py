@@ -16,6 +16,7 @@ from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "sports-data.js"
+HTML_FILE = ROOT / "deportes.html"
 RFEF_FILES = "https://rfef.es/sites/default/files/"
 HEADERS = {"User-Agent": "WOLFGAMES-referee-sync/1.0 (+https://github.com/Steven2506/CONTENIDO-DEPORTIVO)"}
 TIMEOUT = 25
@@ -164,6 +165,16 @@ def apply_updates(source: str, updates: dict[tuple[str, str], dict[str, str]]) -
     return source, changed
 
 
+def bust_browser_cache() -> None:
+    html = HTML_FILE.read_text(encoding="utf-8")
+    from datetime import datetime, timezone
+    token = datetime.now(timezone.utc).strftime("referees-%Y%m%d-%H%M%S")
+    updated, count = re.subn(r'sports-data\.js\?v=[^"\']+', f'sports-data.js?v={token}', html, count=1)
+    if count != 1:
+        raise RuntimeError("No se encontró la versión de sports-data.js en deportes.html")
+    HTML_FILE.write_text(updated, encoding="utf-8")
+
+
 def main() -> int:
     source = DATA_FILE.read_text(encoding="utf-8")
     urls = discover_pdfs(source)
@@ -182,6 +193,7 @@ def main() -> int:
     updated, changed = apply_updates(source, updates)
     if changed:
         DATA_FILE.write_text(updated, encoding="utf-8")
+        bust_browser_cache()
     print(f"PDF revisados: {len(documents)} · coincidencias seguras: {len(updates)} · cambios: {changed}")
     return 0
 
