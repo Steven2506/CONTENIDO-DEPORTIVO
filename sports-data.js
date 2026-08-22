@@ -21,9 +21,9 @@ const footballData={
       {date:"Sábado 22 de agosto",time:"17:00",iso:"2026-08-22T17:00:00+02:00",home:"Athletic Club",away:"Sevilla FC",venue:"San Mamés",status:"En directo",referee:"César Soto",var:"Valentín Pizarro",state:"live",homeScore:0,awayScore:1,period:"FirstHalf",periodStart:"2026-08-22T15:00:44+00:00",periodBase:0,minute:13},
       {date:"Sábado 22 de agosto",time:"19:30",iso:"2026-08-22T19:30:00+02:00",home:"Valencia CF",away:"Celta",venue:"Mestalla",status:"Próximo",referee:"Jesús Gil",var:"David Gálvez"},
       {date:"Sábado 22 de agosto",time:"21:30",iso:"2026-08-22T21:30:00+02:00",home:"RCD Espanyol de Barcelona",away:"Real Madrid",venue:"RCDE Stadium",status:"Próximo",referee:"José María Sánchez",var:"Jorge Figueroa"},
-      {date:"Domingo 23 de agosto",time:"17:00",iso:"2026-08-23T17:00:00+02:00",home:"Atlético de Madrid",away:"Villarreal CF",venue:"Riyadh Air Metropolitano",status:"Próximo",referee:null,var:null},
-      {date:"Domingo 23 de agosto",time:"19:30",iso:"2026-08-23T19:30:00+02:00",home:"Getafe CF",away:"R. Racing Club",venue:"Coliseum",status:"Próximo",referee:null,var:null},
-      {date:"Domingo 23 de agosto",time:"21:30",iso:"2026-08-23T21:30:00+02:00",home:"Elche CF",away:"FC Barcelona",venue:"Martínez Valero",status:"Próximo",referee:null,var:null},
+      {date:"Domingo 23 de agosto",time:"17:00",iso:"2026-08-23T17:00:00+02:00",home:"Atlético de Madrid",away:"Villarreal CF",venue:"Riyadh Air Metropolitano",status:"Próximo",referee:"Alejandro José Hernández 4º",var:"Raúl Martín González"},
+      {date:"Domingo 23 de agosto",time:"19:30",iso:"2026-08-23T19:30:00+02:00",home:"Getafe CF",away:"R. Racing Club",venue:"Coliseum",status:"Próximo",referee:"Juan Martínez 4º",var:"Raúl Martín González"},
+      {date:"Domingo 23 de agosto",time:"21:30",iso:"2026-08-23T21:30:00+02:00",home:"Elche CF",away:"FC Barcelona",venue:"Martínez Valero",status:"Próximo",referee:"Alejandro Quintero 4º",var:"Alejandro Muñiz"},
       {date:"Lunes 24 de agosto",time:"19:30",iso:"2026-08-24T19:30:00+02:00",home:"CA Osasuna",away:"Levante UD",venue:"El Sadar",status:"Próximo",referee:null,var:null},
       {date:"Lunes 24 de agosto",time:"21:30",iso:"2026-08-24T21:30:00+02:00",home:"Málaga CF",away:"RC Deportivo",venue:"La Rosaleda",status:"Próximo",referee:null,var:null}
     ]
