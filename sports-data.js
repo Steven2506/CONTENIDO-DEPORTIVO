@@ -24,8 +24,8 @@ const footballData={
       {date:"Domingo 23 de agosto",time:"17:00",iso:"2026-08-23T17:00:00+02:00",home:"Atlético de Madrid",away:"Villarreal CF",venue:"Riyadh Air Metropolitano",status:"Próximo",referee:"Alejandro José Hernández 4º",var:"Raúl Martín González"},
       {date:"Domingo 23 de agosto",time:"19:30",iso:"2026-08-23T19:30:00+02:00",home:"Getafe CF",away:"R. Racing Club",venue:"Coliseum",status:"Próximo",referee:"Juan Martínez 4º",var:"Raúl Martín González"},
       {date:"Domingo 23 de agosto",time:"21:30",iso:"2026-08-23T21:30:00+02:00",home:"Elche CF",away:"FC Barcelona",venue:"Martínez Valero",status:"Próximo",referee:"Alejandro Quintero 4º",var:"Alejandro Muñiz"},
-      {date:"Lunes 24 de agosto",time:"19:30",iso:"2026-08-24T19:30:00+02:00",home:"CA Osasuna",away:"Levante UD",venue:"El Sadar",status:"Próximo",referee:null,var:null},
-      {date:"Lunes 24 de agosto",time:"21:30",iso:"2026-08-24T21:30:00+02:00",home:"Málaga CF",away:"RC Deportivo",venue:"La Rosaleda",status:"Próximo",referee:null,var:null}
+      {date:"Lunes 24 de agosto",time:"19:30",iso:"2026-08-24T19:30:00+02:00",home:"CA Osasuna",away:"Levante UD",venue:"El Sadar",status:"Próximo",referee:"Víctor García 4º",var:"o Rodríguez"},
+      {date:"Lunes 24 de agosto",time:"21:30",iso:"2026-08-24T21:30:00+02:00",home:"Málaga CF",away:"RC Deportivo",venue:"La Rosaleda",status:"Próximo",referee:"Álvaro Rodríguez",var:"o Rodríguez"}
     ]
   },
   standingsNote:"Clasificación oficial actualizada tras el Betis–Real Sociedad del 21 de agosto.",
