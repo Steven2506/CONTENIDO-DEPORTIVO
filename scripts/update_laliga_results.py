@@ -18,6 +18,7 @@ DATA_FILE = ROOT / "sports-data.js"
 HTML_FILE = ROOT / "deportes.html"
 HOME_FILE = ROOT / "index.html"
 RESULTS_URL = "https://www.laliga.com/laliga-easports/resultados/2026-27/jornada-{round}"
+STANDINGS_URL = "https://www.laliga.com/laliga-easports/clasificacion"
 MATCH_URL = "https://www.laliga.com/partido/{slug}"
 WEBVIEW_URL = "https://apim.laliga.com/webview"
 HEADERS = {"User-Agent": "WOLFGAMES-results-sync/1.0 (+https://github.com/Steven2506/CONTENIDO-DEPORTIVO)"}
@@ -124,6 +125,34 @@ def official_matches(round_number: int) -> list[dict]:
                 if key in detail:
                     match[key] = detail[key]
     return matches
+
+
+def official_standings() -> list[list]:
+    payload = next_payload(STANDINGS_URL)
+    standings = payload.get("props", {}).get("pageProps", {}).get("standings")
+    if not isinstance(standings, list) or len(standings) != 20:
+        raise RuntimeError(f"La clasificación oficial no contiene 20 equipos (recibidos: {len(standings or [])})")
+    rows = [[row.get("position"), team_name(row.get("team", {})), row.get("points")] for row in standings]
+    if any(not isinstance(pos, int) or not team or not isinstance(points, int) for pos, team, points in rows):
+        raise RuntimeError("La clasificación oficial contiene datos incompletos")
+    if len({team for _, team, _ in rows}) != 20:
+        raise RuntimeError("La clasificación oficial contiene equipos duplicados")
+    return rows
+
+
+def apply_standings(source: str, rows: list[list]) -> tuple[str, bool]:
+    rendered = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
+    current = re.search(r"laligaStandings:(\[\[.*?\]\])\.map", source)
+    if not current:
+        raise RuntimeError("No se encontró laligaStandings en sports-data.js")
+    if current.group(1) == rendered:
+        return source, False
+    now = datetime.now(ZoneInfo("Europe/Madrid"))
+    months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+    note = f"Clasificación oficial actualizada el {now.day} de {months[now.month - 1]} de {now.year}."
+    updated = source[:current.start(1)] + rendered + source[current.end(1):]
+    updated = re.sub(r'standingsNote:"[^"]*"', f'standingsNote:"{note}"', updated, count=1)
+    return updated, True
 
 
 def set_property(line: str, key: str, value) -> str:
@@ -344,10 +373,12 @@ def main() -> int:
         updated, round_changes = apply(updated, target_round, matches)
         changes += round_changes
         verified += len(matches)
+    updated, standings_changed = apply_standings(updated, official_standings())
+    changes += int(standings_changed)
     if changes:
         DATA_FILE.write_text(update_timestamp(updated), encoding="utf-8")
         bust_browser_cache()
-    print(f"Jornadas 1–{round_number}: {verified} partidos verificados · cambios: {changes}")
+    print(f"Jornadas 1–{round_number}: {verified} partidos verificados · clasificación oficial verificada · cambios: {changes}")
     return 0
 
 
