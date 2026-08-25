@@ -113,13 +113,36 @@ def webview_payload(path: str) -> dict:
     return response.json()
 
 
-def official_matches(round_number: int) -> list[dict]:
+def watched_rescheduled_matches(source: str, round_number: int) -> set[tuple[str, str]]:
+    """Devuelve aplazados cuya nueva hora está próxima o ya en curso."""
+    now = datetime.now(ZoneInfo("Europe/Madrid"))
+    watched: set[tuple[str, str]] = set()
+    in_round = False
+    for line in source.splitlines():
+        round_match = re.match(r"\s*(\d+):\[", line)
+        if round_match:
+            in_round = int(round_match.group(1)) == round_number
+        if not in_round or 'state:"rescheduled"' not in line:
+            continue
+        fixture = re.search(r'iso:"([^"]+)".*home:"([^"]+)",away:"([^"]+)"', line)
+        if not fixture:
+            continue
+        kickoff = datetime.fromisoformat(fixture.group(1))
+        seconds = (now - kickoff).total_seconds()
+        if -30 * 60 <= seconds <= 4 * 60 * 60:
+            watched.add((fixture.group(2), fixture.group(3)))
+    return watched
+
+
+def official_matches(round_number: int, source: str) -> list[dict]:
     payload = next_payload(RESULTS_URL.format(round=round_number))
     matches = payload.get("props", {}).get("pageProps", {}).get("matches")
     if not isinstance(matches, list) or len(matches) != 10:
         raise RuntimeError(f"La jornada oficial no contiene 10 partidos (recibidos: {len(matches or [])})")
+    watched = watched_rescheduled_matches(source, round_number)
     for match in matches:
-        if match.get("status") in LIVE_STATES:
+        key = (team_name(match.get("home_team", {})), team_name(match.get("away_team", {})))
+        if match.get("status") in LIVE_STATES or key in watched:
             detail = next_payload(MATCH_URL.format(slug=match["slug"])).get("props", {}).get("pageProps", {}).get("match", {})
             for key in ("status", "home_score", "away_score", "period_started", "home_formation", "away_formation", "home_team", "away_team", "opta_id", "id"):
                 if key in detail:
@@ -140,7 +163,7 @@ def official_standings() -> list[list]:
     if any(not isinstance(pos, int) or not team or any(not isinstance(value, int) for value in values)
            for pos, team, *values in rows):
         raise RuntimeError("La clasificación oficial contiene datos incompletos")
-    if len({team for _, team, _ in rows}) != 20:
+    if len({row[1] for row in rows}) != 20:
         raise RuntimeError("La clasificación oficial contiene equipos duplicados")
     return rows
 
@@ -375,7 +398,7 @@ def main() -> int:
     updated, changes = source, 0
     verified = 0
     for target_round in range(1, round_number + 1):
-        matches = official_matches(target_round)
+        matches = official_matches(target_round, updated)
         updated, round_changes = apply(updated, target_round, matches)
         changes += round_changes
         verified += len(matches)
