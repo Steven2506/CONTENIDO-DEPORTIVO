@@ -12,9 +12,8 @@
     document.head.append(favicon);
   }
   const links = [
-    ["index.html", "INICIO"], ["directos.html", "DIRECTOS"], ["F1.html", "F1"],
-    ["MotoGP.html", "MotoGP"], ["videos.html", "VÍDEOS"], ["deportes.html", "FÚTBOL"],
-    ["sobremi.html", "SOBRE MÍ"], ["noticias.html", "NOTICIAS"], ["mas.html", "MÁS"]
+    ["index.html", "INICIO"], ["directos.html", "CONTENIDO"], ["deportes.html", "FÚTBOL"],
+    ["F1.html", "F1"], ["MotoGP.html", "MOTOGP"], ["sobremi.html", "SOBRE MÍ"]
   ];
   const current = location.pathname.split("/").pop() || "index.html";
   const header = document.querySelector("[data-site-header]");
