@@ -132,8 +132,13 @@ def official_standings() -> list[list]:
     standings = payload.get("props", {}).get("pageProps", {}).get("standings")
     if not isinstance(standings, list) or len(standings) != 20:
         raise RuntimeError(f"La clasificación oficial no contiene 20 equipos (recibidos: {len(standings or [])})")
-    rows = [[row.get("position"), team_name(row.get("team", {})), row.get("points")] for row in standings]
-    if any(not isinstance(pos, int) or not team or not isinstance(points, int) for pos, team, points in rows):
+    rows = [[
+        row.get("position"), team_name(row.get("team", {})), row.get("played"), row.get("won"),
+        row.get("drawn"), row.get("lost"), row.get("goals_for"), row.get("goals_against"),
+        int(row.get("goal_difference", 0)), row.get("points"),
+    ] for row in standings]
+    if any(not isinstance(pos, int) or not team or any(not isinstance(value, int) for value in values)
+           for pos, team, *values in rows):
         raise RuntimeError("La clasificación oficial contiene datos incompletos")
     if len({team for _, team, _ in rows}) != 20:
         raise RuntimeError("La clasificación oficial contiene equipos duplicados")
@@ -142,7 +147,7 @@ def official_standings() -> list[list]:
 
 def apply_standings(source: str, rows: list[list]) -> tuple[str, bool]:
     rendered = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
-    current = re.search(r"laligaStandings:(\[\[.*?\]\])\.map", source)
+    current = re.search(r"(?m)^  laligaStandings:(\[\[.*\]\])\.map.*$", source)
     if not current:
         raise RuntimeError("No se encontró laligaStandings en sports-data.js")
     if current.group(1) == rendered:
@@ -150,7 +155,8 @@ def apply_standings(source: str, rows: list[list]) -> tuple[str, bool]:
     now = datetime.now(ZoneInfo("Europe/Madrid"))
     months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
     note = f"Clasificación oficial actualizada el {now.day} de {months[now.month - 1]} de {now.year}."
-    updated = source[:current.start(1)] + rendered + source[current.end(1):]
+    mapping = ".map(([pos,team,played,won,drawn,lost,gf,ga,gd,points])=>({pos,team,played,won,drawn,lost,gf,ga,gd,points})),"
+    updated = source[:current.start()] + "  laligaStandings:" + rendered + mapping + source[current.end():]
     updated = re.sub(r'standingsNote:"[^"]*"', f'standingsNote:"{note}"', updated, count=1)
     return updated, True
 
