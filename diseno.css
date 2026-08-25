@@ -59,3 +59,19 @@ footer{text-align:center;border-top:1px solid var(--border);padding:25px 16px;ba
 /* Separación visual entre la transmisión de Twitch y su acción principal. */
 .stream-actions{margin-top:30px;text-align:center}
 @media(max-width:620px){.stream-actions{margin-top:24px}}
+
+
+/* Clasificación completa: columnas legibles y desplazamiento horizontal en móvil. */
+#laliga-standing{display:block;max-height:520px;overflow:auto;border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.standing-table{width:100%;min-width:760px;border-collapse:separate;border-spacing:0;background:rgba(8,4,18,.35);font-size:.86rem}
+.standing-table th,.standing-table td{padding:10px 11px;text-align:center;border-bottom:1px solid rgba(255,255,255,.07);white-space:nowrap}
+.standing-table thead th{position:sticky;top:0;z-index:3;background:#171026;color:var(--purple-2);font-size:.72rem;letter-spacing:.05em}
+.standing-table tbody th{text-align:left;color:#fff}
+.standing-table tbody tr:last-child>*{border-bottom:0}
+.standing-table tbody tr:hover>*{background:rgba(180,0,255,.09)}
+.standing-table th:first-child,.standing-table td:first-child{position:sticky;left:0;z-index:2;background:#130d21}
+.standing-table th:nth-child(2){position:sticky;left:48px;z-index:2;background:#130d21}
+.standing-table thead th:first-child,.standing-table thead th:nth-child(2){z-index:4;background:#171026}
+.standing-table tbody tr.favourite-team>*{background:color-mix(in srgb,var(--team-accent) 22%,#130d21)!important}
+.standing-table td:last-child,.standing-table th:last-child{color:#fff;font-weight:950}
+@media(max-width:620px){#laliga-standing{margin-inline:-10px}.standing-table{min-width:720px;font-size:.8rem}.standing-table th,.standing-table td{padding:9px}.standing-table th:nth-child(2){left:44px}}
