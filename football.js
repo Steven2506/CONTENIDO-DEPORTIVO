@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("champions-draw").textContent=`Sorteo: ${footballData.champions.draw}`;
   document.getElementById("champions-dates").innerHTML=footballData.champions.rounds.map(round=>`<li>${round}</li>`).join("");
   document.getElementById("laliga-standing-note").textContent=footballData.standingsNote;
-  document.getElementById("laliga-standing").innerHTML=footballData.laligaStandings.map(row=>`<div class="standing-row" data-team="${row.team}"><b>${row.pos}</b><span><strong>${row.team}</strong></span><strong>${row.points} pts</strong></div>`).join("");
+  document.getElementById("laliga-standing").innerHTML=`<table class="standing-table"><thead><tr><th scope="col">Pos.</th><th scope="col">Equipo</th><th scope="col" title="Partidos jugados">PJ</th><th scope="col" title="Victorias">PG</th><th scope="col" title="Empates">PE</th><th scope="col" title="Derrotas">PP</th><th scope="col" title="Goles a favor">GF</th><th scope="col" title="Goles en contra">GC</th><th scope="col" title="Diferencia de goles">DG</th><th scope="col">PTS</th></tr></thead><tbody>${footballData.laligaStandings.map(row=>`<tr data-team="${escapeHtml(row.team)}"><td><b>${row.pos}</b></td><th scope="row">${escapeHtml(row.team)}</th><td>${row.played}</td><td>${row.won}</td><td>${row.drawn}</td><td>${row.lost}</td><td>${row.gf}</td><td>${row.ga}</td><td>${row.gd>0?`+${row.gd}`:row.gd}</td><td><strong>${row.points}</strong></td></tr>`).join("")}</tbody></table>`;
   bindTabs("[data-tab]","[data-panel]","tab","panel");
   bindTabs("[data-football-view]","[data-football-panel]","footballView","footballPanel");
   renderFootball();
