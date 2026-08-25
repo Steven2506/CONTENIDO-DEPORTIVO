@@ -33,8 +33,8 @@ function renderFootball(){
   requestAnimationFrame(()=>window.applyTeamPreference?.());
 }
 
-function inferredKickoffState(match){if(!match.iso||match.state)return null;const elapsed=Date.now()-new Date(match.iso).getTime();return elapsed>=0&&elapsed<3*60*60*1000?"live":null;}
-function matchState(match){if(match.state)return match.state;if(match.status==="Finalizado")return "finished";return inferredKickoffState(match)||"scheduled";}
+function inferredKickoffState(match){if(!match.iso||["live","finished","postponed"].includes(match.state))return null;const elapsed=Date.now()-new Date(match.iso).getTime();return elapsed>=0&&elapsed<3*60*60*1000?"live":null;}
+function matchState(match){const inferred=inferredKickoffState(match);if(inferred)return inferred;if(match.state)return match.state;if(match.status==="Finalizado")return "finished";return "scheduled";}
 function scoreValue(value){return Number.isInteger(value)?value:"–";}
 function statusLabel(match){const state=matchState(match);if(state==="live"){if(match.state!=="live"){const elapsed=Math.max(0,Math.floor((Date.now()-new Date(match.iso).getTime())/60000));if(elapsed<50)return `${Math.min(45,elapsed+1)}’`;if(elapsed<65)return "DESCANSO";return `${Math.min(90,46+elapsed-65)}’`;}if(match.period==="HalfTime")return "DESCANSO";const elapsed=match.periodStart?Math.max(0,Math.floor((Date.now()-new Date(match.periodStart).getTime())/60000)):null;if(match.period==="FirstHalf"&&elapsed!==null&&elapsed>=55)return "DESCANSO";const minute=elapsed===null?match.minute:(match.periodBase||0)+elapsed+1;if(!minute)return "EN JUEGO";if(match.period==="FirstHalf"&&minute>45)return `45+${minute-45}’`;if(match.period==="SecondHalf"&&minute>90)return `90+${minute-90}’`;return `${minute}’`;}if(state==="finished")return "FINAL";if(state==="rescheduled")return "REPROGRAMADO";if(state==="postponed")return "APLAZADO";return match.time;}
 function matchKey(match){return `${match.home}|||${match.away}`;}
