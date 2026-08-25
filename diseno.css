@@ -55,3 +55,7 @@ footer{text-align:center;border-top:1px solid var(--border);padding:25px 16px;ba
 .detail-stat{display:grid;grid-template-rows:auto 8px;gap:8px;min-width:0}.detail-stat>div{display:grid;grid-template-columns:minmax(42px,auto) minmax(110px,1fr) minmax(42px,auto);align-items:center;gap:10px;margin:0}.detail-stat>div>strong:first-child{text-align:left}.detail-stat>div>strong:last-child{text-align:right}.detail-stat>i{display:block;width:100%;height:8px}.detail-stat span{align-self:center;line-height:1.2}
 .timeline-event.is-finished{border-color:rgba(255,255,255,.16);background:rgba(18,14,31,.9)}.event-state.finished{color:#e5e7eb}
 @media(max-width:620px){.stats-list{gap:20px}.detail-stat>div{grid-template-columns:54px minmax(130px,1fr) 54px}.detail-stat span{font-size:1rem}}
+
+/* Separación visual entre la transmisión de Twitch y su acción principal. */
+.stream-actions{margin-top:30px;text-align:center}
+@media(max-width:620px){.stream-actions{margin-top:24px}}
