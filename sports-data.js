@@ -1,5 +1,5 @@
 const footballData={
-  updated:"25 de agosto de 2026 · resultados y clasificación LALIGA sincronizados",
+  updated:"25 de agosto de 2026 · clasificación completa LALIGA sincronizada",
   timezone:"Hora peninsular española (CEST, UTC+2)",
   currentRound:2,
   laligaRounds:{
@@ -29,7 +29,7 @@ const footballData={
     ]
   },
   standingsNote:"Clasificación oficial actualizada el 25 de agosto de 2026.",
-  laligaStandings:[[1,"Sevilla FC",6],[2,"Deportivo Alavés",4],[3,"Atlético de Madrid",4],[4,"FC Barcelona",3],[5,"RCD Espanyol de Barcelona",3],[6,"Real Madrid",3],[7,"Real Betis",3],[8,"Getafe CF",3],[9,"Villarreal CF",2],[10,"RC Deportivo",2],[11,"Valencia CF",1],[12,"CA Osasuna",1],[13,"Celta",1],[14,"R. Racing Club",1],[15,"Rayo Vallecano",1],[16,"Málaga CF",1],[17,"Levante UD",1],[18,"Elche CF",1],[19,"Real Sociedad",0],[20,"Athletic Club",0]].map(([pos,team,points])=>({pos,team,points})),
+  laligaStandings:[[1,"Sevilla FC",2,2,0,0,5,2,3,6],[2,"Deportivo Alavés",2,1,1,0,4,1,3,4],[3,"Atlético de Madrid",2,1,1,0,4,2,2,4],[4,"FC Barcelona",1,1,0,0,5,0,5,3],[5,"RCD Espanyol de Barcelona",2,1,0,1,4,2,2,3],[6,"Real Madrid",1,1,0,0,2,1,1,3],[7,"Real Betis",1,1,0,0,1,0,1,3],[8,"Getafe CF",2,1,0,1,1,3,-2,3],[9,"Villarreal CF",2,0,2,0,4,4,0,2],[10,"RC Deportivo",2,0,2,0,2,2,0,2],[11,"Valencia CF",1,0,1,0,0,0,0,1],[12,"CA Osasuna",1,0,1,0,0,0,0,1],[13,"Celta",1,0,1,0,0,0,0,1],[14,"R. Racing Club",2,0,1,1,2,3,-1,1],[15,"Rayo Vallecano",2,0,1,1,2,3,-1,1],[16,"Málaga CF",2,0,1,1,1,3,-2,1],[17,"Levante UD",2,0,1,1,0,3,-3,1],[18,"Elche CF",2,0,1,1,1,6,-5,1],[19,"Real Sociedad",1,0,0,1,0,1,-1,0],[20,"Athletic Club",1,0,0,1,1,3,-2,0]].map(([pos,team,played,won,drawn,lost,gf,ga,gd,points])=>({pos,team,played,won,drawn,lost,gf,ga,gd,points})),
   champions:{draw:"27 de agosto de 2026 · 18:00 CET",rounds:["Jornada 1 · 8–10 septiembre 2026","Jornada 2 · 13–14 octubre 2026","Jornada 3 · 20–21 octubre 2026","Jornada 4 · 3–4 noviembre 2026","Jornada 5 · 24–25 noviembre 2026","Jornada 6 · 8–9 diciembre 2026","Jornada 7 · 19–20 enero 2027","Jornada 8 · 27 enero 2027"]},
   f1Standings:[{pos:1,name:"Kimi Antonelli",team:"Mercedes",points:219},{pos:2,name:"Lewis Hamilton",team:"Ferrari",points:169},{pos:3,name:"George Russell",team:"Mercedes",points:160},{pos:4,name:"Charles Leclerc",team:"Ferrari",points:138},{pos:5,name:"Lando Norris",team:"McLaren",points:128}],
   latest:{f1:"GP Hungría: clasificación y resultados disponibles en F1.com",motogp:"GP Gran Bretaña: resultados disponibles en MotoGP.com",football:"LaLiga 2026/27 ya está en marcha"}
