@@ -22,10 +22,13 @@ function bindTabs(buttonSelector,panelSelector,buttonKey,panelKey){document.quer
 
 function renderFootball(){
   const matches=footballData.laligaRounds[scoreState.round]||[];
+  const allMatches=Object.values(footballData.laligaRounds||{}).flat();
   document.getElementById("round-title").textContent=`Jornada ${scoreState.round} · ${matches.length} partidos`;
   document.getElementById("score-strip").innerHTML=matches.map(compactScore).join("");
   document.getElementById("laliga-matches").innerHTML=matches.map(fullMatch).join("");
-  const live=matches.filter(match=>matchState(match)==="live");
+  const live=allMatches
+    .filter(match=>matchState(match)==="live")
+    .sort((a,b)=>new Date(a.iso||0)-new Date(b.iso||0));
   const finished=matches.filter(match=>matchState(match)==="finished");
   document.getElementById("live-count").textContent=live.length;
   document.getElementById("live-matches").innerHTML=live.length?live.map(fullMatch).join(""):emptyState("No hay partidos en directo","Cuando comience un encuentro, el marcador y el minuto aparecerán aquí automáticamente.");
