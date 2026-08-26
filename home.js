@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await window.f1Ready;
   const state=getF1State(),name=document.getElementById("f1-name"),place=document.getElementById("f1-circuit"),session=document.getElementById("f1-next-session"),timer=document.getElementById("f1-countdown");
   if(state.race){name.textContent=state.race.name;place.textContent=`📍 ${state.race.circuit}`;session.textContent=`${state.status==="live"?"🔴":"⏱️"} ${state.session[0]} · ${formatSpainTime(state.session[1])}`;renderSessionList(state.race);startCountdown(state.start,timer.id);}else{name.textContent="Temporada finalizada";timer.textContent="🏁";}
-  const moto=getNextMotoGP(),mName=document.getElementById("motogp-name"),mPlace=document.getElementById("motogp-circuit"),mTimer=document.getElementById("motogp-countdown");if(moto){mName.textContent=moto.name;mPlace.textContent=`📍 ${moto.circuit}`;startMotoCountdown(new Date(moto.date).getTime(),mTimer.id);}
+  const moto=getNextMotoGP(),mName=document.getElementById("motogp-name"),mPlace=document.getElementById("motogp-circuit"),mSession=document.getElementById("motogp-next-session"),mTimer=document.getElementById("motogp-countdown");if(moto){const nextMotoSession=getNextMotoSession(moto);mName.textContent=moto.name;mPlace.textContent=`📍 ${moto.circuit}`;if(mSession)mSession.textContent=nextMotoSession?`${motoSessionState(nextMotoSession)==="live"?"🔴":"⏱️"} ${nextMotoSession.name} · ${formatMotoSpainTime(nextMotoSession.start)}`:"Programa detallado pendiente";renderMotoSessionList(moto);startMotoCountdown(nextMotoSession?new Date(nextMotoSession.start).getTime():new Date(moto.date).getTime(),mTimer.id);}
   renderEventHub();
   setInterval(()=>{renderEventHub();checkHomeDataUpdate();},60000);
 });
