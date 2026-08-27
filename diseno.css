@@ -96,3 +96,11 @@ footer{text-align:center;border-top:1px solid var(--border);padding:25px 16px;ba
 .community-card:hover,.community-card:focus-visible{transform:translateY(-3px);border-color:var(--purple-2);background:rgba(180,0,255,.1)}
 .community-card span{color:var(--muted);font-size:.86rem}
 @media(max-width:700px){.content-section-heading{align-items:flex-start;flex-direction:column}.community-links{grid-template-columns:1fr}.content-section-heading .btn-main,.content-section-heading .btn-link{width:100%}}
+
+.champions-draw-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1rem}
+.champions-draw-card{display:grid;gap:.85rem}
+.champions-draw-card h4{margin:0;color:#fff;font-size:1.05rem}
+.champions-draw-side{display:grid;gap:.3rem}
+.champions-draw-side strong{color:var(--neon-green,#65ff9a);font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}
+.champions-draw-side span{color:#dce4eb;line-height:1.5}
+@media(max-width:720px){.champions-draw-grid{grid-template-columns:1fr}.champions-draw-card{padding:1rem}}
