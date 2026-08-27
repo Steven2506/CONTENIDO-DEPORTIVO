@@ -37,7 +37,15 @@ function renderFootball(){
 }
 
 function inferredKickoffState(match){if(!match.iso||["live","finished","postponed"].includes(match.state))return null;const elapsed=Date.now()-new Date(match.iso).getTime();return elapsed>=0&&elapsed<3*60*60*1000?"live":null;}
-function matchState(match){if(match.state==="live"&&match.iso&&Date.now()-new Date(match.iso).getTime()>3*60*60*1000)return "finished";const inferred=inferredKickoffState(match);if(inferred)return inferred;if(match.state)return match.state;if(match.status==="Finalizado")return "finished";return "scheduled";}
+function matchState(match){
+  if(match.state==="live"){
+    const sinceKickoff=match.iso?Date.now()-new Date(match.iso).getTime():0;
+    const sincePeriod=match.periodStart?Date.now()-new Date(match.periodStart).getTime():0;
+    const staleSecondHalf=match.period==="SecondHalf"&&sincePeriod>75*60*1000;
+    if(staleSecondHalf||sinceKickoff>165*60*1000)return "finished";
+  }
+  const inferred=inferredKickoffState(match);if(inferred)return inferred;if(match.state)return match.state;if(match.status==="Finalizado")return "finished";return "scheduled";
+}
 function scoreValue(value){return Number.isInteger(value)?value:"–";}
 function statusLabel(match){const state=matchState(match);if(state==="live"){if(match.state!=="live"){const elapsed=Math.max(0,Math.floor((Date.now()-new Date(match.iso).getTime())/60000));if(elapsed<50)return `${Math.min(45,elapsed+1)}’`;if(elapsed<65)return "DESCANSO";return `${Math.min(90,46+elapsed-65)}’`;}if(match.period==="HalfTime")return "DESCANSO";const elapsed=match.periodStart?Math.max(0,Math.floor((Date.now()-new Date(match.periodStart).getTime())/60000)):null;if(match.period==="FirstHalf"&&elapsed!==null&&elapsed>=55)return "DESCANSO";const base=match.periodBase||0,rawMinute=Number(match.minute),providerMinute=Number.isFinite(rawMinute)?(rawMinute>base?rawMinute:base+rawMinute):null,minute=elapsed!==null&&elapsed<=60?base+elapsed+1:providerMinute;if(!minute)return "EN JUEGO";if(match.period==="FirstHalf"&&minute>45)return `45+${minute-45}’`;if(match.period==="SecondHalf"&&minute>90)return `90+${minute-90}’`;return `${minute}’`;}if(state==="finished")return "FINAL";if(state==="rescheduled")return "REPROGRAMADO";if(state==="postponed")return "APLAZADO";return match.time;}
 function matchKey(match){return `${match.home}|||${match.away}`;}
