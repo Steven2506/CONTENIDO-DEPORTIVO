@@ -69,7 +69,7 @@ const laligaCalendar={
     {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"Levante UD",away:"Athletic Club",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
     {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"Málaga CF",away:"Villarreal CF",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
     {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"Rayo Vallecano",away:"RCD Espanyol de Barcelona",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"Real Sociedad",away:"Celta",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null}
+    {date:"Jueves, 3 de septiembre",time:"21:00",iso:"2026-09-03T21:00:00+02:00",home:"Real Sociedad",away:"Celta",venue:"Reale Arena",status:"Reprogramado",state:"rescheduled",scheduleNote:"Adelantado oficialmente desde la jornada 6",referee:null,var:null}
   ],
   7:[
     {date:"Domingo, 20 de septiembre",time:"Por confirmar",iso:null,home:"Athletic Club",away:"Deportivo Alavés",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
