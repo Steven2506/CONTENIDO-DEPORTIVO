@@ -1,5 +1,5 @@
 const footballData={
-  updated:"28 de agosto de 2026 · jornada 3 y resultados LALIGA sincronizados",
+  updated:"28 de agosto de 2026 · jornadas 3 y 4 sincronizadas con LALIGA",
   timezone:"Hora peninsular española (CEST, UTC+2)",
   currentRound:3,
   laligaRounds:{
@@ -38,6 +38,18 @@ const footballData={
       {date:"Domingo 30 de agosto",time:"21:30",iso:"2026-08-30T21:30:00+02:00",home:"Celta",away:"Athletic Club",venue:"Estadio ABANCA Balaídos",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"},
       {date:"Lunes 31 de agosto",time:"19:30",iso:"2026-08-31T19:30:00+02:00",home:"CA Osasuna",away:"Getafe CF",venue:"El Sadar",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"},
       {date:"Lunes 31 de agosto",time:"21:30",iso:"2026-08-31T21:30:00+02:00",home:"FC Barcelona",away:"Rayo Vallecano",venue:"Spotify Camp Nou",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"}
+    ],
+    4:[
+      {date:"Viernes 4 de septiembre",time:"21:00",iso:"2026-09-04T21:00:00+02:00",home:"Real Betis",away:"Real Madrid",venue:"La Cartuja",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"},
+      {date:"Sábado 5 de septiembre",time:"16:15",iso:"2026-09-05T16:15:00+02:00",home:"Athletic Club",away:"Atlético de Madrid",venue:"San Mamés",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"},
+      {date:"Sábado 5 de septiembre",time:"18:30",iso:"2026-09-05T18:30:00+02:00",home:"Rayo Vallecano",away:"R. Racing Club",venue:"Estadio de Vallecas",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"},
+      {date:"Sábado 5 de septiembre",time:"21:00",iso:"2026-09-05T21:00:00+02:00",home:"Villarreal CF",away:"RC Deportivo",venue:"Estadio de la Cerámica",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"},
+      {date:"Domingo 6 de septiembre",time:"16:15",iso:"2026-09-06T16:15:00+02:00",home:"Valencia CF",away:"FC Barcelona",venue:"Mestalla",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"},
+      {date:"Domingo 6 de septiembre",time:"18:30",iso:"2026-09-06T18:30:00+02:00",home:"Deportivo Alavés",away:"CA Osasuna",venue:"Mendizorroza",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"},
+      {date:"Domingo 6 de septiembre",time:"18:30",iso:"2026-09-06T18:30:00+02:00",home:"Málaga CF",away:"Levante UD",venue:"La Rosaleda",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"},
+      {date:"Domingo 6 de septiembre",time:"21:00",iso:"2026-09-06T21:00:00+02:00",home:"RCD Espanyol de Barcelona",away:"Sevilla FC",venue:"RCDE Stadium",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"},
+      {date:"Lunes 7 de septiembre",time:"19:00",iso:"2026-09-07T19:00:00+02:00",home:"Getafe CF",away:"Celta",venue:"Coliseum",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"},
+      {date:"Lunes 7 de septiembre",time:"21:30",iso:"2026-09-07T21:30:00+02:00",home:"Elche CF",away:"Real Sociedad",venue:"Martínez Valero",status:"Programado",state:"scheduled",referee:"Pendiente de publicación oficial",var:"Pendiente de publicación oficial"}
     ]
 
   },
