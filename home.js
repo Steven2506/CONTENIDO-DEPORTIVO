@@ -6,12 +6,30 @@ function isFootballLive(match){
 }
 function spainDay(timestamp){return new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:"Europe/Madrid"}).format(new Date(timestamp));}
 
+let homeF1SessionKey="",homeMotoSessionKey="";
+function homeMotoCountdown(ms){
+  if(ms<=0)return "🔴 En curso";
+  const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000);
+  return d?`${d} d · ${h} h · ${m} min`:`${h} h · ${m} min · ${s} s`;
+}
+function renderHomeMotorCards(){
+  const state=getF1State(),name=document.getElementById("f1-name"),place=document.getElementById("f1-circuit"),session=document.getElementById("f1-next-session"),timer=document.getElementById("f1-countdown");
+  if(state.race){
+    name.textContent=state.race.name;place.textContent=`📍 ${state.race.circuit}`;session.textContent=`${state.status==="live"?"🔴":"⏱️"} ${state.session[0]} · ${formatSpainTime(state.session[1])}`;timer.textContent=formatCountdown(state.start-Date.now());
+    const key=`${state.race.round}|${state.session[0]}|${state.session[1]}`;if(key!==homeF1SessionKey){homeF1SessionKey=key;renderSessionList(state.race);}
+  }else{name.textContent="Temporada finalizada";session.textContent="";timer.textContent="🏁";}
+  const moto=getNextMotoGP(),mName=document.getElementById("motogp-name"),mPlace=document.getElementById("motogp-circuit"),mSession=document.getElementById("motogp-next-session"),mTimer=document.getElementById("motogp-countdown");
+  if(moto){
+    const nextMotoSession=getNextMotoSession(moto),target=nextMotoSession?new Date(nextMotoSession.start).getTime():new Date(moto.date).getTime();
+    mName.textContent=moto.name;mPlace.textContent=`📍 ${moto.circuit}`;mSession.textContent=nextMotoSession?`${motoSessionState(nextMotoSession)==="live"?"🔴":"⏱️"} ${nextMotoSession.name} · ${formatMotoSpainTime(nextMotoSession.start)}`:"Programa detallado pendiente";mTimer.textContent=homeMotoCountdown(target-Date.now());
+    const key=`${moto.round}|${nextMotoSession?.name||"pending"}|${nextMotoSession?.start||moto.date}`;if(key!==homeMotoSessionKey){homeMotoSessionKey=key;renderMotoSessionList(moto);}
+  }else{mName.textContent="Temporada finalizada";mSession.textContent="";mTimer.textContent="🏁";}
+}
 document.addEventListener("DOMContentLoaded", async () => {
   await window.f1Ready;
-  const state=getF1State(),name=document.getElementById("f1-name"),place=document.getElementById("f1-circuit"),session=document.getElementById("f1-next-session"),timer=document.getElementById("f1-countdown");
-  if(state.race){name.textContent=state.race.name;place.textContent=`📍 ${state.race.circuit}`;session.textContent=`${state.status==="live"?"🔴":"⏱️"} ${state.session[0]} · ${formatSpainTime(state.session[1])}`;renderSessionList(state.race);startCountdown(state.start,timer.id);}else{name.textContent="Temporada finalizada";timer.textContent="🏁";}
-  const moto=getNextMotoGP(),mName=document.getElementById("motogp-name"),mPlace=document.getElementById("motogp-circuit"),mSession=document.getElementById("motogp-next-session"),mTimer=document.getElementById("motogp-countdown");if(moto){const nextMotoSession=getNextMotoSession(moto);mName.textContent=moto.name;mPlace.textContent=`📍 ${moto.circuit}`;if(mSession)mSession.textContent=nextMotoSession?`${motoSessionState(nextMotoSession)==="live"?"🔴":"⏱️"} ${nextMotoSession.name} · ${formatMotoSpainTime(nextMotoSession.start)}`:"Programa detallado pendiente";renderMotoSessionList(moto);startMotoCountdown(nextMotoSession?new Date(nextMotoSession.start).getTime():new Date(moto.date).getTime(),mTimer.id);}
+  renderHomeMotorCards();
   renderEventHub();
+  setInterval(renderHomeMotorCards,1000);
   setInterval(()=>{renderEventHub();checkHomeDataUpdate();},60000);
 });
 async function checkHomeDataUpdate(){try{const response=await fetch(`sports-data.js?poll=${Date.now()}`,{cache:"no-store"});if(!response.ok)return;const source=await response.text(),revision=source.match(/updated:"([^"]+)"/)?.[1];if(revision&&revision!==footballData.updated)location.reload();}catch(error){console.info("Sincronización temporalmente no disponible.");}}
@@ -20,7 +38,7 @@ function renderEventHub(){
   if(!box)return;
   const f1=getF1State(),moto=getNextMotoGP(),events=[],motorEvents=[];
   if(f1.race)motorEvents.push({icon:"🏎️",title:`${f1.race.name} · ${f1.session[0]}`,time:f1.start,url:"F1.html"});
-  if(moto)motorEvents.push({icon:"🏍️",title:moto.name,time:new Date(moto.date).getTime(),url:"MotoGP.html"});
+  if(moto){const nextMotoSession=getNextMotoSession(moto);motorEvents.push({icon:"🏍️",title:nextMotoSession?`${moto.name} · ${nextMotoSession.name}`:moto.name,time:nextMotoSession?new Date(nextMotoSession.start).getTime():new Date(moto.date).getTime(),url:"MotoGP.html"});}
 
   Object.values(footballData.laligaRounds||{}).flat().forEach(match=>{
     if(!match.iso)return;
