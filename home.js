@@ -4,7 +4,7 @@ function isFootballLive(match){
   const elapsed=Date.now()-new Date(match.iso).getTime();
   return elapsed>=0&&elapsed<3*60*60*1000;
 }
-function spainDay(timestamp){return new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:"Europe/Madrid"}).format(new Date(timestamp));}
+function spainDay(timestamp){return new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:window.WolfTimezone?.get()||"Europe/Madrid"}).format(new Date(timestamp));}
 
 let homeF1SessionKey="",homeMotoSessionKey="";
 function homeMotoCountdown(ms){
@@ -49,6 +49,6 @@ function renderEventHub(){
   const favourite=window.getFavouriteTeam?.(),today=spainDay(Date.now());
   const footballEvents=events.filter(e=>Number.isFinite(e.time)&&(e.state==="live"||spainDay(e.time)===today)).sort((a,b)=>{const af=favourite&&a.teams?.split("|").includes(favourite),bf=favourite&&b.teams?.split("|").includes(favourite);return (b.state==="live")-(a.state==="live")||bf-af||a.time-b.time;});
   const visibleEvents=[...footballEvents,...motorEvents.filter(e=>Number.isFinite(e.time))];
-  box.innerHTML=visibleEvents.map(e=>{const finished=e.state==="finished",subtitle=finished?"Resultado definitivo":new Intl.DateTimeFormat("es-ES",{weekday:"long",day:"numeric",hour:"2-digit",minute:"2-digit",timeZone:"Europe/Madrid"}).format(new Date(e.time)),label=e.state==="live"?"🔴 EN JUEGO":finished?"FINAL":spainDay(e.time)===today?"HOY":"PRÓXIMO";return `<a class="timeline-event${e.state==="live"?" is-live":""}${finished?" is-finished":""}" href="${e.url}"${e.teams?` data-teams="${e.teams}"`:""}><span>${e.icon}</span><span><strong>${e.title}</strong><small>${subtitle}</small></span><span class="event-state${e.state==="live"?" live":""}${finished?" finished":""}">${label}</span></a>`;}).join("")||"<p>No hay eventos próximos confirmados.</p>";
+  box.innerHTML=visibleEvents.map(e=>{const finished=e.state==="finished",subtitle=finished?"Resultado definitivo":new Intl.DateTimeFormat("es-ES",{weekday:"long",day:"numeric",hour:"2-digit",minute:"2-digit",timeZone:window.WolfTimezone?.get()||"Europe/Madrid"}).format(new Date(e.time)),label=e.state==="live"?"🔴 EN JUEGO":finished?"FINAL":spainDay(e.time)===today?"HOY":"PRÓXIMO";return `<a class="timeline-event${e.state==="live"?" is-live":""}${finished?" is-finished":""}" href="${e.url}"${e.teams?` data-teams="${e.teams}"`:""}><span>${e.icon}</span><span><strong>${e.title}</strong><small>${subtitle}</small></span><span class="event-state${e.state==="live"?" live":""}${finished?" finished":""}">${label}</span></a>`;}).join("")||"<p>No hay eventos próximos confirmados.</p>";
   requestAnimationFrame(()=>window.applyTeamPreference?.());
 }
