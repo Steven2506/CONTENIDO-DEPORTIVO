@@ -12,7 +12,7 @@ const WolfTimezone=(()=>{
   const saved=localStorage.getItem(storageKey),current=valid(saved)?saved:detected;
   const offset=zone=>{try{return new Intl.DateTimeFormat("es-ES",{timeZone:zone,timeZoneName:"shortOffset"}).formatToParts(new Date()).find(part=>part.type==="timeZoneName")?.value||zone;}catch{return zone;}};
   const name=zone=>zones.find(item=>item[0]===zone)?.[1]||zone.replaceAll("_"," ").split("/").pop();
-  const get=()=>localStorage.getItem(storageKey)||current;
+  const get=()=>{const value=localStorage.getItem(storageKey);return valid(value)?value:current;};
   const set=zone=>{if(valid(zone)){localStorage.setItem(storageKey,zone);location.reload();}};
   const format=(value,options={})=>new Intl.DateTimeFormat("es-ES",{...options,timeZone:get()}).format(new Date(value));
   return {detected,zones,valid,get,set,format,offset,name,hasSaved:()=>Boolean(localStorage.getItem(storageKey))};
@@ -66,7 +66,7 @@ window.WolfTimezone=WolfTimezone;
   dialog.innerHTML=`<h2 id="timezone-title">Tu horario local</h2><p>Hemos detectado <strong>${WolfTimezone.name(WolfTimezone.detected)} (${WolfTimezone.offset(WolfTimezone.detected)})</strong>. Todos los partidos y sesiones se mostrarán en la zona que elijas.</p><label for="wolf-timezone-select">Zona horaria</label><select id="wolf-timezone-select">${options.map(([zone,label])=>`<option value="${zone}"${zone===WolfTimezone.get()?" selected":""}>${label} · ${WolfTimezone.offset(zone)}</option>`).join("")}</select><div class="timezone-actions"><button class="secondary" type="button" data-timezone-close>Ahora no</button><button type="button" data-timezone-save>Usar este horario</button></div>`;
   document.body.append(dialog);
   header?.querySelector(".timezone-button")?.addEventListener("click",()=>dialog.showModal());
-  dialog.querySelector("[data-timezone-close]")?.addEventListener("click",()=>dialog.close());
+  dialog.querySelector("[data-timezone-close]")?.addEventListener("click",()=>{localStorage.setItem("wolf-timezone",WolfTimezone.get());dialog.close();});
   dialog.querySelector("[data-timezone-save]")?.addEventListener("click",()=>WolfTimezone.set(dialog.querySelector("select").value));
   if(!WolfTimezone.hasSaved())setTimeout(()=>dialog.showModal(),350);
   document.querySelectorAll(".timezone-note").forEach(note=>note.textContent=`🕒 Horarios en ${WolfTimezone.name(WolfTimezone.get())} (${WolfTimezone.offset(WolfTimezone.get())})`);
