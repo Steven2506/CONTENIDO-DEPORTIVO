@@ -32,13 +32,23 @@ if(aragonMotoGP)aragonMotoGP.sessions=[
   ["Warm Up","2026-08-30T09:40:00+02:00",20],
   ["Carrera","2026-08-30T14:00:00+02:00",90]
 ].map(([name,start,duration])=>({name,start,duration}));
+const sanMarinoMotoGP=motogpCalendar.find(race=>race.round===14);
+if(sanMarinoMotoGP)sanMarinoMotoGP.sessions=[
+  ["FP1","2026-09-11T10:45:00+02:00",45],
+  ["Practice","2026-09-11T15:00:00+02:00",60],
+  ["FP2","2026-09-12T10:10:00+02:00",30],
+  ["Clasificación (Q1/Q2)","2026-09-12T10:50:00+02:00",40],
+  ["Sprint","2026-09-12T15:00:00+02:00",45],
+  ["Warm Up","2026-09-13T09:40:00+02:00",10],
+  ["Carrera","2026-09-13T14:00:00+02:00",90]
+].map(([name,start,duration])=>({name,start,duration}));
 function motoWeekendEnd(race){return new Date(new Date(race.date).getTime()+3*86400000).getTime();}
 function getNextMotoGP(){return motogpCalendar.find(r=>motoWeekendEnd(r)>Date.now())||null;}
 function getNextMotoSession(race){return race?.sessions?.find(session=>new Date(session.start).getTime()+session.duration*60000>Date.now())||null;}
 function motoSessionState(session){const start=new Date(session.start).getTime(),end=start+session.duration*60000,now=Date.now();return now<start?"upcoming":now<=end?"live":"finished";}
 function formatMotoSpainTime(value){return new Intl.DateTimeFormat("es-ES",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit",timeZone:window.WolfTimezone?.get()||"Europe/Madrid"}).format(new Date(value));}
 function motoCalendarUrl(race){const compact=date=>date.toISOString().slice(0,10).replaceAll("-","");const start=new Date(race.date),end=new Date(motoWeekendEnd(race));return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`${race.name} · MotoGP`)}&dates=${compact(start)}/${compact(end)}&location=${encodeURIComponent(race.circuit)}&details=${encodeURIComponent("Fin de semana de MotoGP · Consulta los horarios confirmados en WOLFGAMES")}`;}
-function motoSessionCalendarUrl(race,session){const compact=date=>date.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z/,"Z"),start=new Date(session.start),end=new Date(start.getTime()+session.duration*60000);return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`${session.name} · ${race.name}`)}&dates=${compact(start)}/${compact(end)}&location=${encodeURIComponent(race.circuit)}&details=${encodeURIComponent("Sesión de MotoGP · Horario peninsular en WOLFGAMES")}`;}
+function motoSessionCalendarUrl(race,session){const compact=date=>date.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z/,"Z"),start=new Date(session.start),end=new Date(start.getTime()+session.duration*60000);return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`${session.name} · ${race.name}`)}&dates=${compact(start)}/${compact(end)}&location=${encodeURIComponent(race.circuit)}&details=${encodeURIComponent("Sesión de MotoGP · Horario adaptado por WOLFGAMES")}`;}
 function startMotoCountdown(time,id){const el=document.getElementById(id);if(!el)return;const update=()=>{const ms=time-Date.now();if(ms<=0){el.textContent="🏁 En marcha";return;}const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000);el.textContent=`${d} d · ${h} h · ${m} min`;};update();setInterval(update,60000);}
 function renderMotoCalendar(id="motogp-calendar"){
   const box=document.getElementById(id);if(!box)return;const next=getNextMotoGP();
