@@ -21,4 +21,13 @@ function f1CalendarUrl(race,session){const stamp=date=>new Date(date).toISOStrin
 function startCountdown(time,id){const el=document.getElementById(id);if(!el)return;const update=()=>el.textContent=formatCountdown(time-Date.now());update();setInterval(update,1000);}
 function renderSessionList(race,id="f1-sessions"){const box=document.getElementById(id);if(!box||!race)return;const now=Date.now();box.innerHTML=race.sessions.map(session=>{const start=new Date(session[1]).getTime(),end=f1SessionEnd(session);const state=now>=start&&now<end?"En curso":end<=now?"Finalizada":"Próxima";return `<li class="session-row ${state==="En curso"?"is-live":""}"><span><strong>${session[0]}</strong><small>${formatSpainTime(session[1])}</small></span><span class="session-actions"><span class="status">${state}</span><a class="mini-action" href="${f1CalendarUrl(race,session)}" target="_blank" aria-label="Añadir ${session[0]} al calendario">＋ Calendario</a></span></li>`;}).join("");}
 function renderF1Calendar(id="f1-calendar"){const box=document.getElementById(id);if(!box)return;const state=getF1State();box.innerHTML=f1Races.map(r=>{const isNext=state.race===r,past=r.sessions.every(s=>f1SessionEnd(s)<Date.now()),tag=r.url?"a":"article",href=r.url?` href="${r.url}"`:"";return `<${tag}${href} class="race-card${past?" is-past":""}${isNext?" is-next":""}"><span class="race-round">ROUND ${r.round}</span>${isNext?'<span class="race-status">SIGUIENTE</span>':""}<h3>${r.name}</h3><p>${r.circuit}</p><p class="race-date">${r.label}</p></${tag}>`;}).join("");}
+async function loadF1Standings(){
+  try{
+    const response=await fetch("https://api.jolpi.ca/ergast/f1/2026/driverstandings.json",{cache:"no-store"});
+    if(!response.ok)throw new Error("standings");
+    const rows=(await response.json()).MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings||[];
+    if(rows.length)return rows.slice(0,5).map(row=>({pos:Number(row.position),name:`${row.Driver.givenName} ${row.Driver.familyName}`,team:row.Constructors?.[0]?.name||"",points:Number(row.points)}));
+  }catch(error){console.info("Clasificación F1 en modo de respaldo.");}
+  return footballData.f1Standings;
+}
 window.f1Ready=loadF1Data();
