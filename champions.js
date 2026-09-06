@@ -26,9 +26,9 @@ function renderChampionsMatches(){
 }
 
 function championsDrawOverview(){
-  const draw=championsData.drawOpponents||[];
+  const draw=championsData.drawOpponents?.length?championsData.drawOpponents:(window.officialChampionsDraw||[]);
   if(!draw.length)return `<div class="score-empty champions-waiting"><span aria-hidden="true">✦</span><h4>Calendario pendiente</h4><p>Los rivales aparecerán en cuanto UEFA publique el sorteo.</p></div>`;
-  return `<div class="score-empty champions-waiting"><span aria-hidden="true">✓</span><h4>Sorteo oficial publicado</h4><p>Ya están disponibles los ocho rivales de cada club. UEFA publicará las fechas y horas por jornada antes del 29 de agosto.</p></div><div class="champions-draw-grid">${draw.map(item=>`<article class="match-card champions-draw-card" data-team="${championsEscape(item.team)}"><h4>${championsEscape(item.team)}</h4><div class="champions-draw-side"><strong>En casa</strong><span>${item.home.map(championsEscape).join(" · ")}</span></div><div class="champions-draw-side"><strong>Fuera</strong><span>${item.away.map(championsEscape).join(" · ")}</span></div></article>`).join("")}</div>`;
+  return `<div class="score-empty champions-waiting"><span aria-hidden="true">✓</span><h4>Sorteo oficial publicado</h4><p>Ya están disponibles los ocho rivales de cada club. Los emparejamientos están confirmados; las tarjetas por jornada se activarán al sincronizar cada fecha y hora oficial.</p></div><div class="champions-draw-grid">${draw.map(item=>`<article class="match-card champions-draw-card" data-team="${championsEscape(item.team)}"><h4>${championsEscape(item.team)}</h4><div class="champions-draw-side"><strong>En casa</strong><span>${item.home.map(championsEscape).join(" · ")}</span></div><div class="champions-draw-side"><strong>Fuera</strong><span>${item.away.map(championsEscape).join(" · ")}</span></div></article>`).join("")}</div>`;
 }
 
 function championsMatchCard(match){
@@ -42,7 +42,7 @@ function championsCalendarUrl(match){const stamp=date=>date.toISOString().replac
 function updateChampionsCountdown(){
   const box=document.getElementById("champions-countdown");if(!box)return;
   const remaining=new Date(championsData.drawIso).getTime()-Date.now();
-  if(remaining<=0){box.textContent="Sorteo publicado · fechas y horarios pendientes";return;}
+  if(remaining<=0){box.textContent="Sorteo publicado · 36 equipos confirmados";return;}
   const days=Math.floor(remaining/86400000),hours=Math.floor(remaining%86400000/3600000),minutes=Math.floor(remaining%3600000/60000),seconds=Math.floor(remaining%60000/1000);
   box.textContent=`${days} d · ${hours} h · ${minutes} min · ${seconds} s`;
 }
