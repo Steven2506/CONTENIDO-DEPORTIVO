@@ -1,8 +1,11 @@
 function isFootballLive(match){
-  if(match.state==="live")return true;
+  if(match.state==="live"){
+    if(!match.iso)return true;
+    return Date.now()-new Date(match.iso).getTime()<150*60*1000;
+  }
   if(!match.iso||match.state==="finished"||match.state==="postponed")return false;
   const elapsed=Date.now()-new Date(match.iso).getTime();
-  return elapsed>=0&&elapsed<3*60*60*1000;
+  return elapsed>=0&&elapsed<150*60*1000;
 }
 function spainDay(timestamp){return new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:window.WolfTimezone?.get()||"Europe/Madrid"}).format(new Date(timestamp));}
 
