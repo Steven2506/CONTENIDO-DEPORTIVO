@@ -1,4 +1,10 @@
-const scoreState={round:footballData.currentRound};
+function findActiveFootballRound(){
+  const now=Date.now(),rounds=Object.entries(footballData.laligaRounds||{}).map(([round,matches])=>({round:Number(round),matches}));
+  const live=rounds.find(item=>item.matches.some(match=>matchState(match)==="live"));if(live)return live.round;
+  const future=rounds.map(item=>({round:item.round,time:Math.min(...item.matches.map(match=>match.iso?new Date(match.iso).getTime():Infinity).filter(Number.isFinite))})).filter(item=>item.time>=now-3*3600000).sort((a,b)=>a.time-b.time)[0];
+  return future?.round||footballData.currentRound;
+}
+const scoreState={round:findActiveFootballRound()};
 
 document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("football-updated").textContent=`Actualizado: ${footballData.updated}`;
@@ -36,13 +42,13 @@ function renderFootball(){
   requestAnimationFrame(()=>window.applyTeamPreference?.());
 }
 
-function inferredKickoffState(match){if(!match.iso||["live","finished","postponed"].includes(match.state))return null;const elapsed=Date.now()-new Date(match.iso).getTime();return elapsed>=0&&elapsed<3*60*60*1000?"live":null;}
+function inferredKickoffState(match){if(!match.iso||["live","finished","postponed"].includes(match.state))return null;const elapsed=Date.now()-new Date(match.iso).getTime();return elapsed>=0&&elapsed<150*60*1000?"live":null;}
 function matchState(match){
   if(match.state==="live"){
     const sinceKickoff=match.iso?Date.now()-new Date(match.iso).getTime():0;
     const sincePeriod=match.periodStart?Date.now()-new Date(match.periodStart).getTime():0;
     const staleSecondHalf=match.period==="SecondHalf"&&sincePeriod>75*60*1000;
-    if(staleSecondHalf||sinceKickoff>165*60*1000)return "finished";
+    if(staleSecondHalf||sinceKickoff>150*60*1000)return "finished";
   }
   const inferred=inferredKickoffState(match);if(inferred)return inferred;if(match.state)return match.state;if(match.status==="Finalizado")return "finished";return "scheduled";
 }
