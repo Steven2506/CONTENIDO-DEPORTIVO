@@ -52,7 +52,7 @@ function motoSessionCalendarUrl(race,session){const compact=date=>date.toISOStri
 function startMotoCountdown(time,id){const el=document.getElementById(id);if(!el)return;const update=()=>{const ms=time-Date.now();if(ms<=0){el.textContent="🏁 En marcha";return;}const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000);el.textContent=`${d} d · ${h} h · ${m} min`;};update();setInterval(update,60000);}
 function renderMotoCalendar(id="motogp-calendar"){
   const box=document.getElementById(id);if(!box)return;const next=getNextMotoGP();
-  box.innerHTML=motogpCalendar.map(r=>{const past=motoWeekendEnd(r)<Date.now(),isNext=next===r;return `<article class="race-card${past?" is-past":""}${isNext?" is-next":""}"><span class="race-round">ROUND ${r.round}</span>${isNext?'<span class="race-status">SIGUIENTE</span>':""}<h3>${r.name}</h3><p>${r.circuit}</p><p class="race-date">${r.label}</p><a class="mini-action calendar-card-link" href="${motoCalendarUrl(r)}" target="_blank">＋ Añadir fin de semana a Google Calendar</a></article>`;}).join("");
+  box.innerHTML=motogpCalendar.map(r=>{const past=motoWeekendEnd(r)<Date.now(),isNext=next===r;return `<article class="race-card${past?" is-past":""}${isNext?" is-next":""}"><span class="race-round">ROUND ${r.round}</span>${isNext?'<span class="race-status">SIGUIENTE</span>':""}<h3>${r.name}</h3><p>${r.circuit}</p><p class="race-date">${r.label}</p><a class="mini-action calendar-card-link" href="${motoCalendarUrl(r)}" target="_blank" rel="noopener noreferrer">＋ Añadir fin de semana a Google Calendar</a></article>`;}).join("");
 }
 function renderMotoSessionList(race,id="motogp-sessions"){
   const box=document.getElementById(id);if(!box)return;
