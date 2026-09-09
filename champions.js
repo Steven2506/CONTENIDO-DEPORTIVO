@@ -13,9 +13,9 @@ function allChampionsMatches(){return championsData.rounds.flatMap(round=>round.
 function championsMatchState(match){
   if(match.state==="finished")return "finished";
   const kickoff=match.iso?new Date(match.iso).getTime():NaN,elapsed=Date.now()-kickoff;
-  if(match.state==="live")return elapsed>150*60000?"finished":"live";
+  if(match.state==="live")return elapsed>150*60000?"pending":"live";
   if(Number.isFinite(kickoff)&&elapsed>=0&&elapsed<150*60000)return "live";
-  if(Number.isFinite(kickoff)&&elapsed>=150*60000)return "finished";
+  if(Number.isFinite(kickoff)&&elapsed>=150*60000)return "pending";
   return match.state||"scheduled";
 }
 function findChampionsRound(){
@@ -49,7 +49,7 @@ function renderChampionsViews(){
   requestAnimationFrame(()=>window.applyTeamPreference?.());
 }
 function championsLocal(match){const zone=window.WolfTimezone?.get()||"Europe/Madrid",date=new Date(match.iso);return{date:new Intl.DateTimeFormat("es-ES",{weekday:"long",day:"numeric",month:"long",timeZone:zone}).format(date),short:new Intl.DateTimeFormat("es-ES",{weekday:"short",day:"numeric",timeZone:zone}).format(date).replace(".",""),time:new Intl.DateTimeFormat("es-ES",{hour:"2-digit",minute:"2-digit",hour12:false,timeZone:zone}).format(date)};}
-function championsStatus(match){const state=championsMatchState(match);if(state==="live")return "EN JUEGO";if(state==="finished")return "FINAL";return championsLocal(match).time;}
+function championsStatus(match){const state=championsMatchState(match);if(state==="live")return "EN JUEGO";if(state==="finished")return "FINAL";if(state==="pending")return "POR CONFIRMAR";return championsLocal(match).time;}
 function championsCompactScore(match){const state=championsMatchState(match),local=championsLocal(match),score=Number.isInteger(match.homeScore)&&Number.isInteger(match.awayScore);return `<article class="score-chip ${state}" data-teams="${championsEscape(match.home)}|${championsEscape(match.away)}"><div class="score-chip-top"><span>${local.short}</span><strong>${championsStatus(match)}</strong></div><div><span>${championsEscape(match.home)}</span><b>${score?match.homeScore:"–"}</b></div><div><span>${championsEscape(match.away)}</span><b>${score?match.awayScore:"–"}</b></div></article>`;}
 function championsMatchCard(match){const state=championsMatchState(match),local=championsLocal(match),score=Number.isInteger(match.homeScore)&&Number.isInteger(match.awayScore);return `<article class="match-card scoreboard-card ${state}" data-teams="${championsEscape(match.home)}|${championsEscape(match.away)}"><div class="match-meta"><span>${championsEscape(local.date)} · ${local.time}</span><span class="status ${state}">${championsStatus(match)}</span></div><div class="score-teams"><strong>${championsEscape(match.home)}</strong><span class="big-score">${score?`${match.homeScore}<i>–</i>${match.awayScore}`:"VS"}</span><strong>${championsEscape(match.away)}</strong></div>${state==="live"?'<p class="live-message"><span class="live-dot"></span> En directo</p>':""}<div class="card-actions"><button class="btn-link share-event" data-share="${championsEscape(match.home)} vs ${championsEscape(match.away)} · ${local.date}, ${local.time}">Compartir</button><a class="btn-link" href="${championsCalendarUrl(match)}" target="_blank" rel="noopener noreferrer">Añadir al calendario</a></div></article>`;}
 function championsEmpty(title,text){return `<div class="score-empty"><span aria-hidden="true">⚽</span><h4>${title}</h4><p>${text}</p></div>`;}
