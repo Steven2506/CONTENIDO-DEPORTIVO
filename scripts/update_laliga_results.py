@@ -15,6 +15,7 @@ import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "sports-data.js"
+PATCH_FILE = ROOT / "laliga-current.js"
 HTML_FILE = ROOT / "deportes.html"
 HOME_FILE = ROOT / "index.html"
 RESULTS_URL = "https://www.laliga.com/laliga-easports/resultados/2026-27/jornada-{round}"
@@ -73,6 +74,15 @@ def current_round(source: str) -> int:
         raise RuntimeError("No se encontró currentRound en sports-data.js")
     return int(match.group(1))
 
+
+def available_rounds(*sources: str) -> list[int]:
+    rounds = set()
+    for source in sources:
+        rounds.update(int(value) for value in re.findall(r"(?m)^\s*(\d+):\[", source))
+    return sorted(rounds)
+
+def has_round(source: str, round_number: int) -> bool:
+    return re.search(rf"(?m)^\s*{round_number}:\[", source) is not None
 
 def next_payload(url: str) -> dict:
     response = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
@@ -386,28 +396,36 @@ def bust_browser_cache() -> None:
     token = datetime.now(ZoneInfo("Europe/Madrid")).strftime("results-%Y%m%d-%H%M%S")
     for path in (HTML_FILE, HOME_FILE):
         html = path.read_text(encoding="utf-8")
-        updated, count = re.subn(r'sports-data\.js(?:\?v=[^"\']+)?', f'sports-data.js?v={token}', html, count=1)
-        if count != 1:
-            raise RuntimeError(f"No se encontró sports-data.js en {path.name}")
-        path.write_text(updated, encoding="utf-8")
-
+        html, sports_count = re.subn(r'sports-data\.js(?:\?v=[^"\']+)?', f'sports-data.js?v={token}', html, count=1)
+        html, patch_count = re.subn(r'laliga-current\.js(?:\?v=[^"\']+)?', f'laliga-current.js?v={token}', html, count=1)
+        if sports_count != 1 or patch_count != 1:
+            raise RuntimeError(f"No se encontraron los scripts de LALIGA en {path.name}")
+        path.write_text(html, encoding="utf-8")
 
 def main() -> int:
     source = DATA_FILE.read_text(encoding="utf-8")
-    round_number = current_round(source)
-    updated, changes = source, 0
+    patch_source = PATCH_FILE.read_text(encoding="utf-8")
+    rounds = available_rounds(source, patch_source)
+    if not rounds:
+        raise RuntimeError("No hay jornadas locales para sincronizar")
+    updated, updated_patch, changes = source, patch_source, 0
     verified = 0
-    for target_round in range(1, round_number + 1):
+    for target_round in rounds:
         matches = official_matches(target_round, updated)
-        updated, round_changes = apply(updated, target_round, matches)
-        changes += round_changes
+        if has_round(updated, target_round):
+            updated, round_changes = apply(updated, target_round, matches)
+            changes += round_changes
+        if has_round(updated_patch, target_round):
+            updated_patch, patch_changes = apply(updated_patch, target_round, matches)
+            changes += patch_changes
         verified += len(matches)
     updated, standings_changed = apply_standings(updated, official_standings())
     changes += int(standings_changed)
     if changes:
         DATA_FILE.write_text(update_timestamp(updated), encoding="utf-8")
+        PATCH_FILE.write_text(updated_patch, encoding="utf-8")
         bust_browser_cache()
-    print(f"Jornadas 1–{round_number}: {verified} partidos verificados · clasificación oficial verificada · cambios: {changes}")
+    print(f"Jornadas {rounds}: {verified} partidos verificados · clasificación oficial verificada · cambios: {changes}")
     return 0
 
 
