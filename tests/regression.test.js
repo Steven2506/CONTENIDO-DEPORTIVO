@@ -6,6 +6,7 @@ const test=require("node:test");
 
 function loadFootball(){
   const context={}; context.globalThis=context; vm.createContext(context);
+  vm.runInContext(fs.readFileSync("laliga-calendar.js","utf8"),context);
   vm.runInContext(fs.readFileSync("sports-data.js","utf8")+"\nglobalThis.__data=footballData;",context);
   vm.runInContext(fs.readFileSync("laliga-current.js","utf8"),context);
   return context.__data;
