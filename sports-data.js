@@ -1,5 +1,5 @@
 const footballData={
-  updated:"11 de septiembre de 2026 · resultados LALIGA sincronizados",
+  updated:"12 de septiembre de 2026 · resultados LALIGA sincronizados",
   timezone:"Hora peninsular española (CEST, UTC+2)",
   currentRound:3,
   laligaRounds:{
@@ -53,8 +53,8 @@ const footballData={
     ]
 
   },
-  standingsNote:"Clasificación oficial actualizada el 11 de septiembre de 2026.",
-  laligaStandings:[[1,"FC Barcelona",4,4,0,0,17,2,15,12],[2,"Deportivo Alavés",4,3,1,0,10,3,7,10],[3,"Sevilla FC",5,3,1,1,8,6,2,10],[4,"Real Madrid",4,3,0,1,10,3,7,9],[5,"Real Betis",4,3,0,1,5,5,0,9],[6,"RC Deportivo",4,2,2,0,8,5,3,8],[7,"Atlético de Madrid",4,2,1,1,7,6,1,7],[8,"CA Osasuna",4,2,1,1,5,6,-1,7],[9,"Real Sociedad",5,2,1,2,6,8,-2,7],[10,"Athletic Club",4,2,0,2,6,5,1,6],[11,"Levante UD",4,1,2,1,5,5,0,5],[12,"RCD Espanyol de Barcelona",4,1,1,2,6,5,1,4],[13,"R. Racing Club",4,1,1,2,7,8,-1,4],[14,"Rayo Vallecano",4,1,1,2,7,10,-3,4],[15,"Getafe CF",4,1,1,2,2,5,-3,4],[16,"Celta",5,0,3,2,2,5,-3,3],[17,"Villarreal CF",4,0,2,2,6,8,-2,2],[18,"Málaga CF",4,0,2,2,1,7,-6,2],[19,"Elche CF",4,0,1,3,5,12,-7,1],[20,"Valencia CF",5,0,1,4,1,10,-9,1]].map(([pos,team,played,won,drawn,lost,gf,ga,gd,points])=>({pos,team,played,won,drawn,lost,gf,ga,gd,points})),
+  standingsNote:"Clasificación oficial actualizada el 12 de septiembre de 2026.",
+  laligaStandings:[[1,"FC Barcelona",4,4,0,0,17,2,15,12],[2,"Deportivo Alavés",5,3,1,1,11,5,6,10],[3,"Sevilla FC",5,3,1,1,8,6,2,10],[4,"Real Madrid",4,3,0,1,10,3,7,9],[5,"Real Betis",4,3,0,1,5,5,0,9],[6,"RC Deportivo",4,2,2,0,8,5,3,8],[7,"Atlético de Madrid",4,2,1,1,7,6,1,7],[8,"R. Racing Club",5,2,1,2,9,9,0,7],[9,"CA Osasuna",4,2,1,1,5,6,-1,7],[10,"Real Sociedad",5,2,1,2,6,8,-2,7],[11,"Athletic Club",4,2,0,2,6,5,1,6],[12,"Levante UD",4,1,2,1,5,5,0,5],[13,"RCD Espanyol de Barcelona",4,1,1,2,6,5,1,4],[14,"Rayo Vallecano",4,1,1,2,7,10,-3,4],[15,"Getafe CF",4,1,1,2,2,5,-3,4],[16,"Celta",5,0,3,2,2,5,-3,3],[17,"Villarreal CF",4,0,2,2,6,8,-2,2],[18,"Málaga CF",4,0,2,2,1,7,-6,2],[19,"Elche CF",4,0,1,3,5,12,-7,1],[20,"Valencia CF",5,0,1,4,1,10,-9,1]].map(([pos,team,played,won,drawn,lost,gf,ga,gd,points])=>({pos,team,played,won,drawn,lost,gf,ga,gd,points})),
   champions:{draw:"27 de agosto de 2026 · 18:00 CET",rounds:["Jornada 1 · 8–10 septiembre 2026","Jornada 2 · 13–14 octubre 2026","Jornada 3 · 20–21 octubre 2026","Jornada 4 · 3–4 noviembre 2026","Jornada 5 · 24–25 noviembre 2026","Jornada 6 · 8–9 diciembre 2026","Jornada 7 · 19–20 enero 2027","Jornada 8 · 27 enero 2027"]},
   f1Standings:[{pos:1,name:"Kimi Antonelli",team:"Mercedes",points:219},{pos:2,name:"Lewis Hamilton",team:"Ferrari",points:169},{pos:3,name:"George Russell",team:"Mercedes",points:160},{pos:4,name:"Charles Leclerc",team:"Ferrari",points:138},{pos:5,name:"Lando Norris",team:"McLaren",points:128}],
   latest:{f1:"GP Hungría: clasificación y resultados disponibles en F1.com",motogp:"GP Gran Bretaña: resultados disponibles en MotoGP.com",football:"LaLiga 2026/27 ya está en marcha"}
