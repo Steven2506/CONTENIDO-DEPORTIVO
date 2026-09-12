@@ -13,6 +13,7 @@ function loadFootball(){
 }
 function loadFixtures(){
   const context={}; context.globalThis=context; vm.createContext(context);
+  vm.runInContext(fs.readFileSync("champions-data.js","utf8"),context);
   vm.runInContext(fs.readFileSync("champions-fixtures.js","utf8")+"\nglobalThis.__fixtures=officialChampionsFixtures;",context);
   return context.__fixtures;
 }
