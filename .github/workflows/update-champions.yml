@@ -30,20 +30,22 @@ jobs:
       - name: Instalar cliente HTTP
         run: python -m pip install -r scripts/requirements-referees.txt
 
-      - name: Sincronizar clasificación UEFA
+      - name: Sincronizar clasificación y resultados UEFA
         run: python scripts/update_champions.py
 
       - name: Validar datos
         run: node --check champions-data.js
+          node --check champions-fixtures.js
+          node --check champions-draw.js
 
       - name: Publicar únicamente cambios oficiales
         run: |
-          if git diff --quiet -- champions-data.js deportes.html; then
+          if git diff --quiet -- champions-data.js champions-fixtures.js champions-draw.js deportes.html; then
             echo "No hay cambios oficiales."
             exit 0
           fi
           git config user.name "WOLFGAMES Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -- champions-data.js deportes.html
-          git commit -m "Actualiza clasificación oficial de Champions"
+          git add -- champions-data.js champions-fixtures.js champions-draw.js deportes.html
+          git commit -m "Actualiza datos oficiales de Champions"
           git push
