@@ -120,7 +120,7 @@ def bust_cache(data_changed: bool, results_changed: bool) -> None:
         if count != 1:
             raise RuntimeError("No se encontró champions-data.js en deportes.html")
     if results_changed:
-        html_source, count = re.subn(r'champions-draw\.js(?:\?v=[^"\']+)?', f'champions-draw.js?v={token}', html_source, count=1)
+        html_source, count = re.subn(r'champions-fixtures\.js(?:\?v=[^"\']+)?', f'champions-fixtures.js?v={token}', html_source, count=1)
         if count != 1:
             raise RuntimeError("No se encontró champions-fixtures.js en deportes.html")
     HTML_FILE.write_text(html_source, encoding="utf-8")
