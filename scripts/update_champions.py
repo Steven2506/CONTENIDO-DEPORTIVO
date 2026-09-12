@@ -15,7 +15,6 @@ import requests
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "champions-data.js"
 FIXTURES_FILE = ROOT / "champions-fixtures.js"
-DRAW_FILE = ROOT / "champions-draw.js"
 HTML_FILE = ROOT / "deportes.html"
 STANDINGS_URL = "https://standings.uefa.com/v1/standings?competitionId=1&seasonYear=2027"
 RESULTS_URL = "https://www.uefa.com/uefachampionsleague/news/02a8-2174c9e9019d-f909a77bd77a-1000--2026-27-champions-league-all-the-league-phase-fixtures-a/"
@@ -123,7 +122,7 @@ def bust_cache(data_changed: bool, results_changed: bool) -> None:
     if results_changed:
         html_source, count = re.subn(r'champions-draw\.js(?:\?v=[^"\']+)?', f'champions-draw.js?v={token}', html_source, count=1)
         if count != 1:
-            raise RuntimeError("No se encontró champions-draw.js en deportes.html")
+            raise RuntimeError("No se encontró champions-fixtures.js en deportes.html")
     HTML_FILE.write_text(html_source, encoding="utf-8")
 
 def main() -> int:
@@ -131,19 +130,15 @@ def main() -> int:
     updated, standings_changed = apply(source, official_rows())
     results = official_results()
     fixtures_source = FIXTURES_FILE.read_text(encoding="utf-8")
-    draw_source = DRAW_FILE.read_text(encoding="utf-8")
     updated_fixtures, fixture_changes = apply_results(fixtures_source, results)
-    updated_draw, draw_changes = apply_results(draw_source, results)
-    results_changed = bool(fixture_changes or draw_changes)
+    results_changed = bool(fixture_changes)
     if standings_changed:
         DATA_FILE.write_text(updated, encoding="utf-8")
     if fixture_changes:
         FIXTURES_FILE.write_text(updated_fixtures, encoding="utf-8")
-    if draw_changes:
-        DRAW_FILE.write_text(updated_draw, encoding="utf-8")
     if standings_changed or results_changed:
         bust_cache(standings_changed, results_changed)
-    print(f"UEFA: clasificación={'actualizada' if standings_changed else 'sin cambios'} · resultados encontrados={len(results)} · archivos modificados={fixture_changes + draw_changes}")
+    print(f"UEFA: clasificación={'actualizada' if standings_changed else 'sin cambios'} · resultados encontrados={len(results)} · archivos modificados={fixture_changes}")
     return 0
 
 
