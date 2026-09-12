@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import html
 import json
 import re
 from datetime import datetime
@@ -13,8 +14,11 @@ import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "champions-data.js"
+FIXTURES_FILE = ROOT / "champions-fixtures.js"
+DRAW_FILE = ROOT / "champions-draw.js"
 HTML_FILE = ROOT / "deportes.html"
 STANDINGS_URL = "https://standings.uefa.com/v1/standings?competitionId=1&seasonYear=2027"
+RESULTS_URL = "https://www.uefa.com/uefachampionsleague/news/02a8-2174c9e9019d-f909a77bd77a-1000--2026-27-champions-league-all-the-league-phase-fixtures-a/"
 HEADERS = {"User-Agent": "WOLFGAMES-champions-sync/1.0 (+https://github.com/Steven2506/CONTENIDO-DEPORTIVO)"}
 
 
@@ -64,24 +68,82 @@ def apply(source: str, rows: list[dict]) -> tuple[str, bool]:
     return updated, True
 
 
-def bust_cache() -> None:
-    html = HTML_FILE.read_text(encoding="utf-8")
-    token = datetime.now(ZoneInfo("Europe/Madrid")).strftime("champions-%Y%m%d-%H%M%S")
-    updated, count = re.subn(r'champions-data\.js(?:\?v=[^"\']+)?', f'champions-data.js?v={token}', html, count=1)
-    if count != 1:
-        raise RuntimeError("No se encontró champions-data.js en deportes.html")
-    HTML_FILE.write_text(updated, encoding="utf-8")
+RESULT_ALIASES = {
+    "B. Dortmund": "Borussia Dortmund", "Man City": "Manchester City",
+    "Atleti": "Atlético de Madrid", "Paris": "Paris Saint-Germain",
+    "S. Bratislava": "Slovan Bratislava", "PSV": "PSV Eindhoven",
+    "Shakhtar": "Shakhtar Donetsk", "Man Utd": "Manchester United",
+}
 
+def official_results() -> dict[tuple[str, str], tuple[int, int]]:
+    response = requests.get(RESULTS_URL, headers=HEADERS, timeout=30)
+    response.raise_for_status()
+    visible = html.unescape(re.sub(r"<[^>]+>", " ", response.text))
+    visible = re.sub(r"\\[nrt]|\s+", " ", visible)
+    fixtures = FIXTURES_FILE.read_text(encoding="utf-8")
+    results = {}
+    for home_team, away_team in re.findall(r'home:"([^"]+)",away:"([^"]+)"', fixtures):
+        official_home = RESULT_ALIASES.get(home_team, home_team)
+        official_away = RESULT_ALIASES.get(away_team, away_team)
+        match = re.search(rf"{re.escape(official_home)}\s+(\d+)\s*-\s*(\d+)\s+{re.escape(official_away)}", visible, re.I)
+        if match:
+            results[(home_team, away_team)] = (int(match.group(1)), int(match.group(2)))
+    return results
+
+def apply_results(source: str, results: dict[tuple[str, str], tuple[int, int]]) -> tuple[str, int]:
+    lines, changes = source.splitlines(keepends=True), 0
+    for index, line in enumerate(lines):
+        fixture = re.search(r'home:"([^"]+)",away:"([^"]+)"', line)
+        if not fixture or fixture.groups() not in results:
+            continue
+        home_score, away_score = results[fixture.groups()]
+        updated = re.sub(r'state:"(?:scheduled|live|pending)"', 'state:"finished"', line, count=1)
+        for key, value in (("homeScore", home_score), ("awayScore", away_score)):
+            if re.search(rf"{key}:\d+", updated):
+                updated = re.sub(rf"{key}:\d+", f"{key}:{value}", updated, count=1)
+            elif updated.rstrip().endswith("},"):
+                newline = "\n" if updated.endswith("\n") else ""
+                body = updated.rstrip("\n")
+                updated = body[:-2] + f",{key}:{value}" + body[-2:] + newline
+            elif updated.rstrip().endswith("}"):
+                newline = "\n" if updated.endswith("\n") else ""
+                body = updated.rstrip("\n")
+                updated = body[:-1] + f",{key}:{value}" + body[-1:] + newline
+        if updated != line:
+            lines[index], changes = updated, changes + 1
+    return "".join(lines), changes
+
+def bust_cache(data_changed: bool, results_changed: bool) -> None:
+    html_source = HTML_FILE.read_text(encoding="utf-8")
+    token = datetime.now(ZoneInfo("Europe/Madrid")).strftime("champions-%Y%m%d-%H%M%S")
+    if data_changed:
+        html_source, count = re.subn(r'champions-data\.js(?:\?v=[^"\']+)?', f'champions-data.js?v={token}', html_source, count=1)
+        if count != 1:
+            raise RuntimeError("No se encontró champions-data.js en deportes.html")
+    if results_changed:
+        html_source, count = re.subn(r'champions-draw\.js(?:\?v=[^"\']+)?', f'champions-draw.js?v={token}', html_source, count=1)
+        if count != 1:
+            raise RuntimeError("No se encontró champions-draw.js en deportes.html")
+    HTML_FILE.write_text(html_source, encoding="utf-8")
 
 def main() -> int:
     source = DATA_FILE.read_text(encoding="utf-8")
-    updated, changed = apply(source, official_rows())
-    if changed:
+    updated, standings_changed = apply(source, official_rows())
+    results = official_results()
+    fixtures_source = FIXTURES_FILE.read_text(encoding="utf-8")
+    draw_source = DRAW_FILE.read_text(encoding="utf-8")
+    updated_fixtures, fixture_changes = apply_results(fixtures_source, results)
+    updated_draw, draw_changes = apply_results(draw_source, results)
+    results_changed = bool(fixture_changes or draw_changes)
+    if standings_changed:
         DATA_FILE.write_text(updated, encoding="utf-8")
-        bust_cache()
-        print("Clasificación Champions actualizada desde UEFA")
-    else:
-        print("UEFA todavía no ha publicado cambios en la clasificación")
+    if fixture_changes:
+        FIXTURES_FILE.write_text(updated_fixtures, encoding="utf-8")
+    if draw_changes:
+        DRAW_FILE.write_text(updated_draw, encoding="utf-8")
+    if standings_changed or results_changed:
+        bust_cache(standings_changed, results_changed)
+    print(f"UEFA: clasificación={'actualizada' if standings_changed else 'sin cambios'} · resultados encontrados={len(results)} · archivos modificados={fixture_changes + draw_changes}")
     return 0
 
 
