@@ -72,7 +72,7 @@ window.WolfTimezone=WolfTimezone;
   document.querySelectorAll(".timezone-note").forEach(note=>note.textContent=`🕒 Horarios en ${WolfTimezone.name(WolfTimezone.get())} (${WolfTimezone.offset(WolfTimezone.get())})`);
 
   const footer = document.querySelector("[data-site-footer]");
-  if (footer) footer.innerHTML = `<footer><p>© ${new Date().getFullYear()} WOLFGAMES · Contenido deportivo y gaming</p><p class="footer-note">Horarios mostrados en ${WolfTimezone.name(WolfTimezone.get())} (${WolfTimezone.offset(WolfTimezone.get())}) · Datos sujetos a cambios oficiales</p><p class="footer-status"><a href="status.html">Estado del sistema</a></p></footer>`;
+  if (footer) footer.innerHTML = `<footer><p>© ${new Date().getFullYear()} WOLFGAMES · Contenido deportivo y gaming</p><p class="footer-note">Horarios mostrados en ${WolfTimezone.name(WolfTimezone.get())} (${WolfTimezone.offset(WolfTimezone.get())}) · Datos sujetos a cambios oficiales</p><p class="footer-status" aria-label="Sistema supervisado automáticamente"><span class="status-indicator" aria-hidden="true">●</span> Supervisión automática activa</p></footer>`;
   document.querySelectorAll('a[target="_blank"]').forEach(link => { link.rel = "noopener noreferrer"; });
   document.addEventListener("click", async event => {
     const button=event.target.closest("[data-share]");if(!button)return;
