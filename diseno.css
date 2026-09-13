@@ -119,3 +119,9 @@ footer{text-align:center;border-top:1px solid var(--border);padding:25px 16px;ba
 
 /* Portada inteligente. */
 .home-priority-summary{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.home-priority-summary span{padding:5px 9px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.04);color:var(--muted);font-size:.7rem;font-weight:850}.home-priority-summary span.active{border-color:rgba(251,57,88,.42);background:rgba(251,57,88,.1);color:#ff9aac}.timeline-event.is-finished{opacity:.76}.timeline-event.is-live{order:-1}.home-empty{display:grid;gap:5px;padding:22px;border:1px dashed var(--border);border-radius:14px;color:var(--muted)}.home-empty strong{color:#fff}@media(max-width:620px){.event-hub-section .section-heading{text-align:left}.home-priority-summary{justify-content:flex-start}.timeline-event{grid-template-columns:auto minmax(0,1fr);padding-right:42px}.timeline-event>.event-state{grid-column:2;font-size:.62rem}}
+
+/* Instalación y actualización de la aplicación. */
+.pwa-install-button{display:inline-flex;align-items:center;gap:6px;padding:8px 11px;border:1px solid rgba(34,211,238,.38);border-radius:999px;background:rgba(34,211,238,.08);color:#e8fcff;font:inherit;font-size:.76rem;font-weight:850;cursor:pointer}
+.pwa-install-button:hover,.pwa-install-button:focus-visible{background:rgba(34,211,238,.16);border-color:var(--blue)}
+.pwa-install-button[hidden]{display:none!important}.pwa-update-toast button{margin-top:.65rem;padding:.5rem .8rem;border:1px solid var(--blue);border-radius:8px;background:rgba(34,211,238,.13);color:#fff;font:inherit;font-weight:850;cursor:pointer}
+@media(max-width:720px){.pwa-install-button span{display:none}.pwa-install-button{width:40px;height:40px;justify-content:center;padding:0}}

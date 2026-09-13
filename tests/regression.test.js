@@ -69,3 +69,40 @@ test("la personalización reconoce equipos de Liga y Champions",()=>{const sourc
 test("todos los deportes respetan la zona horaria elegida",()=>{for(const path of ["home.js","football.js","champions.js","f1calendar.js","motogpcalendar.js"]){const source=fs.readFileSync(path,"utf8");assert.match(source,/WolfTimezone\?\.get\(\)|WolfTimezone\.get\(\)/,path+" no usa la zona elegida");}const site=fs.readFileSync("site.js","utf8");assert.match(site,/America\/Santiago/);assert.match(site,/America\/Santo_Domingo/);assert.match(site,/optgroup label/);assert.match(site,/Actual:/);});
 
 test("la portada inteligente reúne y prioriza todos los eventos",()=>{const source=fs.readFileSync("home.js","utf8"),html=fs.readFileSync("index.html","utf8");assert.match(source,/officialChampionsFixtures/);assert.match(source,/eventPriority/);assert.match(source,/nextFavourite/);assert.match(source,/state==="live"\?500/);assert.match(source,/localDay/);assert.match(html,/home-priority-summary/);assert.match(html,/champions-fixtures\.js/);});
+
+test("la PWA tiene manifiesto, iconos y pantalla sin conexión",()=>{
+  const manifest=JSON.parse(fs.readFileSync("manifest.webmanifest","utf8"));
+  assert.equal(manifest.start_url,"./?source=pwa");
+  assert.equal(manifest.scope,"./");
+  assert.equal(manifest.display,"standalone");
+  for(const icon of manifest.icons){
+    assert(fs.existsSync(icon.src),`falta ${icon.src}`);
+    assert(fs.statSync(icon.src).size>1000,`${icon.src} está vacío`);
+  }
+  assert(fs.existsSync("offline.html"));
+  assert.match(fs.readFileSync("index.html","utf8"),/rel="manifest" href="manifest\.webmanifest"/);
+});
+
+test("la caché nunca antepone datos deportivos a la red",()=>{
+  const worker=fs.readFileSync("sw.js","utf8");
+  assert.match(worker,/LIVE_DATA_FILES/);
+  for(const file of ["sports-data.js","laliga-current.js","champions-data.js","f1calendar.js","motogpcalendar.js","home.js"]){
+    assert.match(worker,new RegExp(file.replace(".","\\.")),file);
+  }
+  assert.match(worker,/fetch\(request,\{cache:"no-store"\}\)/);
+  assert.match(worker,/request\.mode==="navigate"/);
+  assert.match(worker,/offline\.html/);
+});
+
+test("todas las páginas activas cargan la misma versión PWA",()=>{
+  const pages=["index.html","directos.html","deportes.html","F1.html","MotoGP.html","sobremi.html","status.html"];
+  for(const page of pages){
+    const html=fs.readFileSync(page,"utf8");
+    assert.match(html,/site\.js\?v=20260914-pwa1/,page);
+    assert.match(html,/diseno\.css\?v=20260914-pwa1/,page);
+  }
+  const site=fs.readFileSync("site.js","utf8");
+  assert.match(site,/beforeinstallprompt/);
+  assert.match(site,/serviceWorker\.register/);
+  assert.match(site,/updateViaCache:"none"/);
+});

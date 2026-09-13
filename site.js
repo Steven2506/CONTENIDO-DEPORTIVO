@@ -21,6 +21,24 @@ window.WolfTimezone=WolfTimezone;
 
 (() => {
   const root = document.body.dataset.root || "";
+  if (!document.querySelector('link[rel="manifest"]')) {
+    const manifest = document.createElement("link");
+    manifest.rel = "manifest";
+    manifest.href = `${root}manifest.webmanifest`;
+    document.head.append(manifest);
+  }
+  if (!document.querySelector('link[rel="apple-touch-icon"]')) {
+    const appleIcon = document.createElement("link");
+    appleIcon.rel = "apple-touch-icon";
+    appleIcon.href = `${root}icons/apple-touch-icon.png`;
+    document.head.append(appleIcon);
+  }
+  if (!document.querySelector('meta[name="theme-color"]')) {
+    const theme = document.createElement("meta");
+    theme.name = "theme-color";
+    theme.content = "#120021";
+    document.head.append(theme);
+  }
   const preferences = document.createElement("script");
   preferences.src = `${root}preferences.js?v=20260913-teams2`;
   preferences.defer = true;
@@ -47,6 +65,7 @@ window.WolfTimezone=WolfTimezone;
     header.innerHTML = `<header class="site-header">
       <a class="brand" href="${root}index.html" aria-label="WOLFGAMES, inicio"><span class="brand-mark">WG</span><span>${title}</span></a>
       <button class="timezone-button" type="button" aria-label="Cambiar zona horaria. Actual: ${WolfTimezone.name(WolfTimezone.get())}">🌍 <span>${WolfTimezone.name(WolfTimezone.get())}</span></button>
+      <button class="pwa-install-button" type="button" hidden aria-label="Instalar WOLFGAMES en este dispositivo">⬇ <span>Instalar</span></button>
       <button class="notification-button" type="button" aria-label="Configurar notificaciones" aria-haspopup="dialog">🔔<span class="notification-dot" aria-hidden="true"></span></button>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu"><span aria-hidden="true">☰</span><span class="sr-only">Abrir menú</span></button>
       <nav class="navbar" aria-label="Navegación principal"><ul class="menu" id="main-menu">${menuLinks}</ul></nav>
@@ -119,6 +138,41 @@ window.WolfTimezone=WolfTimezone;
     localStorage.setItem(snapshotKey,JSON.stringify(next));
   };
   document.addEventListener("DOMContentLoaded",()=>{setTimeout(scanNotifications,1200);setInterval(scanNotifications,60000);});
+
+  const installButton=header?.querySelector(".pwa-install-button");
+  let deferredInstallPrompt=null;
+  const isStandalone=()=>window.matchMedia?.("(display-mode: standalone)").matches||window.navigator.standalone===true;
+  const updateInstallButton=()=>{if(installButton)installButton.hidden=isStandalone()||!deferredInstallPrompt;};
+  window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();deferredInstallPrompt=event;updateInstallButton();});
+  window.addEventListener("appinstalled",()=>{deferredInstallPrompt=null;updateInstallButton();emitWolfNotification("pwa-installed","WOLFGAMES instalada","Ya puedes abrirla desde tu pantalla de inicio.");});
+  installButton?.addEventListener("click",async()=>{
+    if(!deferredInstallPrompt)return;
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt=null;
+    updateInstallButton();
+  });
+
+  if("serviceWorker" in navigator){
+    let refreshing=false;
+    navigator.serviceWorker.addEventListener("controllerchange",()=>{if(refreshing)return;refreshing=true;location.reload();});
+    window.addEventListener("load",async()=>{
+      try{
+        const registration=await navigator.serviceWorker.register(`${root}sw.js`,{scope:root||"./",updateViaCache:"none"});
+        const offerUpdate=worker=>{
+          if(!worker||!navigator.serviceWorker.controller||document.querySelector(".pwa-update-toast"))return;
+          const toast=document.createElement("div");toast.className="wolf-toast pwa-update-toast";
+          toast.innerHTML="<strong>Nueva versión disponible</strong><span>Actualiza para cargar los últimos datos y mejoras.</span><button type=\"button\">Actualizar ahora</button>";
+          toast.querySelector("button").addEventListener("click",()=>worker.postMessage({type:"SKIP_WAITING"}));
+          toastStack.append(toast);
+        };
+        if(registration.waiting)offerUpdate(registration.waiting);
+        registration.addEventListener("updatefound",()=>{const worker=registration.installing;worker?.addEventListener("statechange",()=>{if(worker.state==="installed")offerUpdate(worker);});});
+        document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")registration.update();});
+        setInterval(()=>registration.update(),60*60*1000);
+      }catch(error){console.warn("No se pudo activar el modo instalable de WOLFGAMES.",error);}
+    });
+  }
 
   const footer = document.querySelector("[data-site-footer]");
   if (footer) footer.innerHTML = `<footer><p>© ${new Date().getFullYear()} WOLFGAMES · Contenido deportivo y gaming</p><p class="footer-note">Horarios mostrados en ${WolfTimezone.name(WolfTimezone.get())} (${WolfTimezone.offset(WolfTimezone.get())}) · Datos sujetos a cambios oficiales</p><p class="footer-status" aria-label="Sistema supervisado automáticamente"><span class="status-indicator" aria-hidden="true">●</span> Supervisión automática activa</p></footer>`;

@@ -11,6 +11,15 @@ Web estática publicada con GitHub Pages: <https://steven2506.github.io/CONTENID
 - `site.js`: cabecera, navegación, pie y comportamiento compartido.
 - `diseno.css`: sistema visual y adaptación móvil.
 - `particles.js`: fondo animado accesible.
+- `manifest.webmanifest`: identidad, accesos directos e iconos de la aplicación instalable.
+- `sw.js`: actualización y caché segura de la PWA.
+- `offline.html`: respuesta accesible cuando no hay conexión.
+
+## Aplicación instalable
+
+WOLFGAMES funciona como PWA bajo el alcance `/CONTENIDO-DEPORTIVO/`. Los documentos y archivos deportivos usan una estrategia **network first** con `cache: no-store`: siempre se intenta obtener la versión pública más reciente y la copia local solo se utiliza si falla la conexión. Los recursos visuales y scripts estables usan caché local.
+
+Al cambiar el service worker debe incrementarse `CACHE_VERSION`. Cuando hay una versión instalada activa, la interfaz ofrece al usuario actualizarla y recarga después de que el nuevo worker toma el control.
 
 ## Actualización
 
