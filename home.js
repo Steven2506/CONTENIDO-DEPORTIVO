@@ -7,7 +7,7 @@ function isFootballLive(match){
   const elapsed=Date.now()-new Date(match.iso).getTime();
   return elapsed>=0&&elapsed<150*60*1000;
 }
-function spainDay(timestamp){return new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:window.WolfTimezone?.get()||"Europe/Madrid"}).format(new Date(timestamp));}
+function localDay(timestamp){return new Intl.DateTimeFormat("en-CA",{year:"numeric",month:"2-digit",day:"2-digit",timeZone:window.WolfTimezone?.get()||"Europe/Madrid"}).format(new Date(timestamp));}
 
 let homeF1SessionKey="",homeMotoSessionKey="";
 function homeMotoCountdown(ms){
@@ -36,22 +36,26 @@ document.addEventListener("DOMContentLoaded", async () => {
   setInterval(()=>{renderEventHub();checkHomeDataUpdate();},60000);
 });
 async function checkHomeDataUpdate(){try{const response=await fetch(`sports-data.js?poll=${Date.now()}`,{cache:"no-store"});if(!response.ok)return;const source=await response.text(),revision=source.match(/updated:"([^"]+)"/)?.[1];if(revision&&revision!==footballData.updated)location.reload();}catch(error){console.info("Sincronización temporalmente no disponible.");}}
+function homeFootballState(match){if(match.state==="finished"||match.status==="Finalizado")return "finished";return isFootballLive(match)?"live":match.state||"scheduled";}
+function homeFootballEvent(match,competition){
+  if(!match.iso)return null;const state=homeFootballState(match),hasScore=Number.isInteger(match.homeScore)&&Number.isInteger(match.awayScore),showScore=(state==="live"||state==="finished")&&hasScore;
+  return {icon:"⚽",title:showScore?`${match.home} ${match.homeScore}–${match.awayScore} ${match.away}`:`${match.home} – ${match.away}`,time:new Date(match.iso).getTime(),url:"deportes.html",teams:`${match.home}|${match.away}`,state,competition};
+}
+function eventPriority(event,today){const favourite=event.teams?.split("|").some(team=>window.isFavouriteTeam?.(team));return (event.state==="live"?500:0)+(favourite?200:0)+(localDay(event.time)===today?100:0)+(event.state!=="finished"?20:0);}
 function renderEventHub(){
-  const box=document.getElementById("event-hub");
-  if(!box)return;
+  const box=document.getElementById("event-hub");if(!box)return;
   const f1=getF1State(),moto=getNextMotoGP(),events=[],motorEvents=[];
-  if(f1.race)motorEvents.push({icon:"🏎️",title:`${f1.race.name} · ${f1.session[0]}`,time:f1.start,url:"F1.html"});
-  if(moto){const nextMotoSession=getNextMotoSession(moto);motorEvents.push({icon:"🏍️",title:nextMotoSession?`${moto.name} · ${nextMotoSession.name}`:moto.name,time:nextMotoSession?new Date(nextMotoSession.start).getTime():new Date(moto.date).getTime(),url:"MotoGP.html"});}
-
-  Object.values(footballData.laligaRounds||{}).flat().forEach(match=>{
-    if(!match.iso)return;
-    const live=isFootballLive(match),finished=match.state==="finished"||match.status==="Finalizado",hasScore=Number.isInteger(match.homeScore)&&Number.isInteger(match.awayScore),showScore=(live||finished)&&hasScore;
-    events.push({icon:"⚽",title:showScore?`${match.home} ${match.homeScore}–${match.awayScore} ${match.away}`:`${match.home} – ${match.away}`,time:new Date(match.iso).getTime(),url:"deportes.html",teams:`${match.home}|${match.away}`,state:live?"live":finished?"finished":match.state});
-  });
-
-  const favourite=window.getFavouriteTeam?.(),today=spainDay(Date.now());
-  const footballEvents=events.filter(e=>Number.isFinite(e.time)&&(e.state==="live"||spainDay(e.time)===today)).sort((a,b)=>{const af=favourite&&a.teams?.split("|").some(team=>window.isFavouriteTeam?.(team)??team===favourite),bf=favourite&&b.teams?.split("|").some(team=>window.isFavouriteTeam?.(team)??team===favourite);return (b.state==="live")-(a.state==="live")||bf-af||a.time-b.time;});
-  const visibleEvents=[...footballEvents,...motorEvents.filter(e=>Number.isFinite(e.time))];
-  box.innerHTML=visibleEvents.map(e=>{const finished=e.state==="finished",subtitle=finished?"Resultado definitivo":new Intl.DateTimeFormat("es-ES",{weekday:"long",day:"numeric",hour:"2-digit",minute:"2-digit",timeZone:window.WolfTimezone?.get()||"Europe/Madrid"}).format(new Date(e.time)),label=e.state==="live"?"🔴 EN JUEGO":finished?"FINAL":spainDay(e.time)===today?"HOY":"PRÓXIMO";return `<a class="timeline-event${e.state==="live"?" is-live":""}${finished?" is-finished":""}" href="${e.url}"${e.teams?` data-teams="${e.teams}"`:""}><span>${e.icon}</span><span><strong>${e.title}</strong><small>${subtitle}</small></span><span class="event-state${e.state==="live"?" live":""}${finished?" finished":""}">${label}</span></a>`;}).join("")||"<p>No hay eventos próximos confirmados.</p>";
+  if(f1.race)motorEvents.push({icon:"🏎️",title:`${f1.race.name} · ${f1.session[0]}`,time:f1.start,url:"F1.html",state:f1.status==="live"?"live":"scheduled",competition:"F1"});
+  if(moto){const session=getNextMotoSession(moto);motorEvents.push({icon:"🏍️",title:session?`${moto.name} · ${session.name}`:moto.name,time:session?new Date(session.start).getTime():new Date(moto.date).getTime(),url:"MotoGP.html",state:session&&motoSessionState(session)==="live"?"live":"scheduled",competition:"MotoGP"});}
+  Object.values(footballData.laligaRounds||{}).flat().forEach(match=>{const event=homeFootballEvent(match,"LALIGA");if(event)events.push(event);});
+  if(typeof officialChampionsFixtures!=="undefined")officialChampionsFixtures.forEach(match=>{const event=homeFootballEvent(match,"Champions");if(event)events.push(event);});
+  const today=localDay(Date.now()),favourite=window.getFavouriteTeam?.();
+  const todayEvents=events.filter(event=>event.state==="live"||localDay(event.time)===today);
+  const nextFavourite=favourite?events.filter(event=>event.state!=="finished"&&event.time>Date.now()&&event.teams?.split("|").some(team=>window.isFavouriteTeam?.(team))&&!todayEvents.includes(event)).sort((a,b)=>a.time-b.time)[0]:null;
+  const visibleEvents=[...todayEvents,...(nextFavourite?[{...nextFavourite,isNextFavourite:true}]:[]),...motorEvents.filter(event=>Number.isFinite(event.time))].sort((a,b)=>eventPriority(b,today)-eventPriority(a,today)||a.time-b.time);
+  const liveCount=visibleEvents.filter(event=>event.state==="live").length,todayCount=todayEvents.length;
+  const summary=document.getElementById("home-priority-summary");if(summary)summary.innerHTML=`<span class="${liveCount?"active":""}">🔴 ${liveCount} en directo</span><span>📅 ${todayCount} hoy</span>${nextFavourite?'<span>★ Próximo de tu equipo</span>':""}`;
+  const title=document.getElementById("event-hub-title");if(title)title.textContent=liveCount?"Ahora en directo":todayCount?"Hoy y próximamente":"Próximamente";
+  box.innerHTML=visibleEvents.map(event=>{const finished=event.state==="finished",subtitle=finished?"Resultado definitivo":new Intl.DateTimeFormat("es-ES",{weekday:"long",day:"numeric",hour:"2-digit",minute:"2-digit",timeZone:window.WolfTimezone?.get()||"Europe/Madrid"}).format(new Date(event.time)),label=event.state==="live"?"🔴 EN JUEGO":finished?"FINAL":event.isNextFavourite?"TU PRÓXIMO":localDay(event.time)===today?"HOY":"PRÓXIMO";return `<a class="timeline-event${event.state==="live"?" is-live":""}${finished?" is-finished":""}" href="${event.url}"${event.teams?` data-teams="${event.teams}"`:""}><span>${event.icon}</span><span><strong>${event.title}</strong><small>${event.competition} · ${subtitle}</small></span><span class="event-state${event.state==="live"?" live":""}${finished?" finished":""}">${label}</span></a>`;}).join("")||'<div class="home-empty"><strong>Todo al día</strong><span>No hay eventos confirmados para hoy. Te mostramos las próximas sesiones en cuanto se publiquen.</span></div>';
   requestAnimationFrame(()=>window.applyTeamPreference?.());
 }
