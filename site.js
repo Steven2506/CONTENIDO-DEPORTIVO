@@ -22,7 +22,7 @@ window.WolfTimezone=WolfTimezone;
 (() => {
   const root = document.body.dataset.root || "";
   const preferences = document.createElement("script");
-  preferences.src = `${root}preferences.js?v=20260913-teams1`;
+  preferences.src = `${root}preferences.js?v=20260913-teams2`;
   preferences.defer = true;
   document.head.append(preferences);
   if (!document.querySelector('link[rel="icon"]')) {
