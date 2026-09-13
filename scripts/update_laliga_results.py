@@ -248,11 +248,13 @@ def player_name(lineup: dict) -> str:
 
 def lineup_team(items: list, formation: str | None) -> dict:
     starters = [item for item in items if item.get("status") == "start"]
+    substitutes = [item for item in items if item.get("status") in {"bench", "substitute"}]
     managers = [item for item in items if item.get("position") == 0]
     return {
         "formation": formation or "",
         "manager": player_name(managers[0]) if managers else "",
         "starters": [{"number": item.get("shirt_number"), "name": player_name(item)} for item in starters],
+        "substitutes": [{"number": item.get("shirt_number"), "name": player_name(item)} for item in substitutes],
     }
 
 
@@ -281,9 +283,10 @@ def match_details(match: dict) -> dict:
             yellow[event_team] = yellow.get(event_team, 0) + 1
         if collection == "booking" and "Red" in name:
             red[event_team] = red.get(event_team, 0) + 1
-        if collection == "goal" or (collection == "booking" and "Red" in name):
+        visible_type = ("goal" if collection == "goal" else "red" if collection == "booking" and "Red" in name else "yellow" if collection == "booking" and "Yellow" in name else "substitution" if collection == "substitution" else None)
+        if visible_type:
             decisive.append({
-                "type": "goal" if collection == "goal" else "red",
+                "type": visible_type,
                 "minute": event.get("clock") or event.get("time") or "–",
                 "player": player_name(event.get("lineup", {})),
                 "team": team_name(home_team) if event_team == home_id else team_name(away_team),
