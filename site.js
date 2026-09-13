@@ -6,7 +6,7 @@ const WolfTimezone=(()=>{
     ["Europe/Paris","Francia"],["Europe/Berlin","Alemania"],["Europe/Rome","Italia"],["America/New_York","EE. UU. · Este"],
     ["America/Chicago","EE. UU. · Centro"],["America/Denver","EE. UU. · Montaña"],["America/Los_Angeles","EE. UU. · Pacífico"],
     ["America/Mexico_City","México"],["America/Bogota","Colombia"],["America/Lima","Perú"],["America/Argentina/Buenos_Aires","Argentina"],
-    ["America/Sao_Paulo","Brasil · São Paulo"],["Asia/Tokyo","Japón"],["Asia/Shanghai","China"],["Asia/Kolkata","India"],["Australia/Sydney","Australia · Sídney"]
+    ["America/Sao_Paulo","Brasil · São Paulo"],["America/Santiago","Chile"],["America/Caracas","Venezuela"],["America/Guayaquil","Ecuador"],["America/La_Paz","Bolivia"],["America/Montevideo","Uruguay"],["America/Asuncion","Paraguay"],["America/Costa_Rica","Costa Rica"],["America/Guatemala","Guatemala"],["America/Santo_Domingo","República Dominicana"],["Asia/Tokyo","Japón"],["Asia/Shanghai","China"],["Asia/Kolkata","India"],["Australia/Sydney","Australia · Sídney"]
   ];
   const valid=zone=>{try{new Intl.DateTimeFormat("es-ES",{timeZone:zone}).format();return true;}catch{return false;}};
   const saved=localStorage.getItem(storageKey),current=valid(saved)?saved:detected;
@@ -46,7 +46,7 @@ window.WolfTimezone=WolfTimezone;
     }).join("");
     header.innerHTML = `<header class="site-header">
       <a class="brand" href="${root}index.html" aria-label="WOLFGAMES, inicio"><span class="brand-mark">WG</span><span>${title}</span></a>
-      <button class="timezone-button" type="button" aria-label="Cambiar zona horaria">🌍 <span>${WolfTimezone.name(WolfTimezone.get())}</span></button>
+      <button class="timezone-button" type="button" aria-label="Cambiar zona horaria. Actual: ${WolfTimezone.name(WolfTimezone.get())}">🌍 <span>${WolfTimezone.name(WolfTimezone.get())}</span></button>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu"><span aria-hidden="true">☰</span><span class="sr-only">Abrir menú</span></button>
       <nav class="navbar" aria-label="Navegación principal"><ul class="menu" id="main-menu">${menuLinks}</ul></nav>
     </header>`;
@@ -63,7 +63,9 @@ window.WolfTimezone=WolfTimezone;
   document.head.append(zoneStyle);
   const dialog=document.createElement("dialog");dialog.className="timezone-dialog";dialog.setAttribute("aria-labelledby","timezone-title");
   const options=[[WolfTimezone.detected,`Detectada · ${WolfTimezone.name(WolfTimezone.detected)}`],...WolfTimezone.zones].filter((item,index,array)=>array.findIndex(other=>other[0]===item[0])===index);
-  dialog.innerHTML=`<h2 id="timezone-title">Tu horario local</h2><p>Hemos detectado <strong>${WolfTimezone.name(WolfTimezone.detected)} (${WolfTimezone.offset(WolfTimezone.detected)})</strong>. Todos los partidos y sesiones se mostrarán en la zona que elijas.</p><label for="wolf-timezone-select">Zona horaria</label><select id="wolf-timezone-select">${options.map(([zone,label])=>`<option value="${zone}"${zone===WolfTimezone.get()?" selected":""}>${label} · ${WolfTimezone.offset(zone)}</option>`).join("")}</select><div class="timezone-actions"><button class="secondary" type="button" data-timezone-close>Ahora no</button><button type="button" data-timezone-save>Usar este horario</button></div>`;
+  const region=zone=>zone.startsWith("Europe/")||zone==="Atlantic/Canary"?"Europa":zone.startsWith("America/")?"América":"Asia y Oceanía";
+  const groupedOptions=["Europa","América","Asia y Oceanía"].map(group=>`<optgroup label="${group}">${options.filter(([zone])=>region(zone)===group).map(([zone,label])=>`<option value="${zone}"${zone===WolfTimezone.get()?" selected":""}>${label} · ${WolfTimezone.offset(zone)}</option>`).join("")}</optgroup>`).join("");
+  dialog.innerHTML=`<h2 id="timezone-title">Tu horario local</h2><p>Hemos detectado <strong>${WolfTimezone.name(WolfTimezone.detected)} (${WolfTimezone.offset(WolfTimezone.detected)})</strong>. Todos los partidos y sesiones se mostrarán en la zona que elijas.</p><label for="wolf-timezone-select">Zona horaria</label><select id="wolf-timezone-select">${groupedOptions}</select><div class="timezone-actions"><button class="secondary" type="button" data-timezone-close>Ahora no</button><button type="button" data-timezone-save>Usar este horario</button></div>`;
   document.body.append(dialog);
   header?.querySelector(".timezone-button")?.addEventListener("click",()=>dialog.showModal());
   dialog.querySelector("[data-timezone-close]")?.addEventListener("click",()=>{localStorage.setItem("wolf-timezone",WolfTimezone.get());dialog.close();});
