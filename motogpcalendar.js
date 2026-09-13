@@ -42,7 +42,7 @@ if(sanMarinoMotoGP)sanMarinoMotoGP.sessions=[
   ["Warm Up","2026-09-13T09:40:00+02:00",10],
   ["Carrera","2026-09-13T14:00:00+02:00",90]
 ].map(([name,start,duration])=>({name,start,duration}));
-function motoWeekendEnd(race){return new Date(new Date(race.date).getTime()+3*86400000).getTime();}
+function motoWeekendEnd(race){\n  if(race?.sessions?.length)return Math.max(...race.sessions.map(session=>new Date(session.start).getTime()+session.duration*60000));\n  return new Date(new Date(race.date).getTime()+3*86400000).getTime();\n}
 function getNextMotoGP(){return motogpCalendar.find(r=>motoWeekendEnd(r)>Date.now())||null;}
 function getNextMotoSession(race){return race?.sessions?.find(session=>new Date(session.start).getTime()+session.duration*60000>Date.now())||null;}
 function motoSessionState(session){const start=new Date(session.start).getTime(),end=start+session.duration*60000,now=Date.now();return now<start?"upcoming":now<=end?"live":"finished";}
