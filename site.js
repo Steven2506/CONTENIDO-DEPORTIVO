@@ -74,7 +74,7 @@ window.WolfTimezone=WolfTimezone;
   if(!WolfTimezone.hasSaved())setTimeout(()=>dialog.showModal(),350);
   document.querySelectorAll(".timezone-note").forEach(note=>note.textContent=`🕒 Horarios en ${WolfTimezone.name(WolfTimezone.get())} (${WolfTimezone.offset(WolfTimezone.get())})`);
 
-  const notificationDefaults={favourite:true,footballLive:false,goals:false,f1:true,motogp:true,changes:true};
+  const notificationDefaults={favourite:false,footballLive:false,goals:false,f1:false,motogp:false,changes:false};
   const notificationKey="wolf-notification-preferences",snapshotKey="wolf-notification-snapshot",sentKey="wolf-notifications-sent";
   const loadNotificationSettings=()=>{try{return {...notificationDefaults,...JSON.parse(localStorage.getItem(notificationKey)||"{}")};}catch{return {...notificationDefaults};}};
   const saveNotificationSettings=settings=>localStorage.setItem(notificationKey,JSON.stringify(settings));
