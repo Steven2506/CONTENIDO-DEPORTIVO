@@ -59,3 +59,5 @@ test("F1 y MotoGP avanzan a la siguiente sesión",()=>{
   assert.match(f1,/sessions\.find\(session=>f1SessionEnd\(session\)>now\)/);
   assert.match(moto,/sessions\?\.find\(session=>new Date\(session\.start\)\.getTime\(\)\+session\.duration\*60000>Date\.now\(\)\)/);
 });
+
+test("las fichas completas siguen disponibles en ambas competiciones",()=>{const league=fs.readFileSync("football.js","utf8"),champions=fs.readFileSync("champions.js","utf8");assert.match(league,/lineup-subs/);assert.match(league,/Tarjeta amarilla/);assert.match(champions,/openChampionsDetails/);assert.match(champions,/champions-detail-trigger/);});
