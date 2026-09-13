@@ -61,3 +61,5 @@ test("F1 y MotoGP avanzan a la siguiente sesión",()=>{
 });
 
 test("las fichas completas siguen disponibles en ambas competiciones",()=>{const league=fs.readFileSync("football.js","utf8"),champions=fs.readFileSync("champions.js","utf8");assert.match(league,/lineup-subs/);assert.match(league,/Tarjeta amarilla/);assert.match(champions,/openChampionsDetails/);assert.match(champions,/champions-detail-trigger/);});
+
+test("Champions cambia automáticamente al cuadro eliminatorio completo",()=>{const source=fs.readFileSync("champions.js","utf8"),centre=fs.readFileSync("champions-centre.js","utf8"),css=fs.readFileSync("diseno.css","utf8");assert.match(source,/knockoutTieCard/);assert.match(source,/decidedBy/);assert.match(source,/championsData\.phase==="knockout"/);assert.match(centre,/data-champions-view="knockout"/);assert.match(css,/\.knockout-legs/);assert.match(css,/grid-template-columns:1fr;overflow:visible/);});

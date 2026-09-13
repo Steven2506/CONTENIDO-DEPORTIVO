@@ -35,7 +35,12 @@ function renderChampions(){
   selector.innerHTML=championsData.rounds.map(item=>`<option value="${item.round}"${item.round===championsState.round?" selected":""}>Jornada ${item.round} · ${item.label}</option>`).join("");
   document.getElementById("champions-standing").innerHTML=`<table class="standing-table champions-standing-table"><thead><tr><th>Pos.</th><th>Equipo</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>DG</th><th>PTS</th></tr></thead><tbody>${championsData.standings.map(row=>`<tr class="champions-zone-${row.pos<=8?"direct":row.pos<=24?"playoff":"out"}" data-team="${championsEscape(row.team)}"><td><b>${row.pos}</b></td><th scope="row">${championsEscape(row.team)}</th><td>${row.played}</td><td>${row.won}</td><td>${row.drawn}</td><td>${row.lost}</td><td>${row.gf}</td><td>${row.ga}</td><td>${row.gd>0?`+${row.gd}`:row.gd}</td><td><strong>${row.points}</strong></td></tr>`).join("")}</tbody></table>`;
   document.getElementById("champions-draw-overview").innerHTML=championsDrawOverview();
-  renderChampionsViews();renderChampionsBracket();requestAnimationFrame(()=>window.applyTeamPreference?.());
+  renderChampionsViews();renderChampionsBracket();
+  const knockoutActive=championsData.knockout?.active===true||championsData.phase==="knockout";
+  const knockoutTab=document.getElementById("champions-knockout-tab");
+  if(knockoutTab)knockoutTab.hidden=!knockoutActive;
+  if(knockoutActive&&championsData.phase==="knockout")switchChampionsView(knockoutTab);
+  requestAnimationFrame(()=>window.applyTeamPreference?.());
 }
 function renderChampionsViews(){
   const round=championsData.rounds.find(item=>item.round===championsState.round)||championsData.rounds[0],matches=round.matches||[],all=allChampionsMatches();
@@ -68,4 +73,14 @@ function openChampionsDetails(key){
 function championsEmpty(title,text){return `<div class="score-empty"><span aria-hidden="true">⚽</span><h4>${title}</h4><p>${text}</p></div>`;}
 function championsDrawOverview(){const draw=championsData.drawOpponents?.length?championsData.drawOpponents:(window.officialChampionsDraw||[]);return `<div class="champions-draw-grid">${draw.map(item=>`<article class="match-card champions-draw-card" data-team="${championsEscape(item.team)}"><h4>${championsEscape(item.team)}</h4><div class="champions-draw-side"><strong>En casa</strong><span>${item.home.map(championsEscape).join(" · ")}</span></div><div class="champions-draw-side"><strong>Fuera</strong><span>${item.away.map(championsEscape).join(" · ")}</span></div></article>`).join("")}</div>`;}
 function championsCalendarUrl(match){const stamp=date=>date.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z/,"Z"),start=new Date(match.iso),end=new Date(start.getTime()+2*3600000);return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`Champions · ${match.home} vs ${match.away}`)}&dates=${stamp(start)}/${stamp(end)}&details=${encodeURIComponent("UEFA Champions League · WOLFGAMES")}`;}
-function renderChampionsBracket(){const bracket=document.getElementById("champions-bracket");bracket.hidden=!championsData.knockout.active;if(!championsData.knockout.active)return;const labels={playoff:"Play-off",last16:"Octavos",quarters:"Cuartos",semifinals:"Semifinales",final:"Final"};document.getElementById("champions-bracket-rounds").innerHTML=Object.entries(championsData.knockout.rounds).map(([key,ties])=>`<section class="bracket-round"><h4>${labels[key]}</h4>${ties.map(tie=>`<article><span>${championsEscape(tie.home)}</span><b>${tie.aggregate||"–"}</b><span>${championsEscape(tie.away)}</span></article>`).join("")}</section>`).join("");}
+function knockoutScore(leg){if(!leg)return "–";if(Number.isInteger(leg.homeScore)&&Number.isInteger(leg.awayScore))return `${leg.homeScore}–${leg.awayScore}`;return leg.score||"–";}
+function knockoutTieCard(tie){
+  const legs=tie.legs||[],aggregate=tie.aggregate||tie.global||"–",winner=tie.winner||tie.qualified||"",decision=tie.decidedBy||tie.decision||"";
+  return `<article class="knockout-tie"><div class="knockout-team ${winner===tie.home?"qualified":""}"><span>${championsEscape(tie.home||"Por determinar")}</span>${winner===tie.home?'<small>Clasificado</small>':""}</div><strong class="aggregate" title="Marcador global">${championsEscape(aggregate)}</strong><div class="knockout-team away ${winner===tie.away?"qualified":""}"><span>${championsEscape(tie.away||"Por determinar")}</span>${winner===tie.away?'<small>Clasificado</small>':""}</div>${legs.length?`<div class="knockout-legs">${legs.map((leg,index)=>`<span>${index?"Vuelta":"Ida"}: <b>${knockoutScore(leg)}</b></span>`).join("")}</div>`:""}${decision?`<small class="knockout-decision">${championsEscape(decision)}</small>`:""}</article>`;
+}
+function renderChampionsBracket(){
+  const bracket=document.getElementById("champions-bracket"),active=championsData.knockout?.active===true||championsData.phase==="knockout";if(!bracket)return;
+  const labels={playoff:"Play-off",last16:"Octavos",quarters:"Cuartos",semifinals:"Semifinales",final:"Final"},rounds=championsData.knockout?.rounds||{};
+  document.getElementById("champions-bracket-rounds").innerHTML=Object.entries(rounds).map(([key,ties])=>`<section class="bracket-round"><h4>${labels[key]||key}</h4>${ties?.length?ties.map(knockoutTieCard).join(""):'<p class="bracket-pending">Cruces pendientes</p>'}</section>`).join("");
+  bracket.dataset.active=String(active);
+}
