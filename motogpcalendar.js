@@ -47,6 +47,7 @@ function motoWeekendEnd(race){
   return new Date(new Date(race.date).getTime()+3*86400000).getTime();
 }
 function getNextMotoGP(){return motogpCalendar.find(r=>motoWeekendEnd(r)>Date.now())||null;}
+function getLastMotoGP(){return [...motogpCalendar].filter(race=>motoWeekendEnd(race)<=Date.now()).pop()||null;}
 function getNextMotoSession(race){return race?.sessions?.find(session=>new Date(session.start).getTime()+session.duration*60000>Date.now())||null;}
 function motoSessionState(session){const start=new Date(session.start).getTime(),end=start+session.duration*60000,now=Date.now();return now<start?"upcoming":now<=end?"live":"finished";}
 function formatMotoLocalTime(value){return new Intl.DateTimeFormat("es-ES",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit",timeZone:window.WolfTimezone?.get()||"Europe/Madrid"}).format(new Date(value));}
