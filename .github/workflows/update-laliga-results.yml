@@ -34,17 +34,20 @@ jobs:
         run: python scripts/update_laliga_results.py
 
       - name: Validar datos publicados
-        run: node --check sports-data.js
+        run: |
+          node --check sports-data.js
+          node --check laliga-current.js
+          node --check laliga-calendar.js
 
       - name: Publicar solo si hay cambios
         run: |
           printf '%s\n' '20260826-motogp-sessions' > .pages-deploy
-          if git diff --quiet -- sports-data.js laliga-current.js deportes.html index.html .pages-deploy; then
+          if git diff --quiet -- sports-data.js laliga-current.js laliga-calendar.js deportes.html index.html .pages-deploy; then
             echo "No hay cambios oficiales."
             exit 0
           fi
           git config user.name "WOLFGAMES Bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -- sports-data.js laliga-current.js deportes.html index.html .pages-deploy
+          git add -- sports-data.js laliga-current.js laliga-calendar.js deportes.html index.html .pages-deploy
           git commit -m "Actualiza resultados oficiales de LALIGA"
           git push

@@ -16,6 +16,7 @@ import requests
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "sports-data.js"
 PATCH_FILE = ROOT / "laliga-current.js"
+CALENDAR_FILE = ROOT / "laliga-calendar.js"
 HTML_FILE = ROOT / "deportes.html"
 HOME_FILE = ROOT / "index.html"
 RESULTS_URL = "https://www.laliga.com/laliga-easports/resultados/2026-27/jornada-{round}"
@@ -347,7 +348,20 @@ def patch_for(match: dict, include_details: bool = False) -> dict | None:
     return None
 
 
-def apply(source: str, round_number: int, matches: list[dict]) -> tuple[str, int]:
+def schedule_patch(match: dict) -> dict:
+    kickoff = datetime.fromisoformat(match["date"]).astimezone(ZoneInfo("Europe/Madrid"))
+    weekdays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+    months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+    venue = match.get("venue") or {}
+    return {
+        "date": f"{weekdays[kickoff.weekday()]}, {kickoff.day} de {months[kickoff.month - 1]}",
+        "time": kickoff.strftime("%H:%M"),
+        "iso": kickoff.isoformat(),
+        "venue": venue.get("name") if isinstance(venue, dict) else venue or "Por confirmar",
+    }
+
+
+def apply(source: str, round_number: int, matches: list[dict], *, include_details: bool = True) -> tuple[str, int]:
     lines = source.splitlines(keepends=True)
     official = {}
     for match in matches:
@@ -371,9 +385,9 @@ def apply(source: str, round_number: int, matches: list[dict]) -> tuple[str, int
             continue
         seen.add(key)
         match = official[key]
-        patch = patch_for(match, include_details="details:" not in line)
-        if not patch:
-            continue
+        patch = {**schedule_patch(match), **(patch_for(match, include_details=include_details and "details:" not in line) or {})}
+        if match.get("status") not in LIVE_STATES | FINISHED_STATES | POSTPONED_STATES:
+            patch.update({"status": "Programado", "state": "scheduled"})
         updated = line
         for property_name, value in patch.items():
             updated = set_property(updated, property_name, value)
@@ -401,17 +415,20 @@ def bust_browser_cache() -> None:
         html = path.read_text(encoding="utf-8")
         html, sports_count = re.subn(r'sports-data\.js(?:\?v=[^"\']+)?', f'sports-data.js?v={token}', html, count=1)
         html, patch_count = re.subn(r'laliga-current\.js(?:\?v=[^"\']+)?', f'laliga-current.js?v={token}', html, count=1)
-        if sports_count != 1 or patch_count != 1:
+        html, calendar_count = re.subn(r'laliga-calendar\.js(?:\?v=[^"\']+)?', f'laliga-calendar.js?v={token}', html, count=1)
+        if sports_count != 1 or patch_count != 1 or calendar_count != 1:
             raise RuntimeError(f"No se encontraron los scripts de LALIGA en {path.name}")
         path.write_text(html, encoding="utf-8")
 
 def main() -> int:
     source = DATA_FILE.read_text(encoding="utf-8")
     patch_source = PATCH_FILE.read_text(encoding="utf-8")
-    rounds = available_rounds(source, patch_source)
+    calendar_source = CALENDAR_FILE.read_text(encoding="utf-8")
+    active_round = current_round(source)
+    rounds = [round_number for round_number in (active_round - 1, active_round, active_round + 1) if 1 <= round_number <= 38]
     if not rounds:
         raise RuntimeError("No hay jornadas locales para sincronizar")
-    updated, updated_patch, changes = source, patch_source, 0
+    updated, updated_patch, updated_calendar, changes = source, patch_source, calendar_source, 0
     verified = 0
     for target_round in rounds:
         matches = official_matches(target_round, updated)
@@ -421,12 +438,16 @@ def main() -> int:
         if has_round(updated_patch, target_round):
             updated_patch, patch_changes = apply(updated_patch, target_round, matches)
             changes += patch_changes
+        if has_round(updated_calendar, target_round):
+            updated_calendar, calendar_changes = apply(updated_calendar, target_round, matches, include_details=False)
+            changes += calendar_changes
         verified += len(matches)
     updated, standings_changed = apply_standings(updated, official_standings())
     changes += int(standings_changed)
     if changes:
         DATA_FILE.write_text(update_timestamp(updated), encoding="utf-8")
         PATCH_FILE.write_text(updated_patch, encoding="utf-8")
+        CALENDAR_FILE.write_text(updated_calendar, encoding="utf-8")
         bust_browser_cache()
     print(f"Jornadas {rounds}: {verified} partidos verificados · clasificación oficial verificada · cambios: {changes}")
     return 0

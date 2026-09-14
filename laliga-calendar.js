@@ -60,16 +60,16 @@ const laligaCalendar={
     {date:"Domingo, 13 de septiembre",time:"Por confirmar",iso:null,home:"Villarreal CF",away:"Real Betis",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null}
   ],
   6:[
-    {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"Deportivo Alavés",away:"Valencia CF",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"Atlético de Madrid",away:"CA Osasuna",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"Real Betis",away:"Getafe CF",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"RC Deportivo",away:"Sevilla FC",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"Elche CF",away:"Real Madrid",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"FC Barcelona",away:"R. Racing Club",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"Levante UD",away:"Athletic Club",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"Málaga CF",away:"Villarreal CF",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Miércoles, 16 de septiembre",time:"Por confirmar",iso:null,home:"Rayo Vallecano",away:"RCD Espanyol de Barcelona",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Jueves, 3 de septiembre",time:"21:00",iso:"2026-09-03T21:00:00+02:00",home:"Real Sociedad",away:"Celta",venue:"Reale Arena",status:"Reprogramado",state:"rescheduled",scheduleNote:"Adelantado oficialmente desde la jornada 6",referee:null,var:null}
+    {date:"Martes, 15 de septiembre",time:"19:00",iso:"2026-09-15T19:00:00+02:00",home:"Rayo Vallecano",away:"RCD Espanyol de Barcelona",venue:"Ontime Butarque",status:"Programado",state:"scheduled",referee:"Isidro Díaz de Mera Escuderos",var:"Javier Iglesias Villanueva"},
+    {date:"Martes, 15 de septiembre",time:"20:00",iso:"2026-09-15T20:00:00+02:00",home:"Deportivo Alavés",away:"Valencia CF",venue:"Mendizorroza",status:"Programado",state:"scheduled",referee:"Alejandro Sesma Espinosa",var:"Valentín Pizarro Gómez"},
+    {date:"Martes, 15 de septiembre",time:"21:30",iso:"2026-09-15T21:30:00+02:00",home:"Elche CF",away:"Real Madrid",venue:"Martínez Valero",status:"Programado",state:"scheduled",referee:"Jesús Gil Manzano",var:"Miguel Ángel Ortiz Arias"},
+    {date:"Miércoles, 16 de septiembre",time:"19:00",iso:"2026-09-16T19:00:00+02:00",home:"Atlético de Madrid",away:"CA Osasuna",venue:"Riyadh Air Metropolitano",status:"Programado",state:"scheduled",referee:null,var:null},
+    {date:"Miércoles, 16 de septiembre",time:"19:00",iso:"2026-09-16T19:00:00+02:00",home:"RC Deportivo",away:"Sevilla FC",venue:"ABANCA-RIAZOR",status:"Programado",state:"scheduled",referee:null,var:null},
+    {date:"Miércoles, 16 de septiembre",time:"21:30",iso:"2026-09-16T21:30:00+02:00",home:"FC Barcelona",away:"R. Racing Club",venue:"Spotify Camp Nou",status:"Programado",state:"scheduled",referee:null,var:null},
+    {date:"Miércoles, 16 de septiembre",time:"21:30",iso:"2026-09-16T21:30:00+02:00",home:"Levante UD",away:"Athletic Club",venue:"Ciutat de València",status:"Programado",state:"scheduled",referee:null,var:null},
+    {date:"Jueves, 17 de septiembre",time:"19:00",iso:"2026-09-17T19:00:00+02:00",home:"Real Betis",away:"Getafe CF",venue:"Benito Villamarín",status:"Programado",state:"scheduled",referee:null,var:null},
+    {date:"Jueves, 17 de septiembre",time:"21:30",iso:"2026-09-17T21:30:00+02:00",home:"Málaga CF",away:"Villarreal CF",venue:"La Rosaleda",status:"Programado",state:"scheduled",referee:null,var:null},
+    {date:"Jueves, 3 de septiembre",time:"21:00",iso:"2026-09-03T21:00:00+02:00",home:"Real Sociedad",away:"Celta",venue:"Reale Arena",status:"Finalizado",state:"finished",homeScore:0,awayScore:0,scheduleNote:"Adelantado oficialmente desde la jornada 6",referee:null,var:null}
   ],
   7:[
     {date:"Domingo, 20 de septiembre",time:"Por confirmar",iso:null,home:"Athletic Club",away:"Deportivo Alavés",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
@@ -456,4 +456,3 @@ const laligaCalendar={
     {date:"Domingo, 30 de mayo",time:"Por confirmar",iso:null,home:"Real Sociedad",away:"Villarreal CF",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null}
   ],
 };
-

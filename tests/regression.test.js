@@ -123,3 +123,27 @@ test("la mejora de rendimiento evita descargas y trabajo innecesarios",()=>{
     assert.match(fs.readFileSync(path,"utf8"),/document\.hidden/,`${path} sigue trabajando en segundo plano`);
   }
 });
+
+test("la jornada 6 incluye todos los partidos oficiales del 15 de septiembre",()=>{
+  const data=loadFootball();
+  const matches=data.laligaRounds[6]||[];
+  const day15=matches.filter(match=>match.iso?.startsWith("2026-09-15"));
+  assert.equal(matches.length,10);
+  assert.equal(JSON.stringify(day15.map(match=>[match.home,match.away,match.time])),JSON.stringify([
+    ["Rayo Vallecano","RCD Espanyol de Barcelona","19:00"],
+    ["Deportivo Alavés","Valencia CF","20:00"],
+    ["Elche CF","Real Madrid","21:30"],
+  ]));
+  assert.equal(data.currentRound,6);
+});
+
+test("el sincronizador actualiza horarios oficiales y sus cachés",()=>{
+  const updater=fs.readFileSync("scripts/update_laliga_results.py","utf8");
+  const workflow=fs.readFileSync(".github/workflows/update-laliga-results.yml","utf8");
+  assert.match(updater,/CALENDAR_FILE/);
+  assert.match(updater,/schedule_patch/);
+  assert.match(updater,/active_round - 1, active_round, active_round \+ 1/);
+  assert.match(updater,/laliga-calendar\\\.js/);
+  assert.match(workflow,/node --check laliga-calendar\.js/);
+  assert.match(workflow,/git add -- sports-data\.js laliga-current\.js laliga-calendar\.js/);
+});
