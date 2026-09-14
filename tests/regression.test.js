@@ -143,6 +143,7 @@ test("el sincronizador actualiza horarios oficiales y sus cachés",()=>{
   assert.match(updater,/CALENDAR_FILE/);
   assert.match(updater,/schedule_patch/);
   assert.match(updater,/active_round - 1, active_round, active_round \+ 1/);
+  assert.match(updater,/Jornada activa avanzada automáticamente/);
   assert.match(updater,/laliga-calendar\\\.js/);
   assert.match(workflow,/node --check laliga-calendar\.js/);
   assert.match(workflow,/git add -- sports-data\.js laliga-current\.js laliga-calendar\.js/);

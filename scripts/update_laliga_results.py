@@ -430,8 +430,10 @@ def main() -> int:
         raise RuntimeError("No hay jornadas locales para sincronizar")
     updated, updated_patch, updated_calendar, changes = source, patch_source, calendar_source, 0
     verified = 0
+    official_by_round = {}
     for target_round in rounds:
         matches = official_matches(target_round, updated)
+        official_by_round[target_round] = matches
         if has_round(updated, target_round):
             updated, round_changes = apply(updated, target_round, matches)
             changes += round_changes
@@ -442,6 +444,11 @@ def main() -> int:
             updated_calendar, calendar_changes = apply(updated_calendar, target_round, matches, include_details=False)
             changes += calendar_changes
         verified += len(matches)
+    active_matches = official_by_round.get(active_round, [])
+    if active_round < 38 and len(active_matches) == 10 and all(match.get("status") in FINISHED_STATES for match in active_matches):
+        updated = re.sub(r"currentRound:\d+", f"currentRound:{active_round + 1}", updated, count=1)
+        changes += 1
+        print(f"Jornada activa avanzada automáticamente: {active_round} → {active_round + 1}")
     updated, standings_changed = apply_standings(updated, official_standings())
     changes += int(standings_changed)
     if changes:
