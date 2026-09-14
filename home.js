@@ -32,10 +32,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   await window.f1Ready;
   renderHomeMotorCards();
   renderEventHub();
-  setInterval(renderHomeMotorCards,1000);
-  setInterval(()=>{renderEventHub();checkHomeDataUpdate();},60000);
+  setInterval(()=>{if(!document.hidden)renderHomeMotorCards();},1000);
+  setInterval(()=>{if(!document.hidden){renderEventHub();checkHomeDataUpdate();}},60000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden){renderHomeMotorCards();renderEventHub();checkHomeDataUpdate();}});
 });
-async function checkHomeDataUpdate(){try{const response=await fetch(`sports-data.js?poll=${Date.now()}`,{cache:"no-store"});if(!response.ok)return;const source=await response.text(),revision=source.match(/updated:"([^"]+)"/)?.[1];if(revision&&revision!==footballData.updated)location.reload();}catch(error){console.info("Sincronización temporalmente no disponible.");}}
+async function checkHomeDataUpdate(){try{const response=await fetch("sports-data.js?version-check=1",{method:"HEAD",cache:"no-store"});if(!response.ok)return;const revision=response.headers.get("etag")||response.headers.get("last-modified");if(!revision)return;const key="wolf-sports-etag",previous=sessionStorage.getItem(key);sessionStorage.setItem(key,revision);if(previous&&previous!==revision)location.reload();}catch(error){console.info("Sincronización temporalmente no disponible.");}}
 function homeFootballState(match){if(match.state==="finished"||match.status==="Finalizado")return "finished";return isFootballLive(match)?"live":match.state||"scheduled";}
 function homeFootballEvent(match,competition){
   if(!match.iso)return null;const state=homeFootballState(match),hasScore=Number.isInteger(match.homeScore)&&Number.isInteger(match.awayScore),showScore=(state==="live"||state==="finished")&&hasScore;

@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("champions-round-select")?.addEventListener("change",event=>{championsState.round=Number(event.currentTarget.value);renderChampionsViews();});
   document.querySelectorAll("[data-champions-view]").forEach(button=>button.addEventListener("click",()=>switchChampionsView(button)));
   bindChampionsDetails();
-  setInterval(renderChampionsViews,60000);
+  setInterval(()=>{if(!document.hidden)renderChampionsViews();},60000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)renderChampionsViews();});
 });
 
 function championsEscape(value=""){return String(value).replace(/[&<>"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[char]);}

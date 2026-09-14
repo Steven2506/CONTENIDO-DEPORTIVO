@@ -98,11 +98,28 @@ test("todas las páginas activas cargan la misma versión PWA",()=>{
   const pages=["index.html","directos.html","deportes.html","F1.html","MotoGP.html","sobremi.html","status.html"];
   for(const page of pages){
     const html=fs.readFileSync(page,"utf8");
-    assert.match(html,/site\.js\?v=20260914-pwa1/,page);
-    assert.match(html,/diseno\.css\?v=20260914-pwa1/,page);
+    assert.match(html,/site\.js\?v=20260914-performance1/,page);
+    assert.match(html,/diseno\.css\?v=20260914-performance1/,page);
   }
   const site=fs.readFileSync("site.js","utf8");
   assert.match(site,/beforeinstallprompt/);
   assert.match(site,/serviceWorker\.register/);
   assert.match(site,/updateViaCache:"none"/);
+});
+
+test("la mejora de rendimiento evita descargas y trabajo innecesarios",()=>{
+  const f1=fs.readFileSync("F1.html","utf8");
+  assert.doesNotMatch(f1,/laliga-calendar\.js|sports-data\.js/);
+  for(const path of ["home.js","football.js"]){
+    const source=fs.readFileSync(path,"utf8");
+    assert.match(source,/method:"HEAD"/,`${path} no usa una comprobación ligera`);
+    assert.doesNotMatch(source,/response\.text\(\)/,`${path} vuelve a descargar los resultados`);
+  }
+  const particles=fs.readFileSync("particles.js","utf8");
+  assert.match(particles,/saveData/);
+  assert.match(particles,/now-lastFrame<33/);
+  assert.match(particles,/requestIdleCallback/);
+  for(const path of ["home.js","football.js","champions.js","f1calendar.js"]){
+    assert.match(fs.readFileSync(path,"utf8"),/document\.hidden/,`${path} sigue trabajando en segundo plano`);
+  }
 });

@@ -19,10 +19,11 @@ document.addEventListener("DOMContentLoaded",()=>{
   bindTabs("[data-football-view]","[data-football-panel]","footballView","footballPanel");
   renderFootball();
   bindMatchDetails();
-  setInterval(()=>{renderFootball();checkForDataUpdate();},60000);
+  setInterval(()=>{if(!document.hidden){renderFootball();checkForDataUpdate();}},60000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden){renderFootball();checkForDataUpdate();}});
 });
 
-async function checkForDataUpdate(){try{const response=await fetch(`sports-data.js?poll=${Date.now()}`,{cache:"no-store"});if(!response.ok)return false;const source=await response.text(),revision=source.match(/updated:"([^"]+)"/)?.[1];if(revision&&revision!==footballData.updated){location.reload();return true;}}catch(error){console.info("Sincronización temporalmente no disponible.");}return false;}
+async function checkForDataUpdate(){try{const response=await fetch("sports-data.js?version-check=1",{method:"HEAD",cache:"no-store"});if(!response.ok)return false;const revision=response.headers.get("etag")||response.headers.get("last-modified");if(!revision)return false;const key="wolf-sports-etag",previous=sessionStorage.getItem(key);sessionStorage.setItem(key,revision);if(previous&&previous!==revision){location.reload();return true;}}catch(error){console.info("Sincronización temporalmente no disponible.");}return false;}
 
 function bindTabs(buttonSelector,panelSelector,buttonKey,panelKey){document.querySelectorAll(buttonSelector).forEach(button=>button.addEventListener("click",()=>{const target=button.dataset[buttonKey];document.querySelectorAll(buttonSelector).forEach(item=>{item.classList.toggle("active",item===button);item.setAttribute("aria-selected",String(item===button));});document.querySelectorAll(panelSelector).forEach(panel=>panel.hidden=panel.dataset[panelKey]!==target);}));}
 

@@ -125,3 +125,6 @@ footer{text-align:center;border-top:1px solid var(--border);padding:25px 16px;ba
 .pwa-install-button:hover,.pwa-install-button:focus-visible{background:rgba(34,211,238,.16);border-color:var(--blue)}
 .pwa-install-button[hidden]{display:none!important}.pwa-update-toast button{margin-top:.65rem;padding:.5rem .8rem;border:1px solid var(--blue);border-radius:8px;background:rgba(34,211,238,.13);color:#fff;font:inherit;font-weight:850;cursor:pointer}
 @media(max-width:720px){.pwa-install-button span{display:none}.pwa-install-button{width:40px;height:40px;justify-content:center;padding:0}}
+
+/* Rendimiento: las secciones fuera de pantalla se componen cuando se aproximan al viewport. */
+.event-hub-section,.next-events-section,.subsection,.content-anchor,.football-centre,.champions-centre,.calendar-grid{content-visibility:auto;contain-intrinsic-size:auto 700px}

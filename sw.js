@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_VERSION="wolfgames-pwa-20260914-1";
+const CACHE_VERSION="wolfgames-pwa-20260914-performance1";
 const SHELL_CACHE=`${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE=`${CACHE_VERSION}-runtime`;
 const APP_SHELL=[
@@ -12,10 +12,10 @@ const APP_SHELL=[
   "./MotoGP.html",
   "./sobremi.html",
   "./offline.html",
-  "./diseno.css?v=20260914-pwa1",
-  "./site.js?v=20260914-pwa1",
+  "./diseno.css?v=20260914-performance1",
+  "./site.js?v=20260914-performance1",
   "./preferences.js?v=20260913-teams2",
-  "./particles.js",
+  "./particles.js?v=20260914-performance1",
   "./favicon.svg",
   "./icons/icon-192.png",
   "./icons/icon-512.png"

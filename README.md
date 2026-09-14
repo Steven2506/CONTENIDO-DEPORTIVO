@@ -21,6 +21,13 @@ WOLFGAMES funciona como PWA bajo el alcance `/CONTENIDO-DEPORTIVO/`. Los documen
 
 Al cambiar el service worker debe incrementarse `CACHE_VERSION`. Cuando hay una versión instalada activa, la interfaz ofrece al usuario actualizarla y recarga después de que el nuevo worker toma el control.
 
+## Rendimiento
+
+- Los datos deportivos solo se cargan en las páginas que los necesitan.
+- La comprobación de resultados utiliza una petición `HEAD`; el archivo completo únicamente se descarga cuando la página se recarga tras detectar una versión nueva.
+- Las animaciones se limitan a 30 FPS, reducen su complejidad en móvil o con ahorro de datos y se detienen cuando la pestaña queda oculta.
+- Las secciones fuera de la pantalla utilizan `content-visibility` para posponer su composición sin modificar el diseño.
+
 ## Actualización
 
 Los calendarios se editan en sus archivos JavaScript de datos. Los partidos de fútbol se actualizan en `sports-data.js`. La web se publica desde `main` mediante GitHub Pages.
