@@ -159,6 +159,21 @@ test("la jornada 6 incluye todos los partidos oficiales del 15 de septiembre",()
   assert.equal(data.currentRound,6);
 });
 
+test("la fuente de datos de fútbol exige procedencia oficial",()=>{
+  const laliga=fs.readFileSync("scripts/update_laliga_results.py","utf8");
+  const champions=fs.readFileSync("scripts/update_champions.py","utf8");
+  assert.match(laliga,/laliga\.com/);
+  assert.match(laliga,/webview_payload/);
+  assert.match(laliga,/FINISHED_STATES/);
+  assert.match(champions,/standings\.uefa\.com/);
+  assert.match(champions,/uefa\.com\/uefachampionsleague/);
+  assert.match(champions,/expected_finished/);
+});
+test("Champions no muestra alineaciones o estadísticas inventadas",()=>{
+  const source=fs.readFileSync("champions.js","utf8");
+  assert.match(source,/Pendiente de UEFA/);
+  assert.match(source,/No se mostrarán datos inventados/);
+});
 test("el sincronizador actualiza horarios oficiales y sus cachés",()=>{
   const updater=fs.readFileSync("scripts/update_laliga_results.py","utf8");
   const workflow=fs.readFileSync(".github/workflows/update-laliga-results.yml","utf8");
