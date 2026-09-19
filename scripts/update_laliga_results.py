@@ -385,7 +385,7 @@ def apply(source: str, round_number: int, matches: list[dict], *, include_detail
             continue
         seen.add(key)
         match = official[key]
-        patch = {**schedule_patch(match), **(patch_for(match, include_details=include_details and "details:" not in line) or {})}
+        patch = {**schedule_patch(match), **(patch_for(match, include_details=include_details) or {})}
         if match.get("status") not in LIVE_STATES | FINISHED_STATES | POSTPONED_STATES:
             patch.update({"status": "Programado", "state": "scheduled"})
         updated = line
@@ -444,11 +444,16 @@ def main() -> int:
             updated_calendar, calendar_changes = apply(updated_calendar, target_round, matches, include_details=False)
             changes += calendar_changes
         verified += len(matches)
-    active_matches = official_by_round.get(active_round, [])
-    if active_round < 38 and len(active_matches) == 10 and all(match.get("status") in FINISHED_STATES for match in active_matches):
-        updated = re.sub(r"currentRound:\d+", f"currentRound:{active_round + 1}", updated, count=1)
+    now = datetime.now(ZoneInfo("Europe/Madrid"))
+    progressed_rounds = []
+    for target_round, matches in official_by_round.items():
+        if any(match.get("status") not in POSTPONED_STATES and isinstance(match.get("date"), str) and datetime.fromisoformat(match["date"]).astimezone(ZoneInfo("Europe/Madrid")) <= now for match in matches):
+            progressed_rounds.append(target_round)
+    detected_round = max(progressed_rounds, default=active_round)
+    if detected_round != active_round:
+        updated = re.sub(r"currentRound:\d+", f"currentRound:{detected_round}", updated, count=1)
         changes += 1
-        print(f"Jornada activa avanzada automáticamente: {active_round} → {active_round + 1}")
+        print(f"Jornada activa sincronizada automáticamente: {active_round} → {detected_round}")
     updated, standings_changed = apply_standings(updated, official_standings())
     changes += int(standings_changed)
     if changes:
