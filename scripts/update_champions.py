@@ -17,7 +17,7 @@ DATA_FILE = ROOT / "champions-data.js"
 FIXTURES_FILE = ROOT / "champions-fixtures.js"
 HTML_FILE = ROOT / "deportes.html"
 STANDINGS_URL = "https://standings.uefa.com/v1/standings?competitionId=1&seasonYear=2027"
-RESULTS_URL = "https://www.uefa.com/uefachampionsleague/news/02a8-2174c9e9019d-f909a77bd77a-1000--2026-27-champions-league-all-the-league-phase-fixtures-a/"
+RESULTS_URL = "https://www.uefa.com/uefachampionsleague/news/02a8-2174c9e9019d-f909a77bd77a-1000--2026-27-champions-league-all-the-league-phase-fixtures/"
 HEADERS = {"User-Agent": "WOLFGAMES-champions-sync/1.0 (+https://github.com/Steven2506/CONTENIDO-DEPORTIVO)"}
 
 
@@ -78,6 +78,10 @@ DISPLAY_ALIASES = {value:key for key,value in RESULT_ALIASES.items()}
 DISPLAY_ALIASES.update({"Paris Saint-Germain":"Paris","Barcelona":"Barcelona"})
 
 def official_results() -> dict[tuple[str, str], tuple[int, int]]:
+    fixtures = FIXTURES_FILE.read_text(encoding="utf-8")
+    fixture_rows = re.findall(r'home:"([^"]+)",away:"([^"]+)"', fixtures)
+    if len(fixture_rows) != 144 or len(set(fixture_rows)) != 144:
+        raise RuntimeError(f"El calendario local de Champions no contiene exactamente 144 partidos únicos (recibidos: {len(fixture_rows)})")
     response = requests.get(RESULTS_URL, headers=HEADERS, timeout=30)
     response.raise_for_status()
     visible = html.unescape(re.sub(r"<[^>]+>", " ", response.text))
