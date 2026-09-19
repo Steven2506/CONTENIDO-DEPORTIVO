@@ -46,17 +46,19 @@ function renderFootball(){
 function inferredKickoffState(match){if(!match.iso||["live","finished","postponed"].includes(match.state))return null;const elapsed=Date.now()-new Date(match.iso).getTime();return elapsed>=0&&elapsed<150*60*1000?"live":null;}
 function matchState(match){
   const hasScore=Number.isInteger(match.homeScore)&&Number.isInteger(match.awayScore);
-  if(match.state==="finished"&&hasScore)return "finished";
+  const explicitStatus=String(match.status||"").trim().toLowerCase();
+  const explicitFinished=match.state==="finished"||["finalizado","final","ft","complete","completed"].includes(explicitStatus);
+  if(explicitFinished)return "finished";
   if(match.state==="live"){
     const sinceKickoff=match.iso?Date.now()-new Date(match.iso).getTime():0;
     const sincePeriod=match.periodStart?Date.now()-new Date(match.periodStart).getTime():0;
     const staleSecondHalf=match.period==="SecondHalf"&&sincePeriod>75*60*1000;
-    if((staleSecondHalf||sinceKickoff>150*60*1000)&&hasScore)return "finished";
-    if(staleSecondHalf||sinceKickoff>150*60*1000)return "pending";
+    if((staleSecondHalf||sinceKickoff>180*60*1000)&&hasScore)return "finished";
+    if(staleSecondHalf||sinceKickoff>180*60*1000)return "pending";
     return "live";
   }
   const inferred=inferredKickoffState(match);if(inferred)return inferred;
-  if(match.iso&&match.state!=="postponed"&&Date.now()-new Date(match.iso).getTime()>=150*60*1000)return hasScore?"finished":"pending";
+  if(match.iso&&match.state!=="postponed"&&Date.now()-new Date(match.iso).getTime()>=180*60*1000)return hasScore?"finished":"pending";
   if(match.state==="finished"||match.status==="Finalizado")return hasScore?"finished":"pending";
   if(match.state)return match.state;return "scheduled";
 }
@@ -103,5 +105,6 @@ function openMatchDetails(key){
 
 window.WolfGamesScores={
   updateMatch(round,home,patch){const match=footballData.laligaRounds[round]?.find(item=>item.home===home);if(!match)return false;Object.assign(match,patch);if(round===scoreState.round)renderFootball();return true;},
-  refresh:renderFootball
+  refresh:renderFootball,
+  matchState
 };
