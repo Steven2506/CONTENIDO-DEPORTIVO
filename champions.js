@@ -14,10 +14,11 @@ function championsEscape(value=""){return String(value).replace(/[&<>"]/g,char=>
 function allChampionsMatches(){return championsData.rounds.flatMap(round=>round.matches||[]);}
 function championsMatchState(match){
   if(match.state==="finished")return "finished";
-  const kickoff=match.iso?new Date(match.iso).getTime():NaN,elapsed=Date.now()-kickoff;
-  if(match.state==="live")return elapsed>150*60000?"pending":"live";
-  if(Number.isFinite(kickoff)&&elapsed>=0&&elapsed<150*60000)return "live";
-  if(Number.isFinite(kickoff)&&elapsed>=150*60000)return "pending";
+  if(match.state==="live"){
+    const kickoff=match.iso?new Date(match.iso).getTime():NaN;
+    const elapsed=Number.isFinite(kickoff)?Date.now()-kickoff:0;
+    return elapsed>180*60000?"pending":"live";
+  }
   return match.state||"scheduled";
 }
 function findChampionsRound(){
