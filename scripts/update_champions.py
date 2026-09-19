@@ -33,7 +33,8 @@ def official_rows() -> list[dict]:
     rows = []
     for item in items:
         team = item.get("team", {})
-        name = team.get("translations", {}).get("displayName", {}).get("ES") or team.get("internationalName")
+        raw_name = team.get("translations", {}).get("displayName", {}).get("ES") or team.get("internationalName")
+        name = DISPLAY_ALIASES.get(raw_name, raw_name)
         row = {
             "pos": item.get("rank"), "team": name, "played": item.get("played"),
             "won": item.get("won"), "drawn": item.get("drawn"), "lost": item.get("lost"),
@@ -73,6 +74,8 @@ RESULT_ALIASES = {
     "S. Bratislava": "Slovan Bratislava", "PSV": "PSV Eindhoven",
     "Shakhtar": "Shakhtar Donetsk", "Man Utd": "Manchester United",
 }
+DISPLAY_ALIASES = {value:key for key,value in RESULT_ALIASES.items()}
+DISPLAY_ALIASES.update({"Paris Saint-Germain":"Paris","Barcelona":"Barcelona"})
 
 def official_results() -> dict[tuple[str, str], tuple[int, int]]:
     response = requests.get(RESULTS_URL, headers=HEADERS, timeout=30)
@@ -87,6 +90,9 @@ def official_results() -> dict[tuple[str, str], tuple[int, int]]:
         match = re.search(rf"{re.escape(official_home)}\s+(\d+)\s*-\s*(\d+)\s+{re.escape(official_away)}", visible, re.I)
         if match:
             results[(home_team, away_team)] = (int(match.group(1)), int(match.group(2)))
+    expected_finished = sum(1 for line in fixtures.splitlines() if 'state:"finished"' in line)
+    if expected_finished and len(results) < expected_finished:
+        raise RuntimeError(f"UEFA publicó resultados incompletos: encontrados {len(results)} de {expected_finished} partidos ya marcados como finalizados")
     return results
 
 def apply_results(source: str, results: dict[tuple[str, str], tuple[int, int]]) -> tuple[str, int]:
