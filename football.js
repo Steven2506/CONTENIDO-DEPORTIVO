@@ -43,7 +43,7 @@ function renderFootball(){
   requestAnimationFrame(()=>window.applyTeamPreference?.());
 }
 
-function inferredKickoffState(match){if(!match.iso||["live","finished","postponed"].includes(match.state))return null;const elapsed=Date.now()-new Date(match.iso).getTime();return elapsed>=0&&elapsed<150*60*1000?"live":null;}
+function inferredKickoffState(match){return null;}
 function matchState(match){
   const hasScore=Number.isInteger(match.homeScore)&&Number.isInteger(match.awayScore);
   const explicitStatus=String(match.status||"").trim().toLowerCase();
