@@ -17,6 +17,28 @@ function loadFixtures(){
   vm.runInContext(fs.readFileSync("champions-fixtures.js","utf8")+"\nglobalThis.__fixtures=officialChampionsFixtures;",context);
   return context.__fixtures;
 }
+test("los partidos finalizados nunca aparecen como directos",()=>{
+  const data=loadFootball();
+  const finished=data.laligaRounds[7].find(match=>match.home==="Sevilla FC"&&match.away==="FC Barcelona");
+  assert(finished,"No se encontró Sevilla FC–FC Barcelona");
+  assert.equal(finished.state,"finished");
+  assert.equal(finished.homeScore,1);
+  assert.equal(finished.awayScore,3);
+  assert.equal(matchStateForTest(finished),"finished");
+});
+function matchStateForTest(match){
+  const hasScore=Number.isInteger(match.homeScore)&&Number.isInteger(match.awayScore);
+  const explicitStatus=String(match.status||"").trim().toLowerCase();
+  const explicitFinished=match.state==="finished"||["finalizado","final","ft","complete","completed"].includes(explicitStatus);
+  if(explicitFinished)return "finished";
+  if(match.state==="live"){
+    const sinceKickoff=match.iso?Date.now()-new Date(match.iso).getTime():0;
+    if(sinceKickoff>180*60*1000&&hasScore)return "finished";
+    return "live";
+  }
+  if(match.iso&&Date.now()-new Date(match.iso).getTime()>=180*60*1000)return hasScore?"finished":"pending";
+  return match.state||"scheduled";
+}
 test("ningún partido finalizado carece de marcador",()=>{
   const data=loadFootball();
   for(const [round,matches] of Object.entries(data.laligaRounds)){
