@@ -1,5 +1,5 @@
 const footballData={
-  updated:"19 de septiembre de 2026 · resultados LALIGA sincronizados",
+  updated:"20 de septiembre de 2026 · resultados LALIGA sincronizados",
   timezone:"Hora peninsular española (CEST, UTC+2)",
   currentRound:6,
   laligaRounds:{
