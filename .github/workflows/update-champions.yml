@@ -3,7 +3,7 @@ name: Actualizar Champions League
 on:
   workflow_dispatch:
   schedule:
-    - cron: "23 * * * *"
+    - cron: "*/15 * * * *"
 
 permissions:
   contents: write
