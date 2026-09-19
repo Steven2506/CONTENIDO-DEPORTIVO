@@ -153,7 +153,7 @@ def official_matches(round_number: int, source: str) -> list[dict]:
     watched = watched_rescheduled_matches(source, round_number)
     for match in matches:
         key = (team_name(match.get("home_team", {})), team_name(match.get("away_team", {})))
-        if match.get("status") in LIVE_STATES or key in watched:
+        if match.get("status") in LIVE_STATES | FINISHED_STATES or key in watched:
             detail = next_payload(MATCH_URL.format(slug=match["slug"])).get("props", {}).get("pageProps", {}).get("match", {})
             for key in ("status", "home_score", "away_score", "period_started", "home_formation", "away_formation", "home_team", "away_team", "opta_id", "id"):
                 if key in detail:
@@ -304,10 +304,8 @@ def match_details(match: dict) -> dict:
             "redCards": red.get(team_id, 0),
         }
 
-    now = datetime.now(ZoneInfo("Europe/Madrid")).strftime("%H:%M")
     return {
         "source": "LALIGA / Opta",
-        "updatedAt": now,
         "lineups": {
             "home": lineup_team(lineups.get("home_team_lineups", []), match.get("home_formation")),
             "away": lineup_team(lineups.get("away_team_lineups", []), match.get("away_formation")),
