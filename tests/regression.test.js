@@ -171,6 +171,7 @@ test("la fuente de datos de fútbol exige procedencia oficial",()=>{
   assert.match(champions,/expected_finished/);
 });
 test("Champions contiene las 144 jornadas de fase liga y solo marca como finalizados los partidos con resultado",()=>{const fixtures=loadFixtures();assert.equal(fixtures.length,144);for(let round=1;round<=8;round++)assert.equal(fixtures.filter(match=>match.round===round).length,18);for(const match of fixtures){if(match.state==="finished")assert(Number.isInteger(match.homeScore)&&Number.isInteger(match.awayScore),`${match.home}–${match.away}`);}});
+test("Champions sincroniza sus fixtures en el modelo que consume la interfaz",()=>{const context={};context.globalThis=context;vm.createContext(context);vm.runInContext(fs.readFileSync("champions-data.js","utf8"),context);vm.runInContext(fs.readFileSync("champions-fixtures.js","utf8"),context);const all=context.championsData.rounds.flatMap(round=>round.matches||[]);assert.equal(all.length,144);for(let round=1;round<=8;round++)assert.equal((context.championsData.rounds.find(item=>item.round===round)?.matches||[]).length,18);assert.equal(all.find(match=>match.home==="Real Madrid"&&match.away==="Inter")?.homeScore,2);});
 test("Champions no muestra alineaciones o estadísticas inventadas",()=>{
   const source=fs.readFileSync("champions.js","utf8");
   assert.match(source,/Pendiente de UEFA/);
