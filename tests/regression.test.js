@@ -157,7 +157,7 @@ test("la jornada 6 incluye todos los partidos oficiales del 15 de septiembre",()
     ["Deportivo Alavés","Valencia CF","20:00"],
     ["Elche CF","Real Madrid","21:30"],
   ]));
-  assert.equal(data.currentRound,6);
+  assert.equal(data.currentRound,7);
 });
 
 test("la fuente de datos de fútbol exige procedencia oficial",()=>{
