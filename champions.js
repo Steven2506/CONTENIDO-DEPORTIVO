@@ -13,11 +13,14 @@ document.addEventListener("DOMContentLoaded",()=>{
 function championsEscape(value=""){return String(value).replace(/[&<>"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[char]);}
 function allChampionsMatches(){return championsData.rounds.flatMap(round=>round.matches||[]);}
 function championsMatchState(match){
-  if(match.state==="finished")return "finished";
+  const hasScore=Number.isInteger(match.homeScore)&&Number.isInteger(match.awayScore);
+  const explicitStatus=String(match.status||"").trim().toLowerCase();
+  if(match.state==="finished"||["final","finalizado","ft","fulltime","completed"].includes(explicitStatus))return hasScore?"finished":"pending";
   if(match.state==="live"){
     const kickoff=match.iso?new Date(match.iso).getTime():NaN;
     const elapsed=Number.isFinite(kickoff)?Date.now()-kickoff:0;
-    return elapsed>180*60000?"pending":"live";
+    if(elapsed>180*60000)return hasScore?"finished":"pending";
+    return "live";
   }
   return match.state||"scheduled";
 }
