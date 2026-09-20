@@ -39,6 +39,9 @@ jobs:
           node --check laliga-current.js
           node --check laliga-calendar.js
 
+      - name: Ejecutar regresiones de fútbol
+        run: node --test tests/regression.test.js
+
       - name: Publicar solo si hay cambios
         run: |
           printf '%s\n' '20260826-motogp-sessions' > .pages-deploy
