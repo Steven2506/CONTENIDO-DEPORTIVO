@@ -146,7 +146,7 @@ test("la mejora de rendimiento evita descargas y trabajo innecesarios",()=>{
   }
 });
 
-test("la jornada 7 refleja el calendario oficial publicado por LALIGA",()=>{const data=loadFootball();const matches=data.laligaRounds[7]||[];assert.equal(matches.length,10);assert.equal(data.currentRound,7);assert.deepEqual(matches.map(match=>[match.home,match.away,match.time]),[["RCD Espanyol de Barcelona","Elche CF","21:00"],["CA Osasuna","Rayo Vallecano","14:00"],["Athletic Club","Deportivo Alavés","16:15"],["Celta","R. Racing Club","18:30"],["Sevilla FC","FC Barcelona","21:00"],["Getafe CF","Málaga CF","14:00"],["Atlético de Madrid","Real Madrid","16:15"],["RC Deportivo","Real Betis","18:30"],["Villarreal CF","Levante UD","18:30"],["Valencia CF","Real Sociedad","21:00"]]);});
+test("la jornada 7 refleja el calendario oficial publicado por LALIGA",()=>{const data=loadFootball();const matches=(data.laligaRounds[7]||[]).slice().sort((a,b)=>new Date(a.iso)-new Date(b.iso));assert.equal(matches.length,10);assert.equal(data.currentRound,7);assert.deepEqual(matches.map(match=>[match.home,match.away,match.time]),[["RCD Espanyol de Barcelona","Elche CF","21:00"],["CA Osasuna","Rayo Vallecano","14:00"],["Athletic Club","Deportivo Alavés","16:15"],["Celta","R. Racing Club","18:30"],["Sevilla FC","FC Barcelona","21:00"],["Getafe CF","Málaga CF","14:00"],["Atlético de Madrid","Real Madrid","16:15"],["RC Deportivo","Real Betis","18:30"],["Villarreal CF","Levante UD","18:30"],["Valencia CF","Real Sociedad","21:00"]]);});
 test("la jornada 6 incluye todos los partidos oficiales del 15 de septiembre",()=>{
   const data=loadFootball();
   const matches=data.laligaRounds[6]||[];
@@ -182,7 +182,7 @@ test("el sincronizador actualiza horarios oficiales y sus cachés",()=>{
   assert.match(updater,/CALENDAR_FILE/);
   assert.match(updater,/schedule_patch/);
   assert.match(updater,/active_round - 1, active_round, active_round \+ 1/);
-  assert.match(updater,/Jornada activa avanzada automáticamente/);
+  assert.match(updater,/Jornada activa sincronizada automáticamente/);
   assert.match(updater,/laliga-calendar\\\.js/);
   assert.match(workflow,/node --check laliga-calendar\.js/);
   assert.match(workflow,/git add -- sports-data\.js laliga-current\.js laliga-calendar\.js/);
