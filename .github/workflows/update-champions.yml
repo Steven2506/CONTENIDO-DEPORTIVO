@@ -9,8 +9,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: champions-data-sync
-  cancel-in-progress: true
+  group: football-data-sync
+  cancel-in-progress: false
 
 jobs:
   update-champions:
