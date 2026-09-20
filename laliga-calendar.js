@@ -84,16 +84,16 @@ const laligaCalendar={
     {date:"Domingo, 20 de septiembre",time:"18:30",iso:"2026-09-20T18:30:00+02:00",home:"Villarreal CF",away:"Levante UD",venue:"Estadio de la Cerámica",status:"Programado",referee:null,var:null,state:"scheduled"}
   ],
   8:[
-    {date:"Domingo, 11 de octubre",time:"Por confirmar",iso:null,home:"Deportivo Alavés",away:"Atlético de Madrid",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 11 de octubre",time:"Por confirmar",iso:null,home:"Real Betis",away:"CA Osasuna",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 11 de octubre",time:"Por confirmar",iso:null,home:"Elche CF",away:"Celta",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 11 de octubre",time:"Por confirmar",iso:null,home:"FC Barcelona",away:"Getafe CF",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 11 de octubre",time:"Por confirmar",iso:null,home:"Levante UD",away:"Sevilla FC",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 11 de octubre",time:"Por confirmar",iso:null,home:"Málaga CF",away:"RCD Espanyol de Barcelona",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 11 de octubre",time:"Por confirmar",iso:null,home:"R. Racing Club",away:"Valencia CF",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 11 de octubre",time:"Por confirmar",iso:null,home:"Rayo Vallecano",away:"Athletic Club",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 11 de octubre",time:"Por confirmar",iso:null,home:"Real Madrid",away:"Villarreal CF",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 11 de octubre",time:"Por confirmar",iso:null,home:"Real Sociedad",away:"RC Deportivo",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null}
+    {date:"Sábado, 10 de octubre",time:"16:15",iso:"2026-10-10T16:15:00+02:00",home:"Deportivo Alavés",away:"Atlético de Madrid",venue:"Mendizorroza",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Domingo, 11 de octubre",time:"18:30",iso:"2026-10-11T18:30:00+02:00",home:"Real Betis",away:"CA Osasuna",venue:"Estadio La Cartuja",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Domingo, 11 de octubre",time:"14:00",iso:"2026-10-11T14:00:00+02:00",home:"Elche CF",away:"Celta",venue:"Estadio Martínez Valero",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Sábado, 10 de octubre",time:"18:30",iso:"2026-10-10T18:30:00+02:00",home:"FC Barcelona",away:"Getafe CF",venue:"Spotify Camp Nou",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Lunes, 12 de octubre",time:"21:00",iso:"2026-10-12T21:00:00+02:00",home:"Levante UD",away:"Sevilla FC",venue:"Estadio Ciutat de València",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Viernes, 9 de octubre",time:"21:00",iso:"2026-10-09T21:00:00+02:00",home:"Málaga CF",away:"RCD Espanyol de Barcelona",venue:"La Rosaleda",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Domingo, 11 de octubre",time:"21:00",iso:"2026-10-11T21:00:00+02:00",home:"R. Racing Club",away:"Valencia CF",venue:"El Sardinero",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Sábado, 10 de octubre",time:"14:00",iso:"2026-10-10T14:00:00+02:00",home:"Rayo Vallecano",away:"Athletic Club",venue:"Estadio de Vallecas",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Sábado, 10 de octubre",time:"21:00",iso:"2026-10-10T21:00:00+02:00",home:"Real Madrid",away:"Villarreal CF",venue:"Bernabéu",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Domingo, 11 de octubre",time:"16:15",iso:"2026-10-11T16:15:00+02:00",home:"Real Sociedad",away:"RC Deportivo",venue:"Anoeta",status:"Programado",referee:null,var:null,state:"scheduled"}
   ],
   9:[
     {date:"Domingo, 18 de octubre",time:"Por confirmar",iso:null,home:"Real Betis",away:"FC Barcelona",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
