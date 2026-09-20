@@ -40,7 +40,10 @@ jobs:
           node --check champions-draw.js
           node --check champions-centre.js
 
-      - name: Ejecutar regresiones de fútbol\n        run: node --test tests/regression.test.js\n\n      - name: Publicar únicamente cambios oficiales
+      - name: Ejecutar regresiones de fútbol
+        run: node --test tests/regression.test.js
+
+      - name: Publicar únicamente cambios oficiales
         run: |
           if git diff --quiet -- champions-data.js champions-fixtures.js deportes.html; then
             echo "No hay cambios oficiales."
