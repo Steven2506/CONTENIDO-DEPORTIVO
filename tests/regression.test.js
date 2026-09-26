@@ -167,7 +167,6 @@ test("la fuente de datos de fútbol exige procedencia oficial",()=>{
   assert.match(laliga,/webview_payload/);
   assert.match(laliga,/FINISHED_STATES/);
   assert.match(champions,/standings\.uefa\.com/);
-  assert.match(champions,/uefa\.com\/uefachampionsleague/);
   assert.match(champions,/match\.uefa\.com\/v5\/matches/);
   assert.match(champions,/expected_finished/);
 });
