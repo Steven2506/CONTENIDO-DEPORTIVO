@@ -103,7 +103,8 @@ def official_results() -> dict[tuple[str, str], tuple[int, int]]:
             results[(home_team, away_team)] = (int(match.group(1)), int(match.group(2)))
     expected_finished = len(re.findall(r"""["']?state["']?\s*:\s*["']finished["']""", fixtures))
     if expected_finished and len(results) < expected_finished:
-        raise RuntimeError(f"UEFA publicó resultados incompletos: encontrados {len(results)} de {expected_finished} partidos ya marcados como finalizados")
+        missing = [pair for pair in fixture_rows if pair not in results]
+        raise RuntimeError(f"UEFA publicó resultados incompletos: encontrados {len(results)} de {expected_finished} partidos ya marcados como finalizados; faltan: {missing}")
     return results
 
 def apply_results(source: str, results: dict[tuple[str, str], tuple[int, int]]) -> tuple[str, int]:
