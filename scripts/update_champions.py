@@ -178,42 +178,33 @@ def official_results() -> dict[tuple[str, str], dict]:
     return results
 
 def apply_results(source: str, results: dict[tuple[str, str], dict]) -> tuple[str, int]:
-    lines, changes = source.splitlines(keepends=True), 0
-    for index, line in enumerate(lines):
-        fixture = re.search(FIXTURE_PATTERN, line)
-        if not fixture or fixture.groups() not in results:
+    marker = "const officialChampionsFixtures="
+    ref_marker = ";\nconst officialChampionsReferees"
+    start = source.find(marker)
+    end = source.find(ref_marker, start)
+    if start < 0 or end < 0:
+        raise RuntimeError("No se encontró el bloque oficial de fixtures de Champions")
+    raw = source[start + len(marker):end]
+    fixtures = json.loads(raw)
+    changes = 0
+    for match in fixtures:
+        key = (match.get("home"), match.get("away"))
+        patch = results.get(key)
+        if not patch:
             continue
-        patch = results[fixture.groups()]
-        updated = re.sub(r'state:"(?:scheduled|live|pending)"', 'state:"finished"', line, count=1)
-        for key in ("homeScore", "awayScore"):
-            value = patch[key]
-            if re.search(rf"{key}:\\d+", updated):
-                updated = re.sub(rf"{key}:\\d+", f"{key}:{value}", updated, count=1)
-            elif updated.rstrip().endswith("},"):
-                newline = "\n" if updated.endswith("\n") else ""
-                body = updated.rstrip("\n")
-                updated = body[:-2] + f",{key}:{value}" + body[-2:] + newline
-            elif updated.rstrip().endswith("}"):
-                newline = "\n" if updated.endswith("\n") else ""
-                body = updated.rstrip("\n")
-                updated = body[:-1] + f",{key}:{value}" + body[-1:] + newline
+        before = json.dumps(match, ensure_ascii=False, separators=(",", ":"))
+        match["state"] = "finished"
+        match["homeScore"] = patch["homeScore"]
+        match["awayScore"] = patch["awayScore"]
         events = patch.get("events") or []
         if events:
-            details = {"source": "UEFA", "events": events}
-            serialized = json.dumps(details, ensure_ascii=False, separators=(",", ":"))
-            if re.search(r'details:\\{.*?\\}', updated):
-                updated = re.sub(r'details:\\{.*?\\}', f"details:{serialized}", updated, count=1)
-            elif updated.rstrip().endswith("},"):
-                newline = "\n" if updated.endswith("\n") else ""
-                body = updated.rstrip("\n")
-                updated = body[:-2] + f",details:{serialized}" + body[-2:] + newline
-            elif updated.rstrip().endswith("}"):
-                newline = "\n" if updated.endswith("\n") else ""
-                body = updated.rstrip("\n")
-                updated = body[:-1] + f",details:{serialized}" + body[-1:] + newline
-        if updated != line:
-            lines[index], changes = updated, changes + 1
-    return "".join(lines), changes
+            match["details"] = {"source": "UEFA", "events": events}
+        after = json.dumps(match, ensure_ascii=False, separators=(",", ":"))
+        if after != before:
+            changes += 1
+    rendered = json.dumps(fixtures, ensure_ascii=False, separators=(",", ":"))
+    return source[:start + len(marker)] + rendered + source[end:], changes
+
 
 def bust_cache(data_changed: bool, results_changed: bool) -> None:
     html_source = HTML_FILE.read_text(encoding="utf-8")
