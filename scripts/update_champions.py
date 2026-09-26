@@ -17,7 +17,7 @@ DATA_FILE = ROOT / "champions-data.js"
 FIXTURES_FILE = ROOT / "champions-fixtures.js"
 HTML_FILE = ROOT / "deportes.html"
 STANDINGS_URL = "https://standings.uefa.com/v1/standings?competitionId=1&seasonYear=2027"
-RESULTS_URL = "https://www.uefa.com/uefachampionsleague/fixtures-results/"
+MATCHES_URL = "https://match.uefa.com/v5/matches?competitionId=1&seasonYear=2027&phase=TOURNAMENT&order=ASC&offset=0&limit=500"
 HEADERS = {"User-Agent": "WOLFGAMES-champions-sync/1.0 (+https://github.com/Steven2506/CONTENIDO-DEPORTIVO)"}
 
 
@@ -88,22 +88,38 @@ def official_results() -> dict[tuple[str, str], tuple[int, int]]:
     fixture_rows = re.findall(FIXTURE_PATTERN, fixtures)
     if len(fixture_rows) != 144 or len(set(fixture_rows)) != 144:
         raise RuntimeError(f"El calendario local de Champions no contiene exactamente 144 partidos únicos (recibidos: {len(fixture_rows)})")
-    response = requests.get(RESULTS_URL, headers=HEADERS, timeout=30)
+    response = requests.get(MATCHES_URL, headers=HEADERS, timeout=30)
     response.raise_for_status()
-    visible = normalize_uefa_text(re.sub(r"<[^>]+>", " ", response.text))
-    fixtures = FIXTURES_FILE.read_text(encoding="utf-8")
+    payload = response.json()
+    if not isinstance(payload, list):
+        raise RuntimeError("UEFA devolvió un payload de partidos no válido; no se publica ningún cambio")
+    local_by_official = {normalize_uefa_text(value): key for key, value in RESULT_ALIASES.items()}
+    for home, away in fixture_rows:
+        local_by_official.setdefault(normalize_uefa_text(home), home)
+        local_by_official.setdefault(normalize_uefa_text(away), away)
     results = {}
-    for home_team, away_team in re.findall(FIXTURE_PATTERN, fixtures):
-        official_home = RESULT_ALIASES.get(home_team, home_team)
-        official_away = RESULT_ALIASES.get(away_team, away_team)
-        home_norm = normalize_uefa_text(official_home)
-        away_norm = normalize_uefa_text(official_away)
-        match = re.search(rf"{re.escape(home_norm)}\s+(\d+)\s*(?:-|–|—)?\s*(\d+)\s+{re.escape(away_norm)}", visible, re.I)
-        if match:
-            results[(home_team, away_team)] = (int(match.group(1)), int(match.group(2)))
-    expected_finished = len(re.findall(r"""["']?state["']?\s*:\s*["']finished["']""", fixtures))
+    for match in payload:
+        home_raw = ((match.get("homeTeam") or {}).get("internationalName") or (match.get("homeTeam") or {}).get("displayName"))
+        away_raw = ((match.get("awayTeam") or {}).get("internationalName") or (match.get("awayTeam") or {}).get("displayName"))
+        score = match.get("score") or {}
+        score_data = score.get("regular") or score.get("total") or {}
+        home_score = score_data.get("home") if isinstance(score_data, dict) else None
+        away_score = score_data.get("away") if isinstance(score_data, dict) else None
+        if not isinstance(home_score, int) or not isinstance(away_score, int) or not home_raw or not away_raw:
+            continue
+        local_home = local_by_official.get(normalize_uefa_text(home_raw))
+        local_away = local_by_official.get(normalize_uefa_text(away_raw))
+        if local_home and local_away:
+            results[(local_home, local_away)] = (home_score, away_score)
+    expected_finished = len(re.findall(r"""["']?state["']?\\s*:\\s*["']finished["']""", fixtures))
     if expected_finished and len(results) < expected_finished:
-        raise RuntimeError(f"UEFA publicó resultados incompletos: encontrados {len(results)} de {expected_finished} partidos ya marcados como finalizados")
+        finished_rows = []
+        for line in fixtures.splitlines():
+            fixture = re.search(FIXTURE_PATTERN, line)
+            if fixture and re.search(r"""["']?state["']?\\s*:\\s*["']finished["']""", line):
+                finished_rows.append(fixture.groups())
+        missing = [pair for pair in finished_rows if pair not in results]
+        raise RuntimeError(f"UEFA publicó resultados incompletos: encontrados {len(results)} de {expected_finished} partidos ya marcados como finalizados; faltan: {missing}")
     return results
 
 def apply_results(source: str, results: dict[tuple[str, str], tuple[int, int]]) -> tuple[str, int]:
