@@ -98,13 +98,12 @@ def official_results() -> dict[tuple[str, str], tuple[int, int]]:
         official_away = RESULT_ALIASES.get(away_team, away_team)
         home_norm = normalize_uefa_text(official_home)
         away_norm = normalize_uefa_text(official_away)
-        match = re.search(rf"{re.escape(home_norm)}\s+(\d+)-(\d+)\s+{re.escape(away_norm)}", visible, re.I)
+        match = re.search(rf"{re.escape(home_norm)}\s+(\d+)\s*(?:-|–|—)?\s*(\d+)\s+{re.escape(away_norm)}", visible, re.I)
         if match:
             results[(home_team, away_team)] = (int(match.group(1)), int(match.group(2)))
     expected_finished = len(re.findall(r"""["']?state["']?\s*:\s*["']finished["']""", fixtures))
     if expected_finished and len(results) < expected_finished:
-        missing = [pair for pair in fixture_rows if pair not in results]
-        raise RuntimeError(f"UEFA publicó resultados incompletos: encontrados {len(results)} de {expected_finished} partidos ya marcados como finalizados; faltan: {missing}")
+        raise RuntimeError(f"UEFA publicó resultados incompletos: encontrados {len(results)} de {expected_finished} partidos ya marcados como finalizados")
     return results
 
 def apply_results(source: str, results: dict[tuple[str, str], tuple[int, int]]) -> tuple[str, int]:
