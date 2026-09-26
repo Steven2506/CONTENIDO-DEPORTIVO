@@ -172,6 +172,16 @@ test("la fuente de datos de fútbol exige procedencia oficial",()=>{
 });
 test("Champions contiene las 144 jornadas de fase liga y solo marca como finalizados los partidos con resultado",()=>{const fixtures=loadFixtures();assert.equal(fixtures.length,144);for(let round=1;round<=8;round++)assert.equal(fixtures.filter(match=>match.round===round).length,18);for(const match of fixtures){if(match.state==="finished")assert(Number.isInteger(match.homeScore)&&Number.isInteger(match.awayScore),`${match.home}–${match.away}`);}});
 test("Champions sincroniza sus fixtures en el modelo que consume la interfaz",()=>{const context={};context.globalThis=context;vm.createContext(context);vm.runInContext(fs.readFileSync("champions-data.js","utf8")+"\nglobalThis.__championsData=championsData;",context);vm.runInContext(fs.readFileSync("champions-fixtures.js","utf8")+"\nglobalThis.__fixtures=officialChampionsFixtures;",context);const all=context.__championsData.rounds.flatMap(round=>round.matches||[]);assert.equal(all.length,144);for(let round=1;round<=8;round++)assert.equal((context.__championsData.rounds.find(item=>item.round===round)?.matches||[]).length,18);assert.equal(all.find(match=>match.home==="Real Madrid"&&match.away==="Inter")?.homeScore,2);});
+test("Champions reutiliza el contrato de incidencias de LaLiga sin inventar eventos",()=>{
+  const league=fs.readFileSync("football.js","utf8"),champions=fs.readFileSync("champions.js","utf8"),updater=fs.readFileSync("scripts/update_champions.py","utf8");
+  assert.match(league,/details\\?\.events/);
+  assert.match(champions,/championsIncidentList/);
+  assert.match(champions,/UEFA todavía no ha publicado las incidencias/);
+  assert.match(updater,/match\\.uefa\\.com\\/v5\\/matches\\/\{match_id\}\\/events/);
+  assert.match(updater,/"events": events/);
+  assert.match(updater,/YELLOW_CARD/);
+  assert.match(updater,/SUBSTITUTION/);
+});
 test("Champions no muestra alineaciones o estadísticas inventadas",()=>{
   const source=fs.readFileSync("champions.js","utf8");
   assert.match(source,/Pendiente de UEFA/);
