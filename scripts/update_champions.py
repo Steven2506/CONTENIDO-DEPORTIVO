@@ -17,7 +17,7 @@ DATA_FILE = ROOT / "champions-data.js"
 FIXTURES_FILE = ROOT / "champions-fixtures.js"
 HTML_FILE = ROOT / "deportes.html"
 STANDINGS_URL = "https://standings.uefa.com/v1/standings?competitionId=1&seasonYear=2027"
-RESULTS_URL = "https://www.uefa.com/uefachampionsleague/news/02a9-218b8766a6ce-03f12a507d5c-1000--every-2026-27-uefa-champions-league-player-of-the-match/"
+RESULTS_URL = "https://www.uefa.com/uefachampionsleague/fixtures-results/"
 HEADERS = {"User-Agent": "WOLFGAMES-champions-sync/1.0 (+https://github.com/Steven2506/CONTENIDO-DEPORTIVO)"}
 
 
