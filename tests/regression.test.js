@@ -167,7 +167,7 @@ test("la fuente de datos de fútbol exige procedencia oficial",()=>{
   assert.match(laliga,/webview_payload/);
   assert.match(laliga,/FINISHED_STATES/);
   assert.match(champions,/standings\.uefa\.com/);
-  assert.match(champions,/uefa\.com\/uefachampionsleague/);
+  assert.match(champions,/uefa\.com\/uefachampionsleague/);\n  assert.match(champions,/match\.uefa\.com\/v5\/matches/);
   assert.match(champions,/expected_finished/);
 });
 test("Champions contiene las 144 jornadas de fase liga y solo marca como finalizados los partidos con resultado",()=>{const fixtures=loadFixtures();assert.equal(fixtures.length,144);for(let round=1;round<=8;round++)assert.equal(fixtures.filter(match=>match.round===round).length,18);for(const match of fixtures){if(match.state==="finished")assert(Number.isInteger(match.homeScore)&&Number.isInteger(match.awayScore),`${match.home}–${match.away}`);}});
