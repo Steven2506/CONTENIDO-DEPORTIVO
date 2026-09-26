@@ -78,6 +78,11 @@ DISPLAY_ALIASES = {value:key for key,value in RESULT_ALIASES.items()}
 DISPLAY_ALIASES.update({"Paris Saint-Germain":"Paris","Barcelona":"Barcelona"})
 FIXTURE_PATTERN = r"""["']?home["']?\s*:\s*"([^"]+)"\s*,\s*["']?away["']?\s*:\s*"([^"]+)""" 
 
+def normalize_uefa_text(value: str) -> str:
+    value = html.unescape(value).replace("\u200b", " ").replace("\ufeff", " ")
+    value = re.sub(r"\s+", " ", value).strip()
+    return re.sub(r"\s*[-–—]\s*", "-", value)
+
 def official_results() -> dict[tuple[str, str], tuple[int, int]]:
     fixtures = FIXTURES_FILE.read_text(encoding="utf-8")
     fixture_rows = re.findall(FIXTURE_PATTERN, fixtures)
@@ -85,14 +90,15 @@ def official_results() -> dict[tuple[str, str], tuple[int, int]]:
         raise RuntimeError(f"El calendario local de Champions no contiene exactamente 144 partidos únicos (recibidos: {len(fixture_rows)})")
     response = requests.get(RESULTS_URL, headers=HEADERS, timeout=30)
     response.raise_for_status()
-    visible = html.unescape(re.sub(r"<[^>]+>", " ", response.text))
-    visible = re.sub(r"\\[nrt]|\s+", " ", visible)
+    visible = normalize_uefa_text(re.sub(r"<[^>]+>", " ", response.text))
     fixtures = FIXTURES_FILE.read_text(encoding="utf-8")
     results = {}
     for home_team, away_team in re.findall(FIXTURE_PATTERN, fixtures):
         official_home = RESULT_ALIASES.get(home_team, home_team)
         official_away = RESULT_ALIASES.get(away_team, away_team)
-        match = re.search(rf"{re.escape(official_home)}\s+(\d+)\s*-\s*(\d+)\s+{re.escape(official_away)}", visible, re.I)
+        home_norm = normalize_uefa_text(official_home)
+        away_norm = normalize_uefa_text(official_away)
+        match = re.search(rf"{re.escape(home_norm)}\s+(\d+)-(\d+)\s+{re.escape(away_norm)}", visible, re.I)
         if match:
             results[(home_team, away_team)] = (int(match.group(1)), int(match.group(2)))
     expected_finished = len(re.findall(r"""["']?state["']?\s*:\s*["']finished["']""", fixtures))
