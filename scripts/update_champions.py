@@ -19,6 +19,7 @@ HTML_FILE = ROOT / "deportes.html"
 STANDINGS_URL = "https://standings.uefa.com/v1/standings?competitionId=1&seasonYear=2027"
 MATCHES_URL = "https://match.uefa.com/v5/matches?competitionId=1&seasonYear=2027&phase=TOURNAMENT&order=ASC&offset=0&limit=500"
 HEADERS = {"User-Agent": "WOLFGAMES-champions-sync/1.0 (+https://github.com/Steven2506/CONTENIDO-DEPORTIVO)"}
+EVENTS_LIMIT = 100
 
 
 def official_rows() -> list[dict]:
@@ -83,7 +84,57 @@ def normalize_uefa_text(value: str) -> str:
     value = re.sub(r"\s+", " ", value).strip()
     return re.sub(r"\s*[-–—]\s*", "-", value)
 
-def official_results() -> dict[tuple[str, str], tuple[int, int]]:
+def normalize_event(match: dict, event: dict, local_by_official: dict) -> dict | None:
+    event_type = str(event.get("type") or "").upper()
+    type_map = {
+        "GOAL": "goal",
+        "YELLOW_CARD": "yellow",
+        "RED_CARD": "red",
+        "SUBSTITUTION": "substitution",
+        "PENALTY": "goal",
+    }
+    visible_type = type_map.get(event_type)
+    if not visible_type:
+        return None
+    actor = event.get("primaryActor") or {}
+    person = actor.get("person") or {}
+    team = actor.get("team") or {}
+    raw_team = team.get("internationalName") or team.get("displayName") or ""
+    local_team = local_by_official.get(normalize_uefa_text(raw_team), raw_team)
+    name = person.get("internationalName") or person.get("displayName") or ""
+    time = event.get("time") or {}
+    minute = time.get("minute")
+    injury = time.get("injuryMinute")
+    if not isinstance(minute, int):
+        return None
+    minute_label = str(minute)
+    if isinstance(injury, int) and injury > 0:
+        minute_label = f"{minute}+{injury}"
+    return {"type": visible_type, "minute": minute_label, "player": name or "Jugador pendiente", "team": local_team}
+
+def official_events(match_id: str | int, local_by_official: dict) -> list[dict]:
+    url = f"https://match.uefa.com/v5/matches/{match_id}/events"
+    try:
+        response = requests.get(
+            url,
+            params={"filter": "LINEUP", "order": "ASC", "limit": str(EVENTS_LIMIT), "offset": "0"},
+            headers=HEADERS,
+            timeout=30,
+        )
+        response.raise_for_status()
+        payload = response.json()
+        if not isinstance(payload, list):
+            return []
+        events = []
+        for event in payload:
+            normalized = normalize_event({}, event, local_by_official)
+            if normalized:
+                events.append(normalized)
+        return events
+    except (requests.RequestException, ValueError):
+        return []
+
+def official_results() -> dict[tuple[str, str], dict]:
     fixtures = FIXTURES_FILE.read_text(encoding="utf-8")
     fixture_rows = re.findall(FIXTURE_PATTERN, fixtures)
     if len(fixture_rows) != 144 or len(set(fixture_rows)) != 144:
@@ -110,7 +161,11 @@ def official_results() -> dict[tuple[str, str], tuple[int, int]]:
         local_home = local_by_official.get(normalize_uefa_text(home_raw))
         local_away = local_by_official.get(normalize_uefa_text(away_raw))
         if local_home and local_away:
-            results[(local_home, local_away)] = (home_score, away_score)
+            results[(local_home, local_away)] = {
+                "homeScore": home_score,
+                "awayScore": away_score,
+                "events": official_events(match.get("id"), local_by_official) if match.get("id") else [],
+            }
     expected_finished = len(re.findall(r"""["']?state["']?\\s*:\\s*["']finished["']""", fixtures))
     if expected_finished and len(results) < expected_finished:
         finished_rows = []
@@ -122,17 +177,18 @@ def official_results() -> dict[tuple[str, str], tuple[int, int]]:
         raise RuntimeError(f"UEFA publicó resultados incompletos: encontrados {len(results)} de {expected_finished} partidos ya marcados como finalizados; faltan: {missing}")
     return results
 
-def apply_results(source: str, results: dict[tuple[str, str], tuple[int, int]]) -> tuple[str, int]:
+def apply_results(source: str, results: dict[tuple[str, str], dict]) -> tuple[str, int]:
     lines, changes = source.splitlines(keepends=True), 0
     for index, line in enumerate(lines):
         fixture = re.search(FIXTURE_PATTERN, line)
         if not fixture or fixture.groups() not in results:
             continue
-        home_score, away_score = results[fixture.groups()]
+        patch = results[fixture.groups()]
         updated = re.sub(r'state:"(?:scheduled|live|pending)"', 'state:"finished"', line, count=1)
-        for key, value in (("homeScore", home_score), ("awayScore", away_score)):
-            if re.search(rf"{key}:\d+", updated):
-                updated = re.sub(rf"{key}:\d+", f"{key}:{value}", updated, count=1)
+        for key in ("homeScore", "awayScore"):
+            value = patch[key]
+            if re.search(rf"{key}:\\d+", updated):
+                updated = re.sub(rf"{key}:\\d+", f"{key}:{value}", updated, count=1)
             elif updated.rstrip().endswith("},"):
                 newline = "\n" if updated.endswith("\n") else ""
                 body = updated.rstrip("\n")
@@ -141,6 +197,20 @@ def apply_results(source: str, results: dict[tuple[str, str], tuple[int, int]]) 
                 newline = "\n" if updated.endswith("\n") else ""
                 body = updated.rstrip("\n")
                 updated = body[:-1] + f",{key}:{value}" + body[-1:] + newline
+        events = patch.get("events") or []
+        if events:
+            details = {"source": "UEFA", "events": events}
+            serialized = json.dumps(details, ensure_ascii=False, separators=(",", ":"))
+            if re.search(r'details:\\{.*?\\}', updated):
+                updated = re.sub(r'details:\\{.*?\\}', f"details:{serialized}", updated, count=1)
+            elif updated.rstrip().endswith("},"):
+                newline = "\n" if updated.endswith("\n") else ""
+                body = updated.rstrip("\n")
+                updated = body[:-2] + f",details:{serialized}" + body[-2:] + newline
+            elif updated.rstrip().endswith("}"):
+                newline = "\n" if updated.endswith("\n") else ""
+                body = updated.rstrip("\n")
+                updated = body[:-1] + f",details:{serialized}" + body[-1:] + newline
         if updated != line:
             lines[index], changes = updated, changes + 1
     return "".join(lines), changes
@@ -171,7 +241,7 @@ def main() -> int:
         FIXTURES_FILE.write_text(updated_fixtures, encoding="utf-8")
     if standings_changed or results_changed:
         bust_cache(standings_changed, results_changed)
-    print(f"UEFA: clasificación={'actualizada' if standings_changed else 'sin cambios'} · resultados encontrados={len(results)} · archivos modificados={fixture_changes}")
+    print(f"UEFA: clasificación={'actualizada' if standings_changed else 'sin cambios'} · resultados encontrados={len(results)} · archivos modificados={fixture_changes} · incidencias sincronizadas={sum(bool(item.get('events')) for item in results.values())}")
     return 0
 
 
