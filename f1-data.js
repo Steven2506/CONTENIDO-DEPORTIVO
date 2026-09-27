@@ -1,0 +1,32 @@
+/* WOLFGAMES · F1 2026 · fuente única del calendario
+ * Calendario verificado con la programación oficial de Formula 1.
+ * Las horas se almacenan en UTC para que la interfaz las convierta
+ * a la zona horaria del usuario.
+ */
+const F1_CALENDAR_SOURCE = "Formula 1";
+const F1_CALENDAR_SEASON = 2026;
+const F1_CALENDAR = [
+  {round:1,name:"GP Australia",circuit:"Albert Park Grand Prix Circuit",sessions:[["Libres 1","2026-03-06T01:30:00Z"],["Libres 2","2026-03-06T05:00:00Z"],["Libres 3","2026-03-07T01:30:00Z"],["Clasificación","2026-03-07T05:00:00Z"],["Carrera","2026-03-08T04:00:00Z"]]},
+  {round:2,name:"GP China",circuit:"Shanghai International Circuit",sessions:[["Libres 1","2026-03-13T03:30:00Z"],["Clasificación Sprint","2026-03-13T07:30:00Z"],["Sprint","2026-03-14T03:00:00Z"],["Clasificación","2026-03-14T07:00:00Z"],["Carrera","2026-03-15T07:00:00Z"]]},
+  {round:3,name:"GP Japón",circuit:"Suzuka Circuit",sessions:[["Libres 1","2026-03-27T02:30:00Z"],["Libres 2","2026-03-27T06:00:00Z"],["Libres 3","2026-03-28T02:30:00Z"],["Clasificación","2026-03-28T06:00:00Z"],["Carrera","2026-03-29T05:00:00Z"]]},
+  {round:4,name:"GP Miami",circuit:"Miami International Autodrome",sessions:[["Libres 1","2026-05-01T16:00:00Z"],["Clasificación Sprint","2026-05-01T20:30:00Z"],["Sprint","2026-05-02T16:00:00Z"],["Clasificación","2026-05-02T20:00:00Z"],["Carrera","2026-05-03T20:00:00Z"]]},
+  {round:5,name:"GP Canadá",circuit:"Circuit Gilles Villeneuve",sessions:[["Libres 1","2026-05-22T16:30:00Z"],["Clasificación Sprint","2026-05-22T20:30:00Z"],["Sprint","2026-05-23T16:00:00Z"],["Clasificación","2026-05-23T20:00:00Z"],["Carrera","2026-05-24T20:00:00Z"]]},
+  {round:6,name:"GP Mónaco",circuit:"Circuit de Monaco",sessions:[["Libres 1","2026-06-05T11:30:00Z"],["Libres 2","2026-06-05T15:00:00Z"],["Libres 3","2026-06-06T10:30:00Z"],["Clasificación","2026-06-06T14:00:00Z"],["Carrera","2026-06-07T13:00:00Z"]]},
+  {round:7,name:"GP Barcelona-Catalunya",circuit:"Circuit de Barcelona-Catalunya",sessions:[["Libres 1","2026-06-12T11:30:00Z"],["Libres 2","2026-06-12T15:00:00Z"],["Libres 3","2026-06-13T10:30:00Z"],["Clasificación","2026-06-13T14:00:00Z"],["Carrera","2026-06-14T13:00:00Z"]]},
+  {round:8,name:"GP Austria",circuit:"Red Bull Ring",sessions:[["Libres 1","2026-06-26T11:30:00Z"],["Libres 2","2026-06-26T15:00:00Z"],["Libres 3","2026-06-27T10:30:00Z"],["Clasificación","2026-06-27T14:00:00Z"],["Carrera","2026-06-28T13:00:00Z"]]},
+  {round:9,name:"GP Gran Bretaña",circuit:"Silverstone Circuit",sessions:[["Libres 1","2026-07-03T11:30:00Z"],["Clasificación Sprint","2026-07-03T15:30:00Z"],["Sprint","2026-07-04T11:00:00Z"],["Clasificación","2026-07-04T15:00:00Z"],["Carrera","2026-07-05T14:00:00Z"]]},
+  {round:10,name:"GP Bélgica",circuit:"Circuit de Spa-Francorchamps",sessions:[["Libres 1","2026-07-17T11:30:00Z"],["Libres 2","2026-07-17T15:00:00Z"],["Libres 3","2026-07-18T10:30:00Z"],["Clasificación","2026-07-18T14:00:00Z"],["Carrera","2026-07-19T13:00:00Z"]]},
+  {round:11,name:"GP Hungría",circuit:"Hungaroring",sessions:[["Libres 1","2026-07-24T11:30:00Z"],["Libres 2","2026-07-24T15:00:00Z"],["Libres 3","2026-07-25T10:30:00Z"],["Clasificación","2026-07-25T14:00:00Z"],["Carrera","2026-07-26T13:00:00Z"]]},
+  {round:12,name:"GP Países Bajos",circuit:"Circuit Zandvoort",sessions:[["Libres 1","2026-08-21T10:30:00Z"],["Clasificación Sprint","2026-08-21T14:30:00Z"],["Sprint","2026-08-22T10:00:00Z"],["Clasificación","2026-08-22T14:00:00Z"],["Carrera","2026-08-23T13:00:00Z"]]},
+  {round:13,name:"GP Italia",circuit:"Autodromo Nazionale di Monza",sessions:[["Libres 1","2026-09-04T10:30:00Z"],["Libres 2","2026-09-04T14:00:00Z"],["Libres 3","2026-09-05T10:30:00Z"],["Clasificación","2026-09-05T14:00:00Z"],["Carrera","2026-09-06T13:00:00Z"]]},
+  {round:14,name:"GP España",circuit:"Madring",sessions:[["Libres 1","2026-09-11T11:30:00Z"],["Libres 2","2026-09-11T15:00:00Z"],["Libres 3","2026-09-12T10:30:00Z"],["Clasificación","2026-09-12T14:00:00Z"],["Carrera","2026-09-13T13:00:00Z"]]},
+  {round:15,name:"GP Azerbaiyán",circuit:"Baku City Circuit",sessions:[["Libres 1","2026-09-24T08:30:00Z"],["Libres 2","2026-09-24T12:00:00Z"],["Libres 3","2026-09-25T08:30:00Z"],["Clasificación","2026-09-25T12:00:00Z"],["Carrera","2026-09-26T11:00:00Z"]]},
+  {round:16,name:"GP Bahréin en Malasia",circuit:"Sepang International Circuit",sessions:[["Libres 1","2026-10-02T02:00:00Z"],["Libres 2","2026-10-02T06:00:00Z"],["Libres 3","2026-10-03T06:00:00Z"],["Clasificación","2026-10-03T09:00:00Z"],["Carrera","2026-10-04T07:00:00Z"]]},
+  {round:17,name:"GP Singapur",circuit:"Marina Bay Street Circuit",sessions:[["Libres 1","2026-10-09T08:30:00Z"],["Clasificación Sprint","2026-10-09T12:30:00Z"],["Sprint","2026-10-10T09:00:00Z"],["Clasificación","2026-10-10T13:00:00Z"],["Carrera","2026-10-11T12:00:00Z"]]},
+  {round:18,name:"GP Estados Unidos",circuit:"Circuit of the Americas",sessions:[["Libres 1","2026-10-23T17:30:00Z"],["Libres 2","2026-10-23T21:00:00Z"],["Libres 3","2026-10-24T17:30:00Z"],["Clasificación","2026-10-24T21:00:00Z"],["Carrera","2026-10-25T20:00:00Z"]]},
+  {round:19,name:"GP Ciudad de México",circuit:"Autódromo Hermanos Rodríguez",sessions:[["Libres 1","2026-10-30T18:30:00Z"],["Libres 2","2026-10-30T22:00:00Z"],["Libres 3","2026-10-31T17:30:00Z"],["Clasificación","2026-10-31T21:00:00Z"],["Carrera","2026-11-01T20:00:00Z"]]},
+  {round:20,name:"GP São Paulo",circuit:"Autódromo José Carlos Pace",sessions:[["Libres 1","2026-11-06T15:30:00Z"],["Libres 2","2026-11-06T19:00:00Z"],["Libres 3","2026-11-07T14:30:00Z"],["Clasificación","2026-11-07T18:00:00Z"],["Carrera","2026-11-08T17:00:00Z"]]},
+  {round:21,name:"GP Las Vegas",circuit:"Las Vegas Strip Street Circuit",sessions:[["Libres 1","2026-11-20T00:30:00Z"],["Libres 2","2026-11-20T04:00:00Z"],["Libres 3","2026-11-21T00:30:00Z"],["Clasificación","2026-11-21T04:00:00Z"],["Carrera","2026-11-22T04:00:00Z"]]},
+  {round:22,name:"GP Qatar",circuit:"Losail International Circuit",sessions:[["Libres 1","2026-11-27T13:30:00Z"],["Libres 2","2026-11-27T17:00:00Z"],["Libres 3","2026-11-28T14:30:00Z"],["Clasificación","2026-11-28T18:00:00Z"],["Carrera","2026-11-29T16:00:00Z"]]},
+  {round:23,name:"GP Abu Dhabi",circuit:"Yas Marina Circuit",sessions:[["Libres 1","2026-12-04T09:30:00Z"],["Libres 2","2026-12-04T13:00:00Z"],["Libres 3","2026-12-05T10:30:00Z"],["Clasificación","2026-12-05T14:00:00Z"],["Carrera","2026-12-06T13:00:00Z"]]}
+];
