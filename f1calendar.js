@@ -1,19 +1,6 @@
-const F1_API = "https://api.jolpi.ca/ergast/f1/2026.json";
-const F1_CIRCUIT_IMAGES = {"Baku City Circuit":"https://upload.wikimedia.org/wikipedia/commons/f/f1/Baku_Formula_One_circuit_map.svg"};
+/* Motor F1 · consume exclusivamente f1-data.js para el calendario. */
 const F1_SESSION_LENGTH = {"Libres 1":60,"Libres 2":60,"Libres 3":60,"Clasificación Sprint":50,"Sprint":60,"Clasificación":70,"Carrera":150};
-const F1_FALLBACK = [
-  {round:12,name:"GP Países Bajos",circuit:"Circuit Zandvoort",label:"21–23 AGO",url:"gps/holanda.html",sessions:[["Libres 1","2026-08-21T12:30:00+02:00"],["Clasificación Sprint","2026-08-21T16:30:00+02:00"],["Sprint","2026-08-22T12:00:00+02:00"],["Clasificación","2026-08-22T16:00:00+02:00"],["Carrera","2026-08-23T15:00:00+02:00"]]},
-  {round:13,name:"GP Italia",circuit:"Autodromo Nazionale Monza",label:"4–6 SEP",url:"gps/monza.html",sessions:[["Libres 1","2026-09-04T12:30:00+02:00"],["Libres 2","2026-09-04T16:00:00+02:00"],["Libres 3","2026-09-05T12:30:00+02:00"],["Clasificación","2026-09-05T16:00:00+02:00"],["Carrera","2026-09-06T15:00:00+02:00"]]},
-  {round:14,name:"GP España",circuit:"Madring",label:"11–13 SEP",url:"gps/madrid.html",sessions:[["Libres 1","2026-09-11T13:30:00+02:00"],["Libres 2","2026-09-11T17:00:00+02:00"],["Libres 3","2026-09-12T12:30:00+02:00"],["Clasificación","2026-09-12T16:00:00+02:00"],["Carrera","2026-09-13T15:00:00+02:00"]]},
-  {round:15,name:"GP Azerbaiyán",circuit:"Baku City Circuit",label:"24–26 SEP",url:"gps/baku.html",sessions:[["Libres 1","2026-09-24T10:30:00+02:00"],["Libres 2","2026-09-24T14:00:00+02:00"],["Libres 3","2026-09-25T10:30:00+02:00"],["Clasificación","2026-09-25T14:00:00+02:00"],["Carrera","2026-09-26T13:00:00+02:00"]]}
-];
-let f1Races = F1_FALLBACK;
-const toIso = value => value?.date ? `${value.date}T${value.time || "00:00:00Z"}` : null;
-function normalizeF1Race(race){
-  const raw=[["Libres 1",race.FirstPractice],["Libres 2",race.SecondPractice],["Libres 3",race.ThirdPractice],["Clasificación Sprint",race.SprintQualifying||race.SprintShootout],["Sprint",race.Sprint],["Clasificación",race.Qualifying],["Carrera",{date:race.date,time:race.time}]];
-  return {round:Number(race.round),name:race.raceName.replace("Grand Prix","GP"),circuit:race.Circuit.circuitName,label:new Intl.DateTimeFormat("es-ES",{day:"numeric",month:"short"}).format(new Date(`${race.date}T12:00:00Z`)).toUpperCase(),url:null,sessions:raw.map(([name,value])=>[name,toIso(value)]).filter(([,date])=>date)};
-}
-async function loadF1Data(){try{const response=await fetch(F1_API);if(!response.ok)throw new Error("API");const json=await response.json();const races=json?.MRData?.RaceTable?.Races;if(races?.length)f1Races=races.map(normalizeF1Race);}catch(error){console.info("Usando calendario F1 local.");}document.dispatchEvent(new CustomEvent("f1dataready"));return f1Races;}
+let f1Races = F1_CALENDAR;
 function f1SessionEnd(session){return new Date(session[1]).getTime()+(F1_SESSION_LENGTH[session[0]]||90)*60000;}
 function getF1State(now=Date.now()){for(const race of f1Races){const next=race.sessions.find(session=>f1SessionEnd(session)>now);if(next){const start=new Date(next[1]).getTime(),end=f1SessionEnd(next);return {race,session:next,status:now>=start&&now<end?"live":"upcoming",start,end};}}return {race:null,session:null,status:"finished"};}
 function formatCountdown(ms){if(ms<=0)return "🔴 En curso";const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000);return d?`${d} d · ${h} h · ${m} min`:`${h} h · ${m} min · ${s} s`;}
@@ -21,7 +8,7 @@ function formatF1LocalTime(iso){return new Intl.DateTimeFormat("es-ES",{weekday:
 function f1CalendarUrl(race,session){const stamp=date=>new Date(date).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z/,"Z"),start=new Date(session[1]),end=new Date(f1SessionEnd(session));return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`${race.name} · ${session[0]}`)}&dates=${stamp(start)}/${stamp(end)}&location=${encodeURIComponent(race.circuit)}`;}
 function startCountdown(time,id){const el=document.getElementById(id);if(!el)return;const update=()=>{if(!document.hidden)el.textContent=formatCountdown(time-Date.now());};update();setInterval(update,1000);document.addEventListener("visibilitychange",update);}
 function renderSessionList(race,id="f1-sessions"){const box=document.getElementById(id);if(!box||!race)return;const now=Date.now();box.innerHTML=race.sessions.map(session=>{const start=new Date(session[1]).getTime(),end=f1SessionEnd(session);const state=now>=start&&now<end?"En curso":end<=now?"Finalizada":"Próxima";return `<li class="session-row ${state==="En curso"?"is-live":""}"><span><strong>${session[0]}</strong><small>${formatF1LocalTime(session[1])}</small></span><span class="session-actions"><span class="status">${state}</span><a class="mini-action" href="${f1CalendarUrl(race,session)}" target="_blank" rel="noopener noreferrer" aria-label="Añadir ${session[0]} al calendario">＋ Calendario</a></span></li>`;}).join("");}
-function renderF1Calendar(id="f1-calendar"){const box=document.getElementById(id);if(!box)return;const state=getF1State();box.innerHTML=f1Races.map(r=>{const isNext=state.race===r,past=r.sessions.every(s=>f1SessionEnd(s)<Date.now()),tag=r.url?"a":"article",href=r.url?` href="${r.url}"`:"",image=F1_CIRCUIT_IMAGES[r.circuit]||"";return `<${tag}${href} class="race-card${past?" is-past":""}${isNext?" is-next":""}"><span class="race-round">ROUND ${r.round}</span>${isNext?'<span class="race-status">SIGUIENTE</span>':""}<h3>${r.name}</h3><p>${r.circuit}</p><p class="race-date">${r.label}</p>${image?`<img class="gp-image" src="${image}" alt="Mapa del circuito de ${r.circuit}" loading="lazy" decoding="async">`:""}</${tag}>`;}).join("");}
+function renderF1Calendar(id="f1-calendar"){const box=document.getElementById(id);if(!box)return;const state=getF1State();box.innerHTML=f1Races.map(r=>{const isNext=state.race===r,past=r.sessions.every(s=>f1SessionEnd(s)<Date.now()),tag=r.url?"a":"article",href=r.url?` href="${r.url}"`:"",image=F1_CIRCUIT_IMAGES[r.circuit]||"";return `<${tag}${href} class="race-card${past?" is-past":""}${isNext?" is-next":""}"><span class="race-round">ROUND ${r.round}</span>${isNext?'<span class="race-status">SIGUIENTE</span>':""}<h3>${r.name}</h3><p>${r.circuit}</p><p class="race-date">${r.label}</p></${tag}>`;}).join("");}
 async function loadF1Standings(){
   try{
     const response=await fetch("https://api.jolpi.ca/ergast/f1/2026/driverstandings.json",{cache:"no-store"});
@@ -31,4 +18,4 @@ async function loadF1Standings(){
   }catch(error){console.info("Clasificación F1 en modo de respaldo.");}
   return footballData.f1Standings;
 }
-window.f1Ready=loadF1Data();
+window.f1Ready=Promise.resolve(f1Races);
