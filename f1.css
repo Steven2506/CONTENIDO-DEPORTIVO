@@ -10,6 +10,7 @@
 .session-list{display:grid;gap:8px;list-style:none;margin:18px 0}
 .session-row{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.055);border-left:3px solid rgba(232,121,249,.5)}
 .session-row.is-live{background:rgba(251,57,88,.15);border-left-color:var(--red)}
+.session-row small{display:block;color:var(--muted)}
 .session-actions{display:flex;align-items:flex-end;flex-direction:column;gap:5px}
 .mini-action{color:var(--blue);font-size:.72rem;font-weight:800;text-decoration:none}
 .weather-box{padding:12px;border-radius:10px;background:rgba(34,211,238,.08);color:#e7fbff}
