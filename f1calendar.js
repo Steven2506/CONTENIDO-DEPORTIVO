@@ -20,3 +20,24 @@ async function loadF1Standings(){
   return footballData.f1Standings;
 }
 window.f1Ready=Promise.resolve(f1Races);
+
+function initF1Page(){
+  const ready=window.f1Ready||Promise.resolve();
+  ready.then(async()=>{
+    renderF1Calendar();
+    const state=getF1State();
+    if(state.race){
+      const title=document.getElementById("next-f1-title");
+      if(title)title.textContent=state.race.name;
+      renderSessionList(state.race,"next-f1-sessions");
+      if(typeof renderRaceWeather==="function")renderRaceWeather(state.race);
+    }
+    const standings=await loadF1Standings();
+    const box=document.getElementById("f1-standings");
+    if(box)box.innerHTML=standings.map(d=>`<div class="standing-row"><b>${d.pos}</b><span><strong>${d.name}</strong><small>${d.team}</small></span><strong>${d.points} pts</strong></div>`).join("");
+    const completed=[...f1Races].filter(r=>r.sessions.every(s=>f1SessionEnd(s)<=Date.now())).pop();
+    const latest=document.getElementById("f1-latest-result");
+    if(completed&&latest)latest.textContent=`${completed.name}: resultados oficiales disponibles en Formula1.com.`;
+  });
+}
+document.addEventListener("DOMContentLoaded",initF1Page);
