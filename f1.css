@@ -42,3 +42,26 @@
 .standings-list{display:grid;gap:5px}.standing-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 7px;border-bottom:1px solid rgba(255,255,255,.055);border-radius:5px}.standing-row>b{color:#707887;font-size:.7rem}.standing-row span{min-width:0}.standing-row span strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.72rem}.standing-row small{display:block;color:#626977;font-size:.57rem}.standing-row>strong{font-size:.68rem;color:#dfe3ea}
 .f1-calendar-section{padding-top:8px}.f1-section-heading{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:8px}.f1-section-heading h2{margin-top:3px;font-size:clamp(1.8rem,4vw,2.8rem);font-style:italic;text-transform:uppercase}.f1-section-note{padding:6px 9px;border:1px solid var(--f1-line);border-radius:5px;color:#7e8593;font-size:.6rem;font-weight:950;letter-spacing:.12em}.f1-calendar-intro{max-width:680px;font-size:.82rem}.calendar-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:24px}.race-card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:17px;background:linear-gradient(110deg,rgba(17,20,29,.96),rgba(9,11,16,.96));transition:.2s}.race-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:rgba(255,255,255,.1)}.race-card:hover{transform:translateX(3px);border-color:rgba(255,255,255,.2)}.race-card.is-next{border-color:rgba(255,59,85,.45);box-shadow:0 0 22px rgba(255,59,85,.1)}.race-card.is-next:before{background:var(--f1-red)}.race-card.is-past{opacity:.58}.race-round,.race-status{font-size:.57rem;color:#6f7684;font-weight:950;letter-spacing:.12em}.race-status{position:absolute;right:15px;top:15px;color:#ff7183}.race-card h3{font-size:1rem;margin:8px 0 2px;font-style:italic;text-transform:uppercase}.race-card p{font-size:.72rem}.race-date{color:#b7bdc8!important;font-weight:750;margin-top:8px}.weather-box{padding:10px;border:1px solid rgba(82,231,255,.12);border-radius:7px;background:rgba(82,231,255,.035);color:#dceef1;font-size:.72rem}
 @media(max-width:1050px){.f1-dashboard{grid-template-columns:1fr 1fr}.f1-next-card{grid-column:1/-1}}@media(max-width:760px){.f1-hero-grid{grid-template-columns:1fr}.f1-dashboard{grid-template-columns:1fr}.f1-next-card{grid-column:auto}.f1-card-footer{grid-template-columns:1fr}.f1-section-heading{align-items:flex-start;flex-direction:column}.calendar-grid{grid-template-columns:1fr}}@media(max-width:520px){.f1-hero{padding:24px 18px;border-radius:20px}.f1-hero h1{font-size:3.6rem}.f1-hero-meta span{flex:1;text-align:center}.f1-next-card,.f1-side-card{padding:18px}.f1-next-main{align-items:flex-start}.f1-status-orb{width:60px;height:60px}.session-row{grid-template-columns:1fr}.session-actions{align-items:flex-start;flex-direction:row;justify-content:space-between}.telemetry-grid{gap:11px}}
+
+
+/* Motorsport page backdrop: restrained carbon grain and telemetry accents */
+.f1-page{
+  min-height:100vh;
+  background-color:#080a0f;
+  background-image:
+    radial-gradient(ellipse at 10% 3%,rgba(255,59,85,.105),transparent 34rem),
+    radial-gradient(ellipse at 96% 34%,rgba(82,231,255,.065),transparent 31rem),
+    repeating-linear-gradient(135deg,rgba(255,255,255,.014) 0 1px,transparent 1px 8px),
+    repeating-linear-gradient(45deg,rgba(255,255,255,.009) 0 1px,transparent 1px 8px),
+    linear-gradient(180deg,#090b10 0%,#080a0f 52%,#0b0d12 100%);
+  background-attachment:scroll;
+}
+@media(max-width:760px){
+  .f1-page{
+    background-image:
+      radial-gradient(ellipse at 12% 0%,rgba(255,59,85,.09),transparent 25rem),
+      radial-gradient(ellipse at 100% 38%,rgba(82,231,255,.05),transparent 22rem),
+      repeating-linear-gradient(135deg,rgba(255,255,255,.012) 0 1px,transparent 1px 9px),
+      linear-gradient(180deg,#090b10 0%,#080a0f 58%,#0b0d12 100%);
+  }
+}
