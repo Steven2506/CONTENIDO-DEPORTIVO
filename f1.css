@@ -65,3 +65,11 @@
       linear-gradient(180deg,#0b0d12 0%,#080a0f 58%,#0c0e13 100%);
   }
 }
+
+/* Enlaces del calendario a la ficha reutilizable, con acento propio por GP. */
+.race-card:before{background:var(--gp-accent,rgba(255,255,255,.1))}
+.race-card h3 a{color:inherit;text-decoration:none}
+.race-card h3 a:hover{color:var(--gp-accent,var(--f1-red))}
+.race-card .race-open{display:inline-flex;gap:6px;margin-top:8px;color:var(--gp-accent,var(--f1-cyan));font-size:.62rem;font-weight:900;text-decoration:none;letter-spacing:.06em;text-transform:uppercase}
+.race-card .race-open:hover{color:#fff}
+.f1-next-countdown{display:grid;gap:3px;width:max-content;max-width:100%;margin:12px 0;padding:9px 12px;border-left:2px solid var(--f1-red);background:linear-gradient(100deg,rgba(255,59,85,.09),rgba(255,255,255,.025))}.f1-next-countdown strong{color:var(--f1-cyan);font-size:clamp(1rem,2.5vw,1.45rem);font-variant-numeric:tabular-nums;font-weight:950;letter-spacing:.02em}.f1-next-countdown small{color:#858d9a;font-size:.57rem;font-weight:800;letter-spacing:.04em}

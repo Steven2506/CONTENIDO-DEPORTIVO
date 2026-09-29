@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://api.open-meteo.com https://api.jolpi.ca; upgrade-insecure-requests">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Ficha del Gran Premio de Fórmula 1: circuito, sesiones, resultados y campeonato.">
+<title>Gran Premio · WOLFGAMES</title>
+<link rel="stylesheet" href="diseno.css?v=20260914-performance1">
+<link rel="stylesheet" href="f1.css?v=20260929-f1-home1">
+<link rel="stylesheet" href="gp.css?v=20260929-gp-countdown1">
+<script src="site.js?v=20260914-performance1" defer></script>
+<script src="f1-data.js?v=20260929-gp-master1" defer></script>
+<script src="f1calendar.js?v=20260929-gp-master1" defer></script>
+<script src="gp.js?v=20260929-gp-countdown1" defer></script>
+<script src="particles.js?v=20260914-performance1" defer></script>
+</head>
+<body class="f1-page gp-page">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<div data-site-header data-title="FÓRMULA 1"></div>
+<main id="contenido" class="gp-main">
+  <a class="gp-back" href="F1.html">← Volver al calendario</a>
+  <header id="gp-hero" class="gp-hero" aria-live="polite">
+    <div class="gp-hero-copy"><p class="f1-kicker"><span class="f1-signal"></span> WOLFGAMES · MOTORSPORT</p><p id="gp-country" class="gp-country">Cargando Gran Premio…</p><h1 id="gp-title">Gran Premio</h1><p id="gp-circuit-name" class="gp-subtitle"></p>
+      <div class="gp-meta"><span><small>RONDA</small><b id="gp-round">—</b></span><span><small>FECHAS</small><b id="gp-dates">—</b></span><span><small>ESTADO</small><b id="gp-status">—</b></span></div>
+      <div class="gp-countdown-panel"><div class="gp-countdown-heading"><div><p class="gp-countdown-kicker">NEXT SESSION</p><h2 id="gp-countdown-session">Buscando próxima sesión…</h2><p id="gp-countdown-time" class="gp-countdown-time"></p></div><span id="gp-countdown-state" class="gp-countdown-state">CALCULANDO</span></div><div id="gp-countdown" class="gp-countdown" aria-label="Cuenta atrás para la próxima sesión"><span><b id="gp-count-days">—</b><small>DÍAS</small></span><span><b id="gp-count-hours">—</b><small>HORAS</small></span><span><b id="gp-count-minutes">—</b><small>MIN</small></span><span><b id="gp-count-seconds">—</b><small>SEG</small></span></div></div>
+    </div><div class="gp-hero-mark" aria-hidden="true">F1</div>
+  </header>
+
+  <section class="gp-section gp-circuit"><div class="gp-section-heading"><div><p class="eyebrow">TRACK PROFILE</p><h2>El circuito</h2></div><span class="gp-data-tag">DATOS OFICIALES</span></div>
+    <div class="gp-circuit-grid"><div class="gp-track-visual" aria-hidden="true"><span class="track-ring"></span><span class="track-label">CIRCUIT<br>PROFILE</span></div><dl class="gp-stats"><div><dt>Ubicación</dt><dd id="gp-location">Pendiente de confirmar</dd></div><div><dt>Longitud</dt><dd>Pendiente de datos oficiales</dd></div><div><dt>Vueltas</dt><dd>Pendiente de datos oficiales</dd></div><div><dt>Distancia de carrera</dt><dd>Pendiente de datos oficiales</dd></div><div><dt>Récord de vuelta</dt><dd>Pendiente de datos oficiales</dd></div><div><dt>Sentido y características</dt><dd>Pendiente de datos oficiales</dd></div></dl></div>
+  </section>
+
+  <section class="gp-section"><div class="gp-section-heading"><div><p class="eyebrow">WEEKEND TIMING</p><h2>Torre de sesiones</h2></div><span class="gp-data-tag">HORARIO LOCAL</span></div><p class="gp-intro">Toca una sesión para consultar su espacio de resultados. Los horarios se muestran en tu zona horaria elegida.</p><ol id="gp-sessions" class="gp-session-tower"></ol></section>
+
+  <section class="gp-section"><div class="gp-section-heading"><div><p class="eyebrow">SESSION CLASSIFICATION</p><h2>Resultados por sesión</h2></div><span class="gp-data-tag">FUENTE OFICIAL</span></div><div id="gp-results" class="gp-results-list"></div></section>
+
+  <section class="gp-section"><div class="gp-section-heading"><div><p class="eyebrow">RACE CONTROL</p><h2>Datos de carrera</h2></div><span class="gp-data-tag">ACTUALIZACIÓN OFICIAL</span></div><div class="gp-facts" id="gp-race-data"></div></section>
+
+  <section class="gp-lower-grid"><article class="gp-section"><div class="gp-section-heading"><div><p class="eyebrow">TRACK CONDITIONS</p><h2>Condiciones</h2></div></div><div id="gp-conditions" class="gp-pending-panel"></div></article>
+  <article class="gp-section"><div class="gp-section-heading"><div><p class="eyebrow">CHAMPIONSHIP IMPACT</p><h2>Campeonato</h2></div></div><div id="gp-championship" class="gp-pending-panel"></div></article></section>
+  <p class="gp-source-note">La ficha solo presenta datos disponibles en la fuente del calendario. La información no publicada aparece como pendiente.</p>
+</main>
+<div data-site-footer></div><canvas id="particles" aria-hidden="true"></canvas>
+</body>
+</html>

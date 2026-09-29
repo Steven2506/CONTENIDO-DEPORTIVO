@@ -5,7 +5,8 @@ Web estática publicada con GitHub Pages: <https://steven2506.github.io/CONTENID
 ## Estructura
 
 - `index.html`: portada y próximos eventos.
-- `F1.html` / `f1calendar.js`: calendario de Fórmula 1.
+- `F1.html` / `f1calendar.js`: calendario de Fórmula 1 y enlaces a las fichas maestras.
+- `gp.html?id=monza` / `gp.js` / `gp.css`: plantilla reutilizable para las fichas de cada Gran Premio; la identidad visual por ronda vive en `f1-data.js`.
 - `MotoGP.html` / `motogpcalendar.js`: calendario de MotoGP.
 - `deportes.html` / `sports-data.js`: LaLiga y Champions League.
 - `site.js`: cabecera, navegación, pie y comportamiento compartido.

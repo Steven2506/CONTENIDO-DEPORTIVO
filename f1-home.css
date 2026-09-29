@@ -1,0 +1,16 @@
+/* Tema F1 limitado a la tarjeta de motor de Fórmula 1 en la portada. */
+.f1-feature.event-card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:linear-gradient(145deg,rgba(17,20,29,.97),rgba(8,10,15,.98));box-shadow:0 18px 45px rgba(0,0,0,.3)}
+.f1-feature.event-card:before{position:absolute;top:0;left:0;width:36%;height:2px;background:#ff3b55;box-shadow:0 0 20px #ff3b55;content:""}
+.f1-feature .event-label{color:#ff7183;font-size:.66rem;font-weight:950;letter-spacing:.15em}
+.f1-feature h3{margin:8px 0 3px;color:#fff;font-size:clamp(1.45rem,3vw,2rem);font-style:italic;text-transform:uppercase}
+.f1-feature #f1-circuit{color:#9fa6b2;font-size:.78rem}
+.f1-feature .next-session{margin-top:12px;color:#d9dee7;font-size:.78rem}
+.f1-feature #f1-countdown{margin:8px 0 14px;color:#52e7ff;font-size:clamp(1.2rem,2.6vw,1.65rem);font-variant-numeric:tabular-nums;font-weight:950;letter-spacing:.02em}
+.f1-feature .session-list{display:grid;gap:7px;margin:15px 0;list-style:none}
+.f1-feature .session-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;padding:9px 11px;border:1px solid rgba(255,255,255,.07);border-left:2px solid rgba(255,255,255,.16);border-radius:7px;background:rgba(255,255,255,.025)}
+.f1-feature .session-row.is-live{border-left-color:#ff3b55;background:rgba(255,59,85,.08)}
+.f1-feature .session-row strong{color:#eef0f4;font-size:.75rem}.f1-feature .session-row small{display:block;color:#7d8491;font-size:.63rem}
+.f1-feature .session-actions{display:flex;align-items:flex-end;flex-direction:column;gap:4px}.f1-feature .mini-action{color:#52e7ff;font-size:.59rem;font-weight:850;text-decoration:none}
+.f1-feature .status{border-color:rgba(255,255,255,.1);border-radius:4px;background:rgba(255,255,255,.07);color:#aeb4c0;font-size:.53rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase}
+.f1-feature .card-actions .btn-link{border-color:rgba(255,59,85,.4);background:rgba(255,59,85,.08);font-size:.76rem}.f1-feature .card-actions .btn-link:hover{background:rgba(255,59,85,.18);box-shadow:0 8px 22px rgba(255,59,85,.12)}
+@media(max-width:620px){.f1-feature .session-row{align-items:flex-start}.f1-feature .session-actions{align-items:flex-start;flex-direction:row;justify-content:space-between}}

@@ -16,9 +16,10 @@ function homeMotoCountdown(ms){
   return d?`${d} d · ${h} h · ${m} min`:`${h} h · ${m} min · ${s} s`;
 }
 function renderHomeMotorCards(){
-  const state=getF1State(),name=document.getElementById("f1-name"),place=document.getElementById("f1-circuit"),session=document.getElementById("f1-next-session"),timer=document.getElementById("f1-countdown");
+  const state=getF1State(),countdownState=getF1CountdownState(),name=document.getElementById("f1-name"),place=document.getElementById("f1-circuit"),session=document.getElementById("f1-next-session"),timer=document.getElementById("f1-countdown");
   if(state.race){
-    name.textContent=state.race.name;place.textContent=`📍 ${state.race.circuit}`;session.textContent=`${state.status==="live"?"🔴":"⏱️"} ${state.session[0]} · ${formatF1LocalTime(state.session[1])}`;timer.textContent=formatCountdown(state.start-Date.now());
+    name.textContent=state.race.name;place.textContent=`📍 ${state.race.circuit}`;session.textContent=`${countdownState.status==="live"?"🔴":"⏱️"} ${countdownState.session[0]} · ${formatF1LocalTime(countdownState.session[1])}`;
+    timer.textContent=countdownState.status==="upcoming"?formatCountdown(countdownState.start-Date.now()):countdownState.status==="live"?"🔴 EN DIRECTO":"SESIÓN EN CURSO · HORARIO PREVISTO";
     const key=`${state.race.round}|${state.session[0]}|${state.session[1]}`;if(key!==homeF1SessionKey){homeF1SessionKey=key;renderSessionList(state.race);}
   }else{name.textContent="Temporada finalizada";session.textContent="";timer.textContent="🏁";}
   const moto=getNextMotoGP(),mName=document.getElementById("motogp-name"),mPlace=document.getElementById("motogp-circuit"),mSession=document.getElementById("motogp-next-session"),mTimer=document.getElementById("motogp-countdown");

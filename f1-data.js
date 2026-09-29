@@ -30,3 +30,31 @@ const F1_CALENDAR = [
   {round:22,name:"GP Qatar",circuit:"Losail International Circuit",sessions:[["Libres 1","2026-11-27T13:30:00Z"],["Libres 2","2026-11-27T17:00:00Z"],["Libres 3","2026-11-28T14:30:00Z"],["Clasificación","2026-11-28T18:00:00Z"],["Carrera","2026-11-29T16:00:00Z"]]},
   {round:23,name:"GP Abu Dhabi",circuit:"Yas Marina Circuit",sessions:[["Libres 1","2026-12-04T09:30:00Z"],["Libres 2","2026-12-04T13:00:00Z"],["Libres 3","2026-12-05T10:30:00Z"],["Clasificación","2026-12-05T14:00:00Z"],["Carrera","2026-12-06T13:00:00Z"]]}
 ];
+
+/* Identidad de las fichas: el resto de estadísticas permanece pendiente hasta
+ * que f1-data.js reciba datos oficiales para cada GP. */
+const F1_GP_META = {
+  1:{id:"australia",country:"Australia",flag:"🇦🇺",accent:"#26c6a4"},
+  2:{id:"china",country:"China",flag:"🇨🇳",accent:"#e83b4d"},
+  3:{id:"japon",country:"Japón",flag:"🇯🇵",accent:"#f04452"},
+  4:{id:"miami",country:"Estados Unidos",flag:"🇺🇸",accent:"#49c5d9"},
+  5:{id:"canada",country:"Canadá",flag:"🇨🇦",accent:"#e64052"},
+  6:{id:"monaco",country:"Mónaco",flag:"🇲🇨",accent:"#e94c65"},
+  7:{id:"barcelona",country:"España",flag:"🇪🇸",accent:"#f3b841"},
+  8:{id:"austria",country:"Austria",flag:"🇦🇹",accent:"#ed4052"},
+  9:{id:"silverstone",country:"Reino Unido",flag:"🇬🇧",accent:"#4d83d7"},
+  10:{id:"spa",country:"Bélgica",flag:"🇧🇪",accent:"#edb83f"},
+  11:{id:"hungria",country:"Hungría",flag:"🇭🇺",accent:"#50ad79"},
+  12:{id:"holanda",country:"Países Bajos",flag:"🇳🇱",accent:"#f1843d"},
+  13:{id:"monza",country:"Italia",flag:"🇮🇹",accent:"#40b783"},
+  14:{id:"madrid",country:"España",flag:"🇪🇸",accent:"#f3b841"},
+  15:{id:"baku",country:"Azerbaiyán",flag:"🇦🇿",accent:"#54b9d2"},
+  16:{id:"bahrain-malaysia",country:"Pendiente de confirmar",flag:"🏁",accent:"#bd8b55"},
+  17:{id:"singapore",country:"Singapur",flag:"🇸🇬",accent:"#e94c65"},
+  18:{id:"cota",country:"Estados Unidos",flag:"🇺🇸",accent:"#49c5d9"},
+  19:{id:"mexico",country:"México",flag:"🇲🇽",accent:"#42ad78"},
+  20:{id:"brazil",country:"Brasil",flag:"🇧🇷",accent:"#d9c447"},
+  21:{id:"vegas",country:"Estados Unidos",flag:"🇺🇸",accent:"#a88aff"},
+  22:{id:"qatar",country:"Qatar",flag:"🇶🇦",accent:"#ad557e"},
+  23:{id:"abudhabi",country:"Emiratos Árabes Unidos",flag:"🇦🇪",accent:"#d7b74a"}
+};
