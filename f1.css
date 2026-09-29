@@ -44,24 +44,24 @@
 @media(max-width:1050px){.f1-dashboard{grid-template-columns:1fr 1fr}.f1-next-card{grid-column:1/-1}}@media(max-width:760px){.f1-hero-grid{grid-template-columns:1fr}.f1-dashboard{grid-template-columns:1fr}.f1-next-card{grid-column:auto}.f1-card-footer{grid-template-columns:1fr}.f1-section-heading{align-items:flex-start;flex-direction:column}.calendar-grid{grid-template-columns:1fr}}@media(max-width:520px){.f1-hero{padding:24px 18px;border-radius:20px}.f1-hero h1{font-size:3.6rem}.f1-hero-meta span{flex:1;text-align:center}.f1-next-card,.f1-side-card{padding:18px}.f1-next-main{align-items:flex-start}.f1-status-orb{width:60px;height:60px}.session-row{grid-template-columns:1fr}.session-actions{align-items:flex-start;flex-direction:row;justify-content:space-between}.telemetry-grid{gap:11px}}
 
 
-/* Motorsport page backdrop: restrained carbon grain and telemetry accents */
+/* Motorsport page backdrop: visible carbon texture and telemetry accents */
 .f1-page{
   min-height:100vh;
   background-color:#080a0f;
   background-image:
-    radial-gradient(ellipse at 10% 3%,rgba(255,59,85,.105),transparent 34rem),
-    radial-gradient(ellipse at 96% 34%,rgba(82,231,255,.065),transparent 31rem),
-    repeating-linear-gradient(135deg,rgba(255,255,255,.014) 0 1px,transparent 1px 8px),
-    repeating-linear-gradient(45deg,rgba(255,255,255,.009) 0 1px,transparent 1px 8px),
-    linear-gradient(180deg,#090b10 0%,#080a0f 52%,#0b0d12 100%);
+    radial-gradient(ellipse at 9% 4%,rgba(255,48,72,.20),transparent 38rem),
+    radial-gradient(ellipse at 96% 38%,rgba(40,207,235,.13),transparent 34rem),
+    repeating-linear-gradient(135deg,rgba(255,255,255,.025) 0 1px,transparent 1px 7px),
+    repeating-linear-gradient(45deg,rgba(0,0,0,.19) 0 1px,transparent 1px 7px),
+    linear-gradient(180deg,#0b0d12 0%,#080a0f 55%,#0c0e13 100%);
   background-attachment:scroll;
 }
 @media(max-width:760px){
   .f1-page{
     background-image:
-      radial-gradient(ellipse at 12% 0%,rgba(255,59,85,.09),transparent 25rem),
-      radial-gradient(ellipse at 100% 38%,rgba(82,231,255,.05),transparent 22rem),
-      repeating-linear-gradient(135deg,rgba(255,255,255,.012) 0 1px,transparent 1px 9px),
-      linear-gradient(180deg,#090b10 0%,#080a0f 58%,#0b0d12 100%);
+      radial-gradient(ellipse at 12% 0%,rgba(255,48,72,.16),transparent 27rem),
+      radial-gradient(ellipse at 100% 40%,rgba(40,207,235,.09),transparent 23rem),
+      repeating-linear-gradient(135deg,rgba(255,255,255,.021) 0 1px,transparent 1px 8px),
+      linear-gradient(180deg,#0b0d12 0%,#080a0f 58%,#0c0e13 100%);
   }
 }
