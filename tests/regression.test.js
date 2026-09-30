@@ -78,8 +78,61 @@ test("la pestaña En directo y la portada recorren todas las jornadas",()=>{
 test("F1 y MotoGP avanzan a la siguiente sesión",()=>{
   const f1=fs.readFileSync("f1calendar.js","utf8");
   const moto=fs.readFileSync("motogpcalendar.js","utf8");
+  const core=fs.readFileSync("motorsport-core.js","utf8");
   assert.match(f1,/sessions\.find\(session=>f1SessionEnd\(session\)>now\)/);
-  assert.match(moto,/sessions\?\.find\(session=>new Date\(session\.start\)\.getTime\(\)\+session\.duration\*60000>Date\.now\(\)\)/);
+  assert.match(moto,/return motorsportNextSession\("motogp",race,now\)/);
+  assert.match(core,/function motorsportNextSession\(competition, race, now=Date\.now\(\)\)/);
+});
+
+test("MotoGP reutiliza una ficha por query y mantiene sus datos aislados",()=>{
+  const html=fs.readFileSync("motogp-gp.html","utf8"),calendar=fs.readFileSync("motogpcalendar.js","utf8"),detail=fs.readFileSync("motogp-gp.js","utf8");
+  assert.match(calendar,/motogp-gp\.html\?id=\$\{encodeURIComponent\(r\.id\)\}/);
+  assert.match(html,/motogpcalendar\.js/);assert.match(html,/motorsport-core\.js/);
+  assert.match(detail,/new URLSearchParams\(location\.search\)\.get\("id"\)/);
+  assert.doesNotMatch(detail,/F1_CALENDAR|F1_GP_META|f1calendar/);
+  for(const id of ["gp-sessions","gp-results","gp-race-data","gp-conditions","gp-championship"])assert.match(html,new RegExp(`id="${id}"`));
+});
+
+test("el contrato del widget normaliza proveedores y permite selección por competición",()=>{
+  const widget=fs.readFileSync("sports-widget.js","utf8"),home=fs.readFileSync("home.js","utf8"),preferences=fs.readFileSync("preferences.js","utf8"),index=fs.readFileSync("index.html","utf8");
+  for(const id of ["laliga","champions","f1","motogp"])assert.match(home,new RegExp(`id:"${id}"`));
+  assert.match(widget,/function register\(provider\)/);assert.match(widget,/function setSelected\(ids\)/);assert.match(widget,/competitionLabel:provider\.label/);
+  assert.match(preferences,/Mis competiciones/);assert.match(preferences,/SportsWidget\.setSelected/);assert.match(index,/sports-widget\.js/);
+});
+
+test("el núcleo comparte estados de sesión sin cruzar calendarios deportivos",()=>{
+  const context={Date};context.globalThis=context;context.window=context;vm.createContext(context);vm.runInContext(fs.readFileSync("motorsport-core.js","utf8"),context);
+  const start="2026-10-01T10:00:00Z",f1=["Libres 1",start],moto={name:"Practice",start,duration:60};
+  assert.equal(context.motorsportSessionState("f1",f1,Date.parse(start)+10*60000),"pending");
+  assert.equal(context.motorsportSessionState("motogp",moto,Date.parse(start)+10*60000),"live");
+  assert.equal(context.motorsportSessionState("motogp",moto,Date.parse(start)-1000),"upcoming");
+});
+
+test("MotoGP carga el calendario y añade identidad de ficha a todas las rondas",()=>{
+  const context={Date,Intl};context.window=context;context.globalThis=context;vm.createContext(context);vm.runInContext(fs.readFileSync("motorsport-core.js","utf8"),context);vm.runInContext(fs.readFileSync("motogpcalendar.js","utf8"),context);
+  assert.equal(context.MotoGPSchedule.calendar.length,22);
+  assert.equal(context.MotoGPSchedule.calendar.find(race=>race.id==="japan")?.name,"GP Japón 🇯🇵");
+  assert(context.MotoGPSchedule.calendar.every(race=>race.country&&race.accent&&race.id));
+});
+
+test("la ficha MotoGP pinta el GP solicitado y declara pendientes los datos no disponibles",()=>{
+  const elements=new Map(),element=id=>{if(!elements.has(id))elements.set(id,{style:{setProperty(){}},textContent:"",innerHTML:""});return elements.get(id);};
+  const context={Date,Intl,URLSearchParams,location:{search:"?id=japan"},document:{title:"",body:{style:{setProperty(){}}},documentElement:{style:{setProperty(){}}},getElementById:element},setInterval(){}};
+  context.window=context;context.globalThis=context;vm.createContext(context);
+  for(const file of ["motorsport-core.js","motogpcalendar.js","motogp-gp.js"])vm.runInContext(fs.readFileSync(file,"utf8"),context);
+  assert.equal(element("gp-title").textContent,"GP Japón 🇯🇵");
+  assert.match(element("gp-sessions").innerHTML,/Programa oficial pendiente/);
+  assert.match(element("gp-results").innerHTML,/Resultados pendientes/);
+  assert.match(element("gp-conditions").innerHTML,/Condiciones pendientes/);
+});
+
+test("los proveedores del widget respetan la selección guardada y el esquema compartido",()=>{
+  const values=new Map(),context={localStorage:{getItem:key=>values.get(key)||null,setItem:(key,value)=>values.set(key,value)}};context.window=context;context.globalThis=context;vm.createContext(context);vm.runInContext(fs.readFileSync("sports-widget.js","utf8"),context);
+  context.SportsWidget.register({id:"f1",label:"F1",icon:"🏎️",getEvents:()=>[{title:"GP de prueba",startAt:1000,status:"scheduled",href:"gp.html?id=prueba"}]});
+  context.SportsWidget.register({id:"motogp",label:"MotoGP",icon:"🏍️",getEvents:()=>[{title:"GP moto",startAt:2000}]});
+  assert.equal(context.SportsWidget.events(0).length,2);
+  assert.deepEqual(Array.from(context.SportsWidget.setSelected(["motogp","inexistente"])),["motogp"]);
+  const selected=context.SportsWidget.events(0);assert.equal(selected.length,1);assert.equal(selected[0].competition,"motogp");assert.equal(selected[0].status,"scheduled");
 });
 
 test("las fichas completas siguen disponibles en ambas competiciones",()=>{const league=fs.readFileSync("football.js","utf8"),champions=fs.readFileSync("champions.js","utf8");assert.match(league,/lineup-subs/);assert.match(league,/Tarjeta amarilla/);assert.match(champions,/openChampionsDetails/);assert.match(champions,/champions-detail-trigger/);});

@@ -40,7 +40,7 @@ window.WolfTimezone=WolfTimezone;
     document.head.append(theme);
   }
   const preferences = document.createElement("script");
-  preferences.src = `${root}preferences.js?v=20260913-teams2`;
+  preferences.src = `${root}preferences.js?v=20260930-points8-9`;
   preferences.defer = true;
   document.head.append(preferences);
   if (!document.querySelector('link[rel="icon"]')) {

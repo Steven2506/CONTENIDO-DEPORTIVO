@@ -1,9 +1,7 @@
 /* Motor F1 · consume exclusivamente f1-data.js para el calendario. */
-const F1_SESSION_LENGTH = {"Libres 1":60,"Libres 2":60,"Libres 3":60,"Clasificación Sprint":50,"Sprint":60,"Clasificación":70,"Carrera":150};
 let f1Races = F1_CALENDAR;
-function f1SessionEnd(session){return new Date(session[1]).getTime()+(F1_SESSION_LENGTH[session[0]]||90)*60000;}
-function f1SessionSourceStatus(session){const value=String(session[2]||"").toLowerCase();if(["live","in_progress","running"].includes(value))return "live";if(["final","finished","completed"].includes(value))return "finished";if(["postponed","cancelled","canceled"].includes(value))return value==="postponed"?"postponed":"cancelled";return "scheduled";}
-function getF1SessionState(session,now=Date.now()){const start=new Date(session[1]).getTime(),end=f1SessionEnd(session),source=f1SessionSourceStatus(session);if(source==="live")return "live";if(source==="finished")return "finished";if(source==="postponed"||source==="cancelled")return source;if(now<start)return "upcoming";if(now<end)return "pending";return "finished";}
+function f1SessionEnd(session){return motorsportSessionEnd("f1",session);}
+function getF1SessionState(session,now=Date.now()){return motorsportSessionState("f1",session,now);}
 function getF1State(now=Date.now()){for(const race of f1Races){for(const session of race.sessions){const status=getF1SessionState(session,now);if(status==="live")return {race,session,status,start:new Date(session[1]).getTime(),end:f1SessionEnd(session)};if(status==="upcoming"||status==="pending")return {race,session,status,start:new Date(session[1]).getTime(),end:f1SessionEnd(session)};}}return {race:null,session:null,status:"finished"};}
 function getF1CountdownState(now=Date.now()){
   const current=getF1State(now);
@@ -121,4 +119,5 @@ function initF1Page(){
     await Promise.allSettled([loadF1Standings(),loadF1LatestRace()]);
   });
 }
+window.F1Schedule={competition:"f1",calendar:f1Races,getState:getF1State,getCountdownState:getF1CountdownState,sessionState:getF1SessionState,nextSession:(race,now=Date.now())=>motorsportNextSession("f1",race,now)};
 document.addEventListener("DOMContentLoaded",initF1Page);

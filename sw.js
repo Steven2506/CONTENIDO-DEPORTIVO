@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_VERSION="wolfgames-pwa-20260929-f1-home1";
+const CACHE_VERSION="wolfgames-pwa-20260930-points8-9";
 const SHELL_CACHE=`${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE=`${CACHE_VERSION}-runtime`;
 const APP_SHELL=[
@@ -10,6 +10,7 @@ const APP_SHELL=[
   "./deportes.html",
   "./F1.html",
   "./gp.html",
+  "./motogp-gp.html",
   "./MotoGP.html",
   "./sobremi.html",
   "./offline.html",
@@ -17,12 +18,19 @@ const APP_SHELL=[
   "./f1.css?v=20260929-f1-home1",
   "./f1-home.css?v=20260929-f1-home1",
   "./gp.css?v=20260929-gp-countdown1",
+  "./gp.css?v=20260930-points8-9",
+  "./motogp-gp.css?v=20260930-points8-9",
   "./site.js?v=20260914-performance1",
   "./f1-data.js?v=20260929-gp-master1",
-  "./f1calendar.js?v=20260929-f1-home1",
+  "./motorsport-core.js?v=20260930-points8-9",
+  "./f1calendar.js?v=20260930-points8-9",
+  "./motogpcalendar.js?v=20260930-points8-9",
+  "./motogp-page.js?v=20260930-points8-9",
+  "./motogp-gp.js?v=20260930-points8-9",
   "./gp.js?v=20260929-gp-countdown1",
-  "./home.js?v=20260929-f1-home1",
-  "./preferences.js?v=20260913-teams2",
+  "./home.js?v=20260930-points8-9",
+  "./sports-widget.js?v=20260930-points8-9",
+  "./preferences.js?v=20260930-points8-9",
   "./particles.js?v=20260914-performance1",
   "./favicon.svg",
   "./icons/icon-192.png",
@@ -31,7 +39,7 @@ const APP_SHELL=[
 const LIVE_DATA_FILES=new Set([
   "sports-data.js","laliga-current.js","laliga-calendar.js","football.js",
   "champions-data.js","champions-fixtures.js","champions-draw.js","champions-centre.js","champions.js",
-  "f1-data.js","f1calendar.js","motogpcalendar.js","home.js","status.js","weather.js"
+  "f1-data.js","motorsport-core.js","f1calendar.js","motogpcalendar.js","sports-widget.js","home.js","status.js","weather.js"
 ]);
 
 self.addEventListener("install",event=>{
