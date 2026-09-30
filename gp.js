@@ -22,10 +22,10 @@ function gpRenderSessions(race){
     const state=getF1SessionState(session,now),anchor=`gp-result-${index}`;
     return `<li class="gp-session ${state==="live"?"is-live":""}"><span class="gp-session-number">${String(index+1).padStart(2,"0")}</span><span class="gp-session-info"><strong>${session[0]}</strong><small>${formatF1LocalTime(session[1])}</small></span><span class="status">${GP_STATE_LABEL[state]||"Pendiente"}</span><a class="gp-result-link" href="#${anchor}">Resultados ↘</a></li>`;
   }).join("");
-  results.innerHTML=race.sessions.map((session,index)=>`<article id="gp-result-${index}" class="gp-result-panel"><div><p class="eyebrow">${gpEscape(session[0])}</p><h3>Clasificación de sesión</h3></div><div class="gp-pending-panel"><strong>${GP_PENDING}</strong><span>${gpEscape(gpSessionPendingMessage(session))}</span></div></article>`).join("");
+  results.innerHTML=race.sessions.map((session,index)=>{const available=Boolean(gpSessionEndpoint(session));return `<article id="gp-result-${index}" class="gp-result-panel"><div><p class="eyebrow">${gpEscape(session[0])}</p><h3>Clasificación de sesión</h3></div><div class="gp-pending-panel"><strong>${available?"Consultando resultados…":GP_PENDING}</strong><span>${gpEscape(available?"Comprobando si la fuente ya publicó esta sesión.":gpSessionPendingMessage(session))}</span></div></article>`;}).join("");
   gpLoadResults(race);
 }
-function gpPendingPanel(message){return `<div class="gp-pending-panel"><strong>${GP_PENDING}</strong><span>${gpEscape(message)}</span></div>`;}
+function gpPendingPanel(message,title=GP_PENDING){return `<div class="gp-pending-panel"><strong>${gpEscape(title)}</strong><span>${gpEscape(message)}</span></div>`;}
 function gpSessionPendingMessage(session){const name=String(session[0]).toLowerCase();if(name.startsWith("libres"))return "La fuente consultada no publica clasificaciones de entrenamientos libres.";if(name.includes("sprint")&&name.includes("clasificación"))return "La clasificación sprint no está disponible en esta fuente de resultados.";return "Se mostrará cuando exista una clasificación publicada para esta sesión.";}
 function gpResultTable(rows,type){
   if(!rows?.length)return gpPendingPanel("La fuente todavía no ha publicado la clasificación de esta sesión.");
@@ -45,7 +45,7 @@ function gpSessionEndpoint(session){
   if(name==="clasificación")return "qualifying";
   return null;
 }
-function gpRenderRaceFacts(results,qualifying){
+function gpRenderRaceFacts(results,qualifying,pendingState=GP_PENDING){
   const sorted=results.slice().sort((a,b)=>Number(a.position)-Number(b.position));
   const podium=sorted.filter(row=>["1","2","3"].includes(row.position));
   const fastest=sorted.find(row=>row.FastestLap?.rank==="1");
@@ -53,15 +53,15 @@ function gpRenderRaceFacts(results,qualifying){
   const pole=qualifying.slice().sort((a,b)=>Number(a.position)-Number(b.position))[0];
   const laps=sorted[0]?.laps;
   const data=[
-    ["Ganador",podium[0]?.Driver?`${podium[0].Driver.givenName} ${podium[0].Driver.familyName}`:GP_PENDING],
-    ["Segundo",podium[1]?.Driver?`${podium[1].Driver.givenName} ${podium[1].Driver.familyName}`:GP_PENDING],
-    ["Tercero",podium[2]?.Driver?`${podium[2].Driver.givenName} ${podium[2].Driver.familyName}`:GP_PENDING],
-    ["Vuelta rápida",fastest?.Driver?`${fastest.Driver.code||fastest.Driver.familyName} · ${fastest.FastestLap.Time?.time||"tiempo pendiente"}`:GP_PENDING],
-    ["Vueltas",laps||GP_PENDING],
-    ["No clasificados",results.length?dnf:GP_PENDING],
+    ["Ganador",podium[0]?.Driver?`${podium[0].Driver.givenName} ${podium[0].Driver.familyName}`:pendingState],
+    ["Segundo",podium[1]?.Driver?`${podium[1].Driver.givenName} ${podium[1].Driver.familyName}`:pendingState],
+    ["Tercero",podium[2]?.Driver?`${podium[2].Driver.givenName} ${podium[2].Driver.familyName}`:pendingState],
+    ["Vuelta rápida",fastest?.Driver?`${fastest.Driver.code||fastest.Driver.familyName} · ${fastest.FastestLap.Time?.time||"tiempo pendiente"}`:pendingState],
+    ["Vueltas",laps||pendingState],
+    ["No clasificados",results.length?dnf:pendingState],
     ["Safety car",GP_PENDING],
     ["Bandera roja",GP_PENDING],
-    ["Pole position",pole?.Driver?`${pole.Driver.givenName} ${pole.Driver.familyName}`:GP_PENDING]
+    ["Pole position",pole?.Driver?`${pole.Driver.givenName} ${pole.Driver.familyName}`:pendingState]
   ];
   document.getElementById("gp-race-data").innerHTML=data.map(([label,value],index)=>`<article class="gp-fact"><span class="gp-fact-index">${String(index+1).padStart(2,"0")}</span><small>${gpEscape(label)}</small><strong>${gpEscape(value)}</strong></article>`).join("");
 }
@@ -79,24 +79,26 @@ async function gpLoadResults(race){
       const data=await gpFetch(`2026/${race.round}/${type}`);
       const apiRace=data.RaceTable?.Races?.[0];
       const key=type==="qualifying"?"QualifyingResults":type==="sprint"?"SprintResults":"Results";
-      return {index,type,rows:apiRace?.[key]||[]};
-    }catch(error){return {index,type,rows:[]};}
+      return {index,type,rows:apiRace?.[key]||[],failed:false};
+    }catch(error){return {index,type,rows:[],failed:true};}
   }));
-  settled.forEach(({index,type,rows})=>{
+  settled.forEach(({index,type,rows,failed})=>{
     if(!type)return;
     const raceTable=resultsBox.querySelector(`#gp-result-${index} .gp-pending-panel`);
     if(!raceTable)return;
-    raceTable.outerHTML=gpResultTable(rows,type);
+    raceTable.outerHTML=failed?gpPendingPanel("No se pudo conectar con la fuente de resultados. Inténtalo de nuevo más tarde.","Fuente no disponible"):gpResultTable(rows,type);
   });
-  const raceResult=settled.find(item=>item.type==="results")?.rows||[];
+  const raceRequest=settled.find(item=>item.type==="results"),raceResult=raceRequest?.rows||[];
   const qualiResult=settled.find(item=>item.type==="qualifying")?.rows||[];
-  if(raceResult.length)gpRenderRaceFacts(raceResult,qualiResult);
+  gpRenderRaceFacts(raceResult,qualiResult,raceRequest?.failed?"Fuente no disponible":GP_PENDING);
   const championship=document.getElementById("gp-championship");
-  if(!raceResult.length){championship.innerHTML=gpPendingPanel("Pilotos y constructores se actualizarán cuando se publiquen los resultados de este GP.");return;}
+  if(!raceResult.length){championship.innerHTML=gpPendingPanel(raceRequest?.failed?"No se pudo conectar con la fuente de clasificación.":"Pilotos y constructores se actualizarán cuando se publiquen los resultados de este GP.",raceRequest?.failed?"Fuente no disponible":GP_PENDING);return;}
   const [drivers,constructors]=await Promise.allSettled([gpFetch(`2026/${race.round}/driverstandings`),gpFetch(`2026/${race.round}/constructorstandings`)]);
   const driverRows=drivers.status==="fulfilled"?drivers.value.StandingsTable?.StandingsLists?.[0]?.DriverStandings||[]:[];
   const constructorRows=constructors.status==="fulfilled"?constructors.value.StandingsTable?.StandingsLists?.[0]?.ConstructorStandings||[]:[];
-  championship.innerHTML=`<div class="gp-championship-grid">${gpRenderStandings("drivers",driverRows)}${gpRenderStandings("constructors",constructorRows)}</div>`;
+  const driverPanel=drivers.status==="rejected"?gpPendingPanel("No se pudo conectar con la fuente de clasificación.","Fuente no disponible"):gpRenderStandings("drivers",driverRows);
+  const constructorPanel=constructors.status==="rejected"?gpPendingPanel("No se pudo conectar con la fuente de clasificación.","Fuente no disponible"):gpRenderStandings("constructors",constructorRows);
+  championship.innerHTML=`<div class="gp-championship-grid">${driverPanel}${constructorPanel}</div>`;
 }
 function gpFindNextSession(race,now=Date.now()){
   const sessions=race.sessions.map(session=>({session,state:getF1SessionState(session,now)}));
@@ -147,7 +149,7 @@ function gpRender(race){
   gpSetText("gp-location",meta.location||"Pendiente de confirmar con fuente oficial");
   gpRenderSessions(race);
   gpStartCountdown(race);
-  document.getElementById("gp-race-data").innerHTML=["Ganador","Segundo","Tercero","Vuelta rápida","Vueltas","Abandonos","Safety car","Bandera roja","Pole position"].map((label,index)=>`<article class="gp-fact"><span class="gp-fact-index">${String(index+1).padStart(2,"0")}</span><small>${label}</small><strong>${GP_PENDING}</strong></article>`).join("");
+  document.getElementById("gp-race-data").innerHTML=["Ganador","Segundo","Tercero","Vuelta rápida","Vueltas","No clasificados","Safety car","Bandera roja","Pole position"].map((label,index)=>`<article class="gp-fact"><span class="gp-fact-index">${String(index+1).padStart(2,"0")}</span><small>${label}</small><strong>Consultando resultados…</strong></article>`).join("");
   document.getElementById("gp-conditions").innerHTML=`<strong>${GP_PENDING}</strong><span>Temperaturas, humedad, viento y estado de pista aparecerán cuando haya una fuente oficial fiable.</span>`;
   document.getElementById("gp-championship").innerHTML=`<strong>${GP_PENDING}</strong><span>Clasificación de pilotos y constructores tras este GP.</span>`;
 }
