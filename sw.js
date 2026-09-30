@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_VERSION="wolfgames-pwa-20260930-points8-9";
+const CACHE_VERSION="wolfgames-pwa-20260930-points8-9b";
 const SHELL_CACHE=`${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE=`${CACHE_VERSION}-runtime`;
 const APP_SHELL=[
@@ -19,14 +19,14 @@ const APP_SHELL=[
   "./f1-home.css?v=20260929-f1-home1",
   "./gp.css?v=20260929-gp-countdown1",
   "./gp.css?v=20260930-points8-9",
-  "./motogp-gp.css?v=20260930-points8-9",
+  "./motogp-gp.css?v=20260930-points8-9b",
   "./site.js?v=20260914-performance1",
   "./f1-data.js?v=20260929-gp-master1",
   "./motorsport-core.js?v=20260930-points8-9",
   "./f1calendar.js?v=20260930-points8-9",
   "./motogpcalendar.js?v=20260930-points8-9",
   "./motogp-page.js?v=20260930-points8-9",
-  "./motogp-gp.js?v=20260930-points8-9",
+  "./motogp-gp.js?v=20260930-points8-9b",
   "./gp.js?v=20260929-gp-countdown1",
   "./home.js?v=20260930-points8-9",
   "./sports-widget.js?v=20260930-points8-9",
