@@ -46,6 +46,30 @@ if(sanMarinoMotoGP)sanMarinoMotoGP.sessions=[
   ["Warm Up","2026-09-13T09:40:00+02:00",10],
   ["Carrera","2026-09-13T14:00:00+02:00",90]
 ].map(([name,start,duration])=>({name,start,duration}));
+// Programa oficial del GP de Austria publicado por MotoGP (horario local CEST).
+const austriaMotoGP=motogpCalendar.find(race=>race.round===15);
+if(austriaMotoGP)austriaMotoGP.sessions=[
+  {name:"FP1",start:"2026-09-18T10:45:00+02:00",duration:45},
+  {name:"Practice",start:"2026-09-18T15:00:00+02:00",duration:60},
+  {name:"FP2",start:"2026-09-19T10:10:00+02:00",duration:30},
+  {name:"Clasificación Q1",start:"2026-09-19T10:50:00+02:00",duration:15},
+  {name:"Clasificación Q2",start:"2026-09-19T11:15:00+02:00",duration:15},
+  {name:"Sprint",start:"2026-09-19T15:00:00+02:00",duration:45},
+  {name:"Warm Up",start:"2026-09-20T09:40:00+02:00",duration:10},
+  {name:"Carrera",start:"2026-09-20T14:00:00+02:00",duration:90}
+];
+// Programa publicado por MotoGP para el GP de Japón de 2026 (horario local JST).
+const japanMotoGP=motogpCalendar.find(race=>race.id==="japan");
+if(japanMotoGP)japanMotoGP.sessions=[
+  {name:"FP1",start:"2026-10-02T10:45:00+09:00",duration:45},
+  {name:"Practice",start:"2026-10-02T15:00:00+09:00",duration:60},
+  {name:"FP2",start:"2026-10-03T10:10:00+09:00",duration:30},
+  {name:"Clasificación Q1",start:"2026-10-03T10:50:00+09:00",duration:15},
+  {name:"Clasificación Q2",start:"2026-10-03T11:15:00+09:00",duration:15},
+  {name:"Sprint",start:"2026-10-03T15:00:00+09:00",duration:45},
+  {name:"Warm Up",start:"2026-10-04T09:40:00+09:00",duration:10},
+  {name:"Carrera",start:"2026-10-04T14:00:00+09:00",duration:90}
+];
 function motoWeekendEnd(race){
   return motorsportRaceEnd("motogp",race);
 }

@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_VERSION="wolfgames-pwa-20260930-points8-9b";
+const CACHE_VERSION="wolfgames-pwa-20260930-motogp-ui1";
 const SHELL_CACHE=`${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE=`${CACHE_VERSION}-runtime`;
 const APP_SHELL=[
@@ -18,15 +18,16 @@ const APP_SHELL=[
   "./f1.css?v=20260929-f1-home1",
   "./f1-home.css?v=20260929-f1-home1",
   "./gp.css?v=20260929-gp-countdown1",
-  "./gp.css?v=20260930-points8-9",
-  "./motogp-gp.css?v=20260930-points8-9b",
+  "./motogp-gp.css?v=20260930-motogp-ui1",
+  "./motogp-home.css?v=20260930-motogp-ui1",
   "./site.js?v=20260914-performance1",
   "./f1-data.js?v=20260929-gp-master1",
   "./motorsport-core.js?v=20260930-points8-9",
   "./f1calendar.js?v=20260930-points8-9",
-  "./motogpcalendar.js?v=20260930-points8-9",
-  "./motogp-page.js?v=20260930-points8-9",
-  "./motogp-gp.js?v=20260930-points8-9b",
+  "./motogpcalendar.js?v=20260930-motogp-ui1",
+  "./motogp-results-data.js?v=20260930-motogp-ui1",
+  "./motogp-page.js?v=20260930-motogp-ui1",
+  "./motogp-gp.js?v=20260930-motogp-ui1",
   "./gp.js?v=20260929-gp-countdown1",
   "./home.js?v=20260930-points8-9",
   "./sports-widget.js?v=20260930-points8-9",
@@ -39,7 +40,7 @@ const APP_SHELL=[
 const LIVE_DATA_FILES=new Set([
   "sports-data.js","laliga-current.js","laliga-calendar.js","football.js",
   "champions-data.js","champions-fixtures.js","champions-draw.js","champions-centre.js","champions.js",
-  "f1-data.js","motorsport-core.js","f1calendar.js","motogpcalendar.js","sports-widget.js","home.js","status.js","weather.js"
+  "f1-data.js","motorsport-core.js","f1calendar.js","motogpcalendar.js","motogp-results-data.js","sports-widget.js","home.js","status.js","weather.js"
 ]);
 
 self.addEventListener("install",event=>{
@@ -57,7 +58,7 @@ async function networkFirst(request,{offline=false}={}){
     if(response.ok)await cache.put(request,response.clone());
     return response;
   }catch(error){
-    const cached=await cache.match(request);
+    const cached=await cache.match(request)||await caches.match(request);
     if(cached)return cached;
     if(offline)return (await caches.match("./offline.html"))||Response.error();
     throw error;

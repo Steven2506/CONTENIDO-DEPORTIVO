@@ -1,1 +1,81 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://api.open-meteo.com https://api.jolpi.ca; frame-src https://player.twitch.tv https://www.twitch.tv; upgrade-insecure-requests"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Calendario oficial, resultados y clasificación de MotoGP 2026."><title>MotoGP 2026 · WOLFGAMES</title><link rel="stylesheet" href="diseno.css?v=20260914-performance1"><script src="site.js?v=20260914-performance1" defer></script><script src="motorsport-core.js?v=20260930-points8-9" defer></script><script src="motogpcalendar.js?v=20260930-points8-9" defer></script><script src="particles.js?v=20260914-performance1" defer></script></head><body><a class="skip-link" href="#contenido">Saltar al contenido</a><div data-site-header data-title="MOTOGP"></div><main id="contenido"><div class="section-heading"><p class="eyebrow">Temporada 2026</p><h1>Universo <span class="neon blue-neon">MotoGP</span></h1><p>Calendario, resultados recientes y acceso directo a la clasificación oficial.</p></div><section class="dashboard-grid"><article class="content-panel"><h2>Próximo GP</h2><h3 id="next-moto-title">Cargando…</h3><p id="next-moto-place"></p><p id="next-moto-session" class="next-session"></p><div id="next-moto-countdown" class="event-countdown"></div><ul id="next-moto-sessions" class="session-list"></ul></article><article class="content-panel"><h2>Clasificación</h2><p>Consulta la tabla oficial de pilotos, equipos y constructores actualizada por MotoGP.</p><a class="btn-link" href="https://www.motogp.com/en/world-standing" target="_blank">Ver clasificación oficial</a></article><article class="content-panel"><h2>Último resultado</h2><p id="last-moto-result">Consultando el último Gran Premio completado…</p><a class="btn-link" href="https://www.motogp.com/en/gp-results" target="_blank">Ver resultados</a></article></section><div class="section-heading subsection"><h2>Calendario completo</h2><p>Fechas confirmadas por MotoGP. Los horarios detallados se muestran cuando están disponibles.</p></div><section id="motogp-calendar" class="calendar-grid" aria-live="polite"></section></main><div data-site-footer></div><canvas id="particles" aria-hidden="true"></canvas><script src="motogp-page.js?v=20260930-points8-9" defer></script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://api.open-meteo.com https://api.jolpi.ca; frame-src https://player.twitch.tv https://www.twitch.tv; upgrade-insecure-requests">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Calendario de MotoGP 2026 con horarios confirmados, resultados y clasificación cuando estén publicados.">
+  <meta name="theme-color" content="#101014">
+  <title>MotoGP 2026 · WOLFGAMES</title>
+  <link rel="stylesheet" href="diseno.css?v=20260914-performance1">
+  <link rel="stylesheet" href="motogp-home.css?v=20260930-motogp-ui1">
+  <script src="site.js?v=20260914-performance1" defer></script>
+  <script src="motorsport-core.js?v=20260930-points8-9" defer></script>
+  <script src="motogpcalendar.js?v=20260930-motogp-ui1" defer></script>
+  <script src="motogp-results-data.js?v=20260930-motogp-ui1" defer></script>
+  <script src="particles.js?v=20260914-performance1" defer></script>
+</head>
+<body class="motogp-page">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <div data-site-header data-title="MOTOGP"></div>
+  <main id="contenido" class="motogp-main">
+    <header class="motogp-hero">
+      <div class="motogp-hero-copy">
+        <p class="motogp-kicker"><span class="motogp-signal"></span> WOLFGAMES · MOTORSPORT</p>
+        <p class="eyebrow">Temporada 2026 · Round by round</p>
+        <h1>Universo <span>MotoGP</span></h1>
+        <p class="motogp-lead">Calendario, horarios confirmados y fichas de cada Gran Premio. Los resultados y clasificaciones aparecerán aquí cuando estén integrados desde una fuente oficial.</p>
+        <div class="motogp-hero-meta"><span><b id="motogp-round-count">22</b> GRANDES PREMIOS</span><span><b>2026</b> TEMPORADA</span><span><b>LOCAL</b> HORA DEL CIRCUITO</span></div>
+      </div>
+      <aside class="motogp-telemetry" aria-label="Estado de la temporada">
+        <div class="motogp-telemetry-top"><span>RACE CONTROL</span><span><i></i> CALENDARIO</span></div>
+        <div class="motogp-telemetry-line"></div>
+        <div class="motogp-telemetry-grid"><div><small>DISCIPLINA</small><strong>MotoGP</strong></div><div><small>RONDA</small><strong id="motogp-next-round">—</strong></div><div><small>PRÓXIMA CITA</small><strong id="motogp-next-country">—</strong></div><div><small>HORARIOS</small><strong id="motogp-schedule-state">PENDIENTES</strong></div></div>
+        <div class="motogp-telemetry-bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </aside>
+      <div class="motogp-hero-mark" aria-hidden="true">MOTOGP</div>
+      <div class="motogp-track-line" aria-hidden="true"></div>
+    </header>
+
+    <section class="motogp-dashboard" aria-label="Resumen del campeonato">
+      <article class="motogp-panel motogp-next-panel">
+        <div class="motogp-panel-label"><span>NEXT ON TRACK</span><span>01</span></div>
+        <div class="motogp-next-main"><div>
+          <p class="motogp-round-label">PRÓXIMO GRAN PREMIO</p>
+          <h2 id="next-moto-title">Cargando calendario…</h2>
+          <p id="next-moto-place" class="motogp-circuit-name"></p>
+          <p id="next-moto-session" class="motogp-next-session"></p>
+          <div id="next-moto-countdown" class="motogp-countdown" aria-live="polite">Buscando horarios confirmados…</div>
+          <a id="next-moto-link" class="motogp-inline-link" href="MotoGP.html#motogp-calendar">Abrir ficha del GP ↗</a>
+        </div><div class="motogp-status-orb" aria-hidden="true"><span></span><small>SESSION<br>CONTROL</small></div></div>
+        <div class="motogp-next-divider"></div>
+        <ul id="next-moto-sessions" class="motogp-session-list" aria-live="polite"></ul>
+      </article>
+
+      <article class="motogp-panel">
+        <div class="motogp-panel-label"><span>CHAMPIONSHIP</span><span>02</span></div>
+        <h2>Clasificación de pilotos</h2>
+        <div id="motogp-rider-standings" class="motogp-data-block" aria-live="polite"><strong>Clasificación oficial pendiente de integración</strong><span>Mostraremos posiciones y puntos publicados por MotoGP. No se estiman ni se completan con datos de otras categorías.</span></div>
+        <a class="motogp-inline-link" href="https://www.motogp.com/es/world-standing/2026/motogp/championship-standings" target="_blank" rel="noopener noreferrer">Fuente oficial MotoGP ↗</a>
+      </article>
+
+      <article class="motogp-panel motogp-result-panel">
+        <div class="motogp-panel-label"><span>LAST GRAND PRIX</span><span>03</span></div>
+        <div class="motogp-result-number" aria-hidden="true">02</div>
+        <h2>Último Gran Premio</h2>
+        <div id="last-moto-result" class="motogp-data-block" aria-live="polite"><strong>Consultando calendario…</strong><span>Se mostrará el evento más reciente y el estado de sus resultados.</span></div>
+        <a id="last-moto-link" class="motogp-inline-link" href="MotoGP.html#motogp-calendar">Abrir ficha del GP ↗</a>
+      </article>
+    </section>
+
+    <section class="motogp-calendar-section">
+      <div class="motogp-section-heading"><div><p class="eyebrow">Race calendar</p><h2>Calendario 2026</h2></div><span id="motogp-calendar-count" class="motogp-section-note">22 GRANDES PREMIOS</span></div>
+      <p class="motogp-calendar-intro">Cada ficha reúne la información disponible del fin de semana. Los horarios o resultados que MotoGP aún no haya publicado se identifican como pendientes.</p>
+      <section id="motogp-calendar" class="calendar-grid" aria-live="polite" aria-label="Calendario de Grandes Premios de MotoGP"></section>
+    </section>
+  </main>
+  <div data-site-footer></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <script src="motogp-page.js?v=20260930-motogp-ui1" defer></script>
+</body>
+</html>
