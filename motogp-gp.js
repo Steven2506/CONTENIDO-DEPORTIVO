@@ -31,14 +31,16 @@
   }
 
   const raceFacts=resultRecord?.race;
-  const facts=[["01","Ganador",raceFacts?.winner||"Pendiente de publicación"],["02","Podio",raceFacts?.podium?.join(" · ")||"Pendiente de publicación"],["03","Pole","Pendiente de integración oficial"],["04","Vuelta rápida",raceFacts?.fastestLap||"Pendiente de integración oficial"],["05","Abandonos",raceFacts?.retirements??"Pendiente de integración oficial"],["06","Safety car / bandera roja",raceFacts?.safetyCar??"Pendiente de integración oficial"]];
+  const facts=[["01","Ganador",raceFacts?.winner||"Pendiente de publicación"],["02","Podio",raceFacts?.podium?.join(" · ")||"Pendiente de publicación"],["03","Pole",raceFacts?.pole||"Pendiente de integración oficial"],["04","Vuelta rápida",raceFacts?.fastestLap||"Pendiente de integración oficial"],["05","Abandonos",raceFacts?.retirements??"Pendiente de integración oficial"],["06","Safety car / bandera roja",raceFacts?.safetyCar??"Pendiente de integración oficial"]];
   $("gp-race-data").innerHTML=facts.map(([n,label,value])=>`<div class="gp-fact"><span class="gp-fact-index">${n}</span><small>${esc(label)}</small><strong>${esc(value)}</strong></div>`).join("");
 
   const conditions=resultRecord?.conditions;
   $("gp-conditions").innerHTML=conditions?`<div class="gp-condition-grid"><div><small>CIELO</small><strong>${esc(conditions.sky||"Pendiente")}</strong></div><div><small>PISTA</small><strong>${esc(conditions.track||"Pendiente")}</strong></div><div><small>TEMPERATURA AMBIENTE</small><strong>${conditions.airTemperatureC==null?"Pendiente":`${esc(conditions.airTemperatureC)} °C`}</strong></div><div><small>TEMPERATURA DE PISTA</small><strong>${conditions.groundTemperatureC==null?"Pendiente":`${esc(conditions.groundTemperatureC)} °C`}</strong></div><div><small>HUMEDAD</small><strong>${conditions.humidityPercent==null?"Pendiente":`${esc(conditions.humidityPercent)}%`}</strong></div></div>`:pending("Condiciones pendientes","Sin observaciones meteorológicas verificadas para este Gran Premio.");
 
-  const championship=resultRecord?.championship;
-  $("gp-championship").innerHTML=championship?`<div class="gp-championship-grid"><section class="gp-championship-block"><h3>Clasificación de pilotos</h3><ol><li><b>1</b><span>Líder tras el GP</span><strong>${esc(championship.ridersLeader||"Pendiente")}</strong></li><li><b>+</b><span>Ventaja</span><strong>${championship.leadOverSecondPoints==null?"Pendiente":`${esc(championship.leadOverSecondPoints)} pts`}</strong></li></ol></section><section class="gp-championship-block"><h3>Constructores</h3>${pending("Clasificación pendiente","La tabla oficial de equipos aún no está integrada.")}</section></div>`:pending("Impacto en campeonato pendiente","Se completará cuando se integre la clasificación oficial posterior al Gran Premio.");
+  const championship=resultRecord?.championship,snapshot=window.MOTOGP_OFFICIAL_RESULTS?.currentStandings,showSnapshot=snapshot?.afterRound===race.round;
+  const riderImpact=championship?.ridersTiedForLead?.length?`<strong>Empate en cabeza: ${championship.ridersTiedForLead.map(esc).join(" · ")}</strong><span>Igualados a puntos tras este Gran Premio.</span>`:championship?.ridersLeader?`<strong>${esc(championship.ridersLeader)} · líder</strong><span>${championship.leadOverSecondPoints==null?"Diferencia pendiente":`${esc(championship.leadOverSecondPoints)} puntos sobre el segundo`}</span>`:pending("Impacto pendiente");
+  const makeRows=rows=>`<ol>${rows.map(row=>`<li><b>${esc(row.position)}</b><span>${esc(row.name)}</span><strong>${esc(row.points)} pts</strong></li>`).join("")}</ol>`;
+  $("gp-championship").innerHTML=championship?`<div class="gp-championship-grid"><section class="gp-championship-block"><h3>Clasificación de pilotos</h3>${showSnapshot?makeRows(snapshot.riders):riderImpact}</section><section class="gp-championship-block"><h3>Constructores</h3>${showSnapshot?makeRows(snapshot.constructors):pending("Clasificación pendiente","Solo se muestra el impacto que está confirmado para esta ronda.")}</section></div>`:pending("Impacto en campeonato pendiente","Se completará cuando se integre la clasificación oficial posterior al Gran Premio.");
 
   const sourceNote=document.querySelector(".gp-source-note");
   if(sourceNote&&resultRecord?.sourceUrls?.length){
@@ -63,3 +65,4 @@
   }
   updateCountdown();setInterval(()=>{if(!document.hidden)updateCountdown();},1000);
 })();
+

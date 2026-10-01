@@ -31,13 +31,34 @@ function renderLastMoto(){
   if(link){link.href=`motogp-gp.html?id=${encodeURIComponent(race.id)}`;link.hidden=false;}
 }
 
+function renderMotoStandings(){
+  const snapshot=window.MOTOGP_OFFICIAL_RESULTS?.currentStandings;
+  const riders=document.getElementById("motogp-rider-standings"),constructors=document.getElementById("motogp-constructor-standings"),updated=document.getElementById("motogp-standings-updated");
+  if(!snapshot)return;
+  const rows=(items,unit="pts")=>items.map(item=>`<div class="motogp-standing-row"><b>${item.position}</b><span>${item.name}<small>${item.team||""}</small></span><strong>${item.points} <small>${unit}</small></strong></div>`).join("");
+  if(riders)riders.innerHTML=rows(snapshot.riders);
+  if(constructors)constructors.innerHTML=rows(snapshot.constructors);
+  if(updated)updated.textContent=`Tras el GP ${motogpCalendar.find(race=>race.round===snapshot.afterRound)?.country||""} · ${new Intl.DateTimeFormat("es-ES",{day:"numeric",month:"long",year:"numeric",timeZone:"Europe/Madrid"}).format(new Date(`${snapshot.updatedAt}T12:00:00Z`))}`;
+}
+
+function setupMotoStandingsTabs(){
+  const tabs=[...document.querySelectorAll("[data-motogp-standings-tab]")];
+  tabs.forEach(tab=>tab.addEventListener("click",()=>{
+    tabs.forEach(item=>{const selected=item===tab;item.setAttribute("aria-selected",String(selected));item.tabIndex=selected?0:-1;const panel=document.getElementById(item.getAttribute("aria-controls"));if(panel)panel.hidden=!selected;});
+    const key=tab.dataset.motogpStandingsTab,link=document.getElementById("motogp-standings-link"),snapshot=window.MOTOGP_OFFICIAL_RESULTS?.currentStandings;
+    if(link&&snapshot)link.href=key==="constructors"?snapshot.constructorsSourceUrl:"https://www.motogp.com/en/world-standing/2026/motogp/championship-standings";
+  }));
+  tabs.forEach((tab,index)=>tab.addEventListener("keydown",event=>{if(!["ArrowLeft","ArrowRight"].includes(event.key))return;event.preventDefault();tabs[(index+(event.key==="ArrowRight"?1:tabs.length-1))%tabs.length].focus();tabs[(index+(event.key==="ArrowRight"?1:tabs.length-1))%tabs.length].click();}));
+}
+
 document.addEventListener("DOMContentLoaded",()=>{
   renderMotoCalendar();
   const count=document.getElementById("motogp-calendar-count"),heroCount=document.getElementById("motogp-round-count");
   if(count)count.textContent=`${motogpCalendar.length} GRANDES PREMIOS`;
   if(heroCount)heroCount.textContent=String(motogpCalendar.length);
-  renderNextMoto();renderLastMoto();
+  renderNextMoto();renderLastMoto();renderMotoStandings();setupMotoStandingsTabs();
   setInterval(()=>{if(!document.hidden)renderNextMoto(false);},1000);
   setInterval(()=>{if(!document.hidden)renderMotoSessionList(getNextMotoGP(),"next-moto-sessions");},60000);
   document.addEventListener("visibilitychange",()=>{if(!document.hidden){renderNextMoto();renderLastMoto();}});
 });
+

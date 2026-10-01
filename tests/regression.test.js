@@ -113,16 +113,20 @@ test("MotoGP carga el calendario y añade identidad de ficha a todas las rondas"
   assert.equal(context.MotoGPSchedule.calendar.length,22);
   assert.equal(context.MotoGPSchedule.calendar.find(race=>race.id==="japan")?.name,"GP Japón 🇯🇵");
   assert(context.MotoGPSchedule.calendar.every(race=>race.country&&race.accent&&race.id));
+  const japan=context.MotoGPSchedule.calendar.find(race=>race.id==="japan"),australia=context.MotoGPSchedule.calendar.find(race=>race.id==="australia");
+  assert.equal(japan.sessions.filter(session=>session.name.startsWith("Clasificación")).length,2);
+  assert.equal(australia.date,"2026-10-23T09:00:00+11:00");
+  assert.match(context.motoCalendarUrl(australia),/dates=20261023\/20261026/);
 });
 
 test("la ficha MotoGP pinta el GP solicitado y declara pendientes los datos no disponibles",()=>{
   const elements=new Map(),element=id=>{if(!elements.has(id))elements.set(id,{style:{setProperty(){}},textContent:"",innerHTML:""});return elements.get(id);};
-  const context={Date,Intl,URLSearchParams,location:{search:"?id=japan"},document:{title:"",body:{style:{setProperty(){}}},documentElement:{style:{setProperty(){}}},getElementById:element},setInterval(){}};
+  const context={Date,Intl,URLSearchParams,location:{search:"?id=japan"},document:{title:"",body:{style:{setProperty(){}}},documentElement:{style:{setProperty(){}}},getElementById:element,querySelector:()=>element("gp-countdown-kicker")},setInterval(){}};
   context.window=context;context.globalThis=context;vm.createContext(context);
   for(const file of ["motorsport-core.js","motogpcalendar.js","motogp-gp.js"])vm.runInContext(fs.readFileSync(file,"utf8"),context);
   assert.equal(element("gp-title").textContent,"GP Japón 🇯🇵");
-  assert.match(element("gp-sessions").innerHTML,/Programa oficial pendiente/);
-  assert.match(element("gp-results").innerHTML,/Resultados pendientes/);
+  assert.match(element("gp-sessions").innerHTML,/Clasificación Q1/);
+  assert.match(element("gp-results").innerHTML,/Datos de esta sesión pendientes/);
   assert.match(element("gp-conditions").innerHTML,/Condiciones pendientes/);
 });
 
@@ -251,3 +255,4 @@ test("el sincronizador actualiza horarios oficiales y sus cachés",()=>{
   assert.match(workflow,/node --check laliga-calendar\.js/);
   assert.match(workflow,/git add -- sports-data\.js laliga-current\.js laliga-calendar\.js/);
 });
+

@@ -16,7 +16,7 @@ let motogpCalendar = [
   ["GP Austria 🇦🇹","Red Bull Ring","2026-09-18T09:00:00+02:00","18–20 SEP"],
   ["GP Japón 🇯🇵","Motegi","2026-10-02T09:00:00+09:00","2–4 OCT"],
   ["GP Indonesia 🇮🇩","Mandalika","2026-10-09T09:00:00+08:00","9–11 OCT"],
-  ["GP Australia 🇦🇺","Phillip Island","2026-10-22T09:00:00+11:00","22–25 OCT"],
+  ["GP Australia 🇦🇺","Phillip Island","2026-10-23T09:00:00+11:00","23–25 OCT"],
   ["GP Malasia 🇲🇾","Sepang","2026-10-30T09:00:00+08:00","30 OCT–1 NOV"],
   ["GP Qatar 🇶🇦","Lusail","2026-11-06T09:00:00+03:00","6–8 NOV"],
   ["GP Portugal 🇵🇹","Portimão","2026-11-20T09:00:00+00:00","20–22 NOV"],
@@ -31,9 +31,10 @@ if(aragonMotoGP)aragonMotoGP.sessions=[
   ["FP1","2026-08-28T10:45:00+02:00",45],
   ["Practice","2026-08-28T15:00:00+02:00",60],
   ["FP2","2026-08-29T10:10:00+02:00",30],
-  ["Clasificación (Q1/Q2)","2026-08-29T10:50:00+02:00",55],
+  ["Clasificación Q1","2026-08-29T10:50:00+02:00",15],
+  ["Clasificación Q2","2026-08-29T11:15:00+02:00",15],
   ["Sprint","2026-08-29T15:00:00+02:00",45],
-  ["Warm Up","2026-08-30T09:40:00+02:00",20],
+  ["Warm Up","2026-08-30T09:40:00+02:00",10],
   ["Carrera","2026-08-30T14:00:00+02:00",90]
 ].map(([name,start,duration])=>({name,start,duration}));
 const sanMarinoMotoGP=motogpCalendar.find(race=>race.round===14);
@@ -41,7 +42,8 @@ if(sanMarinoMotoGP)sanMarinoMotoGP.sessions=[
   ["FP1","2026-09-11T10:45:00+02:00",45],
   ["Practice","2026-09-11T15:00:00+02:00",60],
   ["FP2","2026-09-12T10:10:00+02:00",30],
-  ["Clasificación (Q1/Q2)","2026-09-12T10:50:00+02:00",40],
+  ["Clasificación Q1","2026-09-12T10:50:00+02:00",15],
+  ["Clasificación Q2","2026-09-12T11:15:00+02:00",15],
   ["Sprint","2026-09-12T15:00:00+02:00",45],
   ["Warm Up","2026-09-13T09:40:00+02:00",10],
   ["Carrera","2026-09-13T14:00:00+02:00",90]
@@ -78,7 +80,7 @@ function getLastMotoGP(){return [...motogpCalendar].filter(race=>motoWeekendEnd(
 function getNextMotoSession(race,now=Date.now()){return motorsportNextSession("motogp",race,now);}
 function motoSessionState(session,now=Date.now()){return motorsportSessionState("motogp",session,now);}
 function formatMotoLocalTime(value){return new Intl.DateTimeFormat("es-ES",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit",timeZone:window.WolfTimezone?.get()||"Europe/Madrid"}).format(new Date(value));}
-function motoCalendarUrl(race){const compact=date=>date.toISOString().slice(0,10).replaceAll("-","");const start=new Date(race.date),end=new Date(motoWeekendEnd(race));return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`${race.name} · MotoGP`)}&dates=${compact(start)}/${compact(end)}&location=${encodeURIComponent(race.circuit)}&details=${encodeURIComponent("Fin de semana de MotoGP · Consulta los horarios confirmados en WOLFGAMES")}`;}
+function motoCalendarUrl(race){const start=String(race.date).slice(0,10),endDate=new Date(`${start}T00:00:00Z`);endDate.setUTCDate(endDate.getUTCDate()+3);const end=endDate.toISOString().slice(0,10).replaceAll("-","");return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`${race.name} · MotoGP`)}&dates=${start.replaceAll("-","")}/${end}&location=${encodeURIComponent(race.circuit)}&details=${encodeURIComponent("Fin de semana de MotoGP · Consulta los horarios confirmados en WOLFGAMES")}`;}
 function motoSessionCalendarUrl(race,session){const compact=date=>date.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z/,"Z"),start=new Date(session.start),end=new Date(start.getTime()+session.duration*60000);return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`${session.name} · ${race.name}`)}&dates=${compact(start)}/${compact(end)}&location=${encodeURIComponent(race.circuit)}&details=${encodeURIComponent("Sesión de MotoGP · Horario adaptado por WOLFGAMES")}`;}
 function startMotoCountdown(time,id){const el=document.getElementById(id);if(!el)return;const update=()=>{const ms=time-Date.now();if(ms<=0){el.textContent="🏁 En marcha";return;}const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000);el.textContent=`${d} d · ${h} h · ${m} min`;};update();setInterval(update,60000);}
 function renderMotoCalendar(id="motogp-calendar"){
@@ -91,3 +93,4 @@ function renderMotoSessionList(race,id="motogp-sessions"){
   box.innerHTML=race.sessions.map(session=>{const state=motoSessionState(session),label=state==="live"?"En directo":state==="finished"?"Finalizada":"Próxima";return `<li class="session-row ${state}"><span><strong>${session.name}</strong><small>${formatMotoLocalTime(session.start)}</small></span><span><em>${label}</em><a href="${motoSessionCalendarUrl(race,session)}" target="_blank" rel="noopener noreferrer">＋ Calendario</a></span></li>`;}).join("");
 }
 window.MotoGPSchedule={competition:"motogp",calendar:motogpCalendar,getNextRace:getNextMotoGP,getLastRace:getLastMotoGP,nextSession:getNextMotoSession,sessionState:motoSessionState,sessionEnd:session=>motorsportSessionEnd("motogp",session)};
+
