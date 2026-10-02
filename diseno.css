@@ -156,3 +156,60 @@ footer{text-align:center;border-top:1px solid var(--border);padding:25px 16px;ba
 .embed-chat>summary::-webkit-details-marker{display:none}
 .embed-chat[open]{display:grid;align-content:start;gap:10px}
 .embed-chat[open] .embed-box{min-width:0}
+
+
+/* Inicio: una cabecera editorial y bloques de eventos más claros. */
+#contenido>.hero.vivid-hero{isolation:isolate;overflow:hidden;margin:12px 0 34px;padding:clamp(34px,7vw,78px) clamp(22px,7vw,76px);border-color:rgba(232,121,249,.3);border-radius:26px;background:radial-gradient(ellipse at 88% 18%,rgba(34,211,238,.16),transparent 32%),radial-gradient(ellipse at 8% 100%,rgba(180,0,255,.2),transparent 42%),linear-gradient(130deg,#171027 0%,#0c0d18 62%,#10121b 100%);box-shadow:0 28px 72px rgba(0,0,0,.35)}
+#contenido>.hero.vivid-hero::before,#contenido>.hero.vivid-hero::after{z-index:0;pointer-events:none}
+#contenido>.hero.vivid-hero>*{position:relative;z-index:1}
+#contenido>.hero.vivid-hero::after{position:absolute;right:-8%;bottom:-38%;width:48%;aspect-ratio:1;border:1px solid rgba(232,121,249,.12);border-radius:50%;box-shadow:0 0 0 28px rgba(232,121,249,.025),0 0 0 58px rgba(34,211,238,.018);content:""}
+#contenido>.hero.vivid-hero .eyebrow{display:inline-flex;margin:0 0 14px;padding:7px 11px;border:1px solid rgba(232,121,249,.28);border-radius:999px;background:rgba(180,0,255,.1);font-size:.68rem;letter-spacing:.14em}
+#contenido>.hero.vivid-hero h1{max-width:760px;letter-spacing:-.045em}
+#contenido>.hero.vivid-hero .tagline{margin:16px 0 24px;max-width:620px;line-height:1.7}
+#contenido>.hero.vivid-hero .hero-actions{justify-content:flex-start}
+.event-hub-section{padding:clamp(18px,3.5vw,30px);border:1px solid rgba(255,255,255,.09);border-radius:20px;background:linear-gradient(145deg,rgba(25,17,40,.78),rgba(10,12,19,.82));box-shadow:0 18px 48px rgba(0,0,0,.2)}
+.event-hub-section .section-heading,.next-events-section .section-heading{text-align:left;margin-bottom:18px}
+.event-hub-section .section-heading p:not(.eyebrow),.next-events-section .section-heading p:not(.eyebrow){max-width:720px}
+.event-hub-section .section-heading h2,.next-events-section .section-heading h2{font-style:italic;letter-spacing:-.025em}
+.event-timeline{gap:9px}
+.timeline-event{border-color:rgba(255,255,255,.1);transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.timeline-event[href]:hover{transform:translateY(-2px);border-color:rgba(232,121,249,.45);background:rgba(27,17,45,.96)}
+.next-events-container{align-items:stretch}
+.next-events-container>.event-card{display:flex;min-width:0;flex-direction:column}
+.next-events-container>.event-card .card-actions{margin-top:auto;padding-top:14px}
+
+/* Sobre mí: presentación destacada y tarjetas con jerarquía propia. */
+.about-page #contenido>.section-heading{position:relative;isolation:isolate;overflow:hidden;margin:12px 0 0;padding:clamp(30px,6vw,64px);border:1px solid rgba(232,121,249,.24);border-radius:24px;background:radial-gradient(ellipse at 92% 8%,rgba(34,211,238,.14),transparent 30%),linear-gradient(125deg,rgba(39,21,58,.94),rgba(12,13,24,.97) 70%);box-shadow:0 24px 62px rgba(0,0,0,.28);text-align:left}
+.about-page #contenido>.section-heading::after{position:absolute;z-index:0;right:-4%;bottom:-58%;width:42%;aspect-ratio:1;border:1px solid rgba(232,121,249,.14);border-radius:50%;box-shadow:0 0 0 24px rgba(180,0,255,.025);content:"";pointer-events:none}
+.about-page #contenido>.section-heading>*{position:relative;z-index:1}
+.about-page #contenido>.section-heading .eyebrow{display:inline-flex;margin:0 0 10px;padding:6px 10px;border:1px solid rgba(232,121,249,.25);border-radius:999px;background:rgba(180,0,255,.1);font-size:.67rem}
+.about-page #contenido>.section-heading h1{max-width:760px;letter-spacing:-.04em}
+.about-page #contenido>.section-heading>p:not(.eyebrow){max-width:650px;margin:14px 0 0;line-height:1.75}
+.about-page #contenido>.section-heading .hero-actions{justify-content:flex-start;margin-top:20px}
+.about-page #contenido>.content-panel{position:relative;overflow:hidden;border-color:rgba(255,255,255,.12);background:linear-gradient(145deg,rgba(28,20,43,.96),rgba(11,13,22,.97));box-shadow:0 16px 40px rgba(0,0,0,.24)}
+.about-page #contenido>section.content-panel h2{margin-bottom:12px;font-size:clamp(1.3rem,3vw,1.8rem);font-style:italic;letter-spacing:-.02em}
+.about-page #contenido>section.content-panel:first-of-type{border-top-color:rgba(180,0,255,.5)}
+.about-page .setup-list li{border:1px solid rgba(255,255,255,.06);transition:border-color .18s ease,background .18s ease}
+.about-page .setup-list li:hover{border-color:rgba(232,121,249,.28);background:rgba(180,0,255,.07)}
+.about-page .community-card{min-height:82px;align-content:center}
+
+/* Contenido: Twitch ocupa el papel principal; YouTube queda como bloque independiente. */
+#twitch.content-panel{border-color:rgba(145,70,255,.35);background:radial-gradient(ellipse at 8% 0%,rgba(145,70,255,.12),transparent 40%),linear-gradient(145deg,rgba(29,18,46,.97),rgba(10,12,20,.98))}
+#twitch .content-section-heading .eyebrow{color:#bf94ff}
+#twitch .embed-box{border-color:rgba(145,70,255,.28);border-radius:14px;background:#0b0911;box-shadow:0 14px 35px rgba(0,0,0,.25)}
+#twitch .embed-chat>summary.btn-link{border-color:rgba(145,70,255,.42);background:linear-gradient(135deg,rgba(145,70,255,.22),rgba(60,31,99,.3));color:#f3eaff}
+#twitch .embed-chat>summary.btn-link:hover{background:rgba(145,70,255,.3)}
+#twitch .embed-chat[open] .embed-box{margin-top:0}
+#videos.content-panel{border-color:rgba(255,90,90,.2);background:radial-gradient(ellipse at 95% 5%,rgba(255,70,70,.08),transparent 34%),linear-gradient(145deg,rgba(27,20,36,.97),rgba(10,12,20,.98))}
+#videos .content-section-heading .eyebrow{color:#ff8b93}
+#videos .home-empty{border-color:rgba(255,90,90,.25);background:linear-gradient(110deg,rgba(255,70,70,.07),rgba(255,255,255,.02));padding:clamp(18px,3vw,28px)}
+#videos .home-empty strong{font-size:1rem}
+#videos .home-empty span{max-width:680px;line-height:1.65}
+#comunidad.content-panel{background:linear-gradient(145deg,rgba(25,20,38,.97),rgba(10,12,20,.98))}
+
+@media(max-width:700px){
+  #contenido>.hero.vivid-hero{margin-top:4px;margin-bottom:26px;padding:32px 22px;border-radius:20px}
+  .event-hub-section{padding:18px;border-radius:16px}
+  .about-page #contenido>.section-heading{padding:30px 22px;border-radius:19px}
+  #twitch .embed-grid{gap:12px}
+}
