@@ -213,3 +213,19 @@ footer{text-align:center;border-top:1px solid var(--border);padding:25px 16px;ba
   .about-page #contenido>.section-heading{padding:30px 22px;border-radius:19px}
   #twitch .embed-grid{gap:12px}
 }
+
+
+/* La navegación de escritorio mantiene todos los enlaces en una misma fila. */
+@media(min-width:901px){
+  .site-header .menu{flex-wrap:nowrap;gap:2px}
+  .site-header .menu a{white-space:nowrap}
+}
+@media(min-width:901px) and (max-width:1200px){
+  .site-header{gap:10px;padding:16px 14px}
+  .site-header .brand{gap:7px;font-size:.84rem;letter-spacing:.04em}
+  .site-header .navbar{min-width:0}
+  .site-header .menu a{padding:8px 6px;font-size:.72rem}
+  .site-header .timezone-button{width:42px;height:42px;justify-content:center;padding:0}
+  .site-header .timezone-button span,.site-header .pwa-install-button span{display:none}
+  .site-header .pwa-install-button{width:42px;height:42px;justify-content:center;padding:0}
+}
