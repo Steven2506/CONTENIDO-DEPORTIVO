@@ -137,3 +137,22 @@ footer{text-align:center;border-top:1px solid var(--border);padding:25px 16px;ba
 
 /* Rendimiento: las secciones fuera de pantalla se componen cuando se aproximan al viewport. */
 .event-hub-section,.next-events-section,.subsection,.content-anchor,.football-centre,.champions-centre,.calendar-grid{content-visibility:auto;contain-intrinsic-size:auto 700px}
+
+
+/* Ajustes de lectura y controles en móvil para la cabecera compartida. */
+@media(max-width:720px){
+  .site-header{gap:10px;padding:14px 12px}
+  .site-header .brand{min-width:0;gap:8px;font-size:.82rem;letter-spacing:.05em}
+  .site-header .brand-mark{flex:0 0 40px;width:40px;height:40px}
+  .site-header .timezone-button,.site-header .pwa-install-button,.site-header .notification-button,.site-header .menu-toggle{min-width:42px;min-height:42px}
+  .site-header .menu-toggle{margin-left:0;padding:7px 10px}
+  .site-header .navbar{margin-left:0}
+  .site-header .menu a{min-height:44px;display:flex;align-items:center;justify-content:center}
+}
+
+/* El resumen del chat funciona como un botón y el panel abierto conserva su ancho. */
+.embed-chat{min-width:0}
+.embed-chat>summary.btn-link{display:flex;align-items:center;justify-content:center;min-height:44px;list-style:none;text-align:center;cursor:pointer}
+.embed-chat>summary::-webkit-details-marker{display:none}
+.embed-chat[open]{display:grid;align-content:start;gap:10px}
+.embed-chat[open] .embed-box{min-width:0}
