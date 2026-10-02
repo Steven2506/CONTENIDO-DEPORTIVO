@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_VERSION="wolfgames-pwa-20261002-css-polish1";
+const CACHE_VERSION="wolfgames-pwa-20261002-editorial1";
 const SHELL_CACHE=`${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE=`${CACHE_VERSION}-runtime`;
 const APP_SHELL=[
@@ -14,7 +14,7 @@ const APP_SHELL=[
   "./MotoGP.html",
   "./sobremi.html",
   "./offline.html",
-  "./diseno.css?v=20261002-css-polish1",
+  "./diseno.css?v=20261002-editorial1",
   "./f1.css?v=20260929-f1-home1",
   "./f1-home.css?v=20260929-f1-home1",
   "./motogp-home-card.css?v=20261002-home-card1",
