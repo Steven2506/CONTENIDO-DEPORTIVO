@@ -1,0 +1,22 @@
+/* Estilos de la tarjeta MotoGP de la portada; la tarjeta F1 mantiene su tema propio. */
+.motogp-card.event-card{position:relative;isolation:isolate;overflow:hidden;border:1px solid rgba(250,51,75,.3);background:linear-gradient(145deg,rgba(25,16,21,.98),rgba(9,11,16,.98));box-shadow:0 18px 45px rgba(0,0,0,.3)}
+.motogp-card.event-card::before{position:absolute;z-index:-1;top:0;left:0;width:38%;height:2px;background:linear-gradient(90deg,#fa334b,#ff7b35);box-shadow:0 0 18px rgba(250,51,75,.6);content:""}
+.motogp-card .event-label{margin:0;color:#ff8064;font-size:.67rem;font-weight:950;letter-spacing:.14em}
+.motogp-card h3{margin:9px 0 4px;color:#fff;font-size:clamp(1.35rem,2.5vw,1.9rem);font-style:italic;line-height:1.12;text-transform:uppercase}
+.motogp-card #motogp-circuit{margin:5px 0;color:#aaa5af;font-size:.82rem;line-height:1.45}
+.motogp-card .next-session{margin:13px 0 0;padding:9px 11px;border-left:2px solid #fa334b;border-radius:0 6px 6px 0;background:rgba(255,255,255,.035);color:#e6e0e5;font-size:.75rem;font-weight:750;line-height:1.5}
+.motogp-card #motogp-countdown{margin:10px 0 12px;color:#ff7958;font-size:clamp(1.15rem,2.5vw,1.55rem);font-variant-numeric:tabular-nums;font-weight:950;letter-spacing:.015em;line-height:1.2}
+.motogp-card #motogp-sessions{display:grid;gap:7px;margin:14px 0;padding:0;list-style:none}
+.motogp-card .session-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;min-width:0;padding:9px 10px;border:1px solid rgba(255,255,255,.08);border-radius:7px;background:rgba(255,255,255,.03)}
+.motogp-card .session-row>span:first-child{display:grid;gap:4px;min-width:0}
+.motogp-card .session-row strong{color:#f0edf0;font-size:.74rem;line-height:1.25}
+.motogp-card .session-row small{color:#928c96;font-size:.65rem;line-height:1.35}
+.motogp-card .session-row>span:last-child{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:8px}
+.motogp-card .session-row em{padding:3px 6px;border:1px solid rgba(255,123,53,.2);border-radius:4px;background:rgba(255,123,53,.07);color:#e8a083;font-size:.57rem;font-style:normal;font-weight:850;letter-spacing:.035em;white-space:nowrap}
+.motogp-card .session-row a{color:#ff8968;font-size:.61rem;font-weight:800;text-decoration:none;white-space:nowrap}
+.motogp-card .session-row a:hover{color:#fff}
+.motogp-card .session-row.live,.motogp-card .session-row.is-live{border-color:rgba(250,51,75,.48);background:rgba(250,51,75,.07)}
+.motogp-card .card-actions .btn-link{border-color:rgba(250,51,75,.38);background:rgba(250,51,75,.09);font-size:.76rem}
+.motogp-card .card-actions .btn-link:hover{background:rgba(250,51,75,.18);box-shadow:0 8px 22px rgba(250,51,75,.13)}
+@media(max-width:700px){.motogp-card{grid-column:1/-1}}
+@media(max-width:420px){.motogp-card .session-row{grid-template-columns:minmax(0,1fr);gap:7px}.motogp-card .session-row>span:last-child{justify-content:space-between}}
