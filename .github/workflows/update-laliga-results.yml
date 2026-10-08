@@ -1,6 +1,9 @@
 name: Actualizar resultados LALIGA
 
 on:
+  push:
+    paths:
+      - ".github/workflows/update-laliga-results.yml"
   workflow_dispatch:
   schedule:
     - cron: "*/5 * * * *"
