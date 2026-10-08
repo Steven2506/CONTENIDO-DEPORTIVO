@@ -175,10 +175,13 @@ test("la caché nunca antepone datos deportivos a la red",()=>{
 
 test("todas las páginas activas cargan la misma versión PWA",()=>{
   const pages=["index.html","directos.html","deportes.html","F1.html","MotoGP.html","sobremi.html","status.html"];
+  const worker=fs.readFileSync("sw.js","utf8");
+  const cssVersion=worker.match(/"\.\/diseno\.css\?v=([^"]+)"/)?.[1];
+  assert(cssVersion,"la shell PWA debe declarar la versión activa de diseno.css");
   for(const page of pages){
     const html=fs.readFileSync(page,"utf8");
     assert.match(html,/site\.js\?v=20260914-performance1/,page);
-    assert.match(html,/diseno\.css\?v=20260914-performance1/,page);
+    assert(html.includes(`diseno.css?v=${cssVersion}`),`${page} no usa la hoja de estilo de la shell PWA`);
   }
   const site=fs.readFileSync("site.js","utf8");
   assert.match(site,/beforeinstallprompt/);
