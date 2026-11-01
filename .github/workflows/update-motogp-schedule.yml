@@ -19,7 +19,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: motogp-schedule-sync
+  group: football-data-sync
   cancel-in-progress: false
 
 jobs:

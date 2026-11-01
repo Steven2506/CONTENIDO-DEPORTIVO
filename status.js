@@ -21,5 +21,42 @@ function dataChecks(){const league=Object.values(typeof footballData!=="undefine
 {label:"Calendario disponible",ok:league.length>0&&champions.length>0,value:league.length+" LALIGA · "+champions.length+" Champions"},
 {label:"Próximos encuentros",ok:scheduled>0,value:scheduled+" programados"}];}
 function renderData(){const checks=dataChecks();document.getElementById("data-health").innerHTML=checks.map(check=>'<article class="health-card '+(check.ok?"ok":"error")+'"><div class="health-card-heading"><span class="health-dot" aria-hidden="true"></span><span class="health-badge">'+(check.ok?"Correcto":"Atención")+'</span></div><h3>'+check.label+'</h3><p>'+check.value+'</p></article>').join("");return checks.every(check=>check.ok);}
-async function refresh(){const button=document.getElementById("health-refresh");button.disabled=true;button.textContent="Actualizando…";const dataOk=renderData();try{const cached=JSON.parse(sessionStorage.getItem("wolf-health-runs")||"null");let runs;if(cached&&Date.now()-cached.savedAt<120000){runs=cached.runs;}else{runs=await Promise.all(watched.map(async item=>{const url=API+encodeURIComponent(item.workflow)+"/runs?per_page=1&branch=main";const response=await fetch(url,{headers:{Accept:"application/vnd.github+json"},signal:AbortSignal.timeout(8000)});if(!response.ok)throw new Error("GitHub respondió "+response.status+" al consultar "+item.label);const payload=await response.json();return payload.workflow_runs?.[0]||null;}catch(error){return null;}}));sessionStorage.setItem("wolf-health-runs",JSON.stringify({savedAt:Date.now(),runs}));}const states=watched.map((item,index)=>({item,run:runs[index]}));document.getElementById("workflow-health").innerHTML=states.map(entry=>workflowCard(entry.item,entry.run)).join("");const workflowsOk=states.every(entry=>resultState(entry.run,entry.item.maxAge).kind==="ok"),allOk=dataOk&&workflowsOk;document.getElementById("health-light").className="health-light "+(allOk?"ok":"warning");document.getElementById("health-title").textContent=allOk?"Todos los sistemas operativos":"El sistema requiere atención";document.getElementById("health-detail").textContent=allOk?"Automatizaciones recientes y datos deportivos coherentes.":"Revisa las tarjetas marcadas antes de confiar en la siguiente actualización.";}catch(error){document.getElementById("workflow-health").innerHTML='<article class="health-card warning"><h3>No se pudo consultar GitHub</h3><p>'+esc(error.message)+'. Los controles locales sí se han ejecutado.</p></article>';document.getElementById("health-light").className="health-light warning";document.getElementById("health-title").textContent=dataOk?"Datos correctos; estado remoto no disponible":"El sistema requiere atención";document.getElementById("health-detail").textContent="La consulta pública a GitHub no respondió. Inténtalo de nuevo más tarde.";}finally{button.disabled=false;button.textContent="Actualizar estado";}}document.addEventListener("DOMContentLoaded",()=>{refresh();document.getElementById("health-refresh").addEventListener("click",refresh);});
+async function refresh(){
+  const button=document.getElementById("health-refresh");
+  button.disabled=true;
+  button.textContent="Actualizando…";
+  const dataOk=renderData();
+  try{
+    const cached=JSON.parse(sessionStorage.getItem("wolf-health-runs")||"null");
+    let runs;
+    if(cached&&Date.now()-cached.savedAt<120000){
+      runs=cached.runs;
+    }else{
+      runs=await Promise.all(watched.map(async item=>{
+        try{
+          const url=API+encodeURIComponent(item.workflow)+"/runs?per_page=1&branch=main";
+          const response=await fetch(url,{headers:{Accept:"application/vnd.github+json"},signal:AbortSignal.timeout(8000)});
+          if(!response.ok)throw new Error("GitHub respondió "+response.status);
+          const payload=await response.json();
+          return payload.workflow_runs?.[0]||null;
+        }catch(error){return null;}
+      }));
+      sessionStorage.setItem("wolf-health-runs",JSON.stringify({savedAt:Date.now(),runs}));
+    }
+    const states=watched.map((item,index)=>({item,run:runs[index]}));
+    document.getElementById("workflow-health").innerHTML=states.map(entry=>workflowCard(entry.item,entry.run)).join("");
+    const workflowsOk=states.every(entry=>resultState(entry.run,entry.item.maxAge).kind==="ok"),allOk=dataOk&&workflowsOk;
+    document.getElementById("health-light").className="health-light "+(allOk?"ok":"warning");
+    document.getElementById("health-title").textContent=allOk?"Todos los sistemas operativos":"El sistema requiere atención";
+    document.getElementById("health-detail").textContent=allOk?"Automatizaciones recientes y datos deportivos coherentes.":"Revisa las tarjetas marcadas antes de confiar en la siguiente actualización.";
+  }catch(error){
+    document.getElementById("workflow-health").innerHTML='<article class="health-card warning"><h3>No se pudo consultar GitHub</h3><p>'+esc(error.message)+'. Los controles locales sí se han ejecutado.</p></article>';
+    document.getElementById("health-light").className="health-light warning";
+    document.getElementById("health-title").textContent=dataOk?"Datos correctos; estado remoto no disponible":"El sistema requiere atención";
+    document.getElementById("health-detail").textContent="La consulta pública a GitHub no respondió. Inténtalo de nuevo más tarde.";
+  }finally{
+    button.disabled=false;
+    button.textContent="Actualizar estado";
+  }
+}document.addEventListener("DOMContentLoaded",()=>{refresh();document.getElementById("health-refresh").addEventListener("click",refresh);});
 })();
