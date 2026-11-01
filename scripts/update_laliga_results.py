@@ -389,13 +389,13 @@ def ensure_round(source: str, round_number: int, matches: list[dict], *, target:
         position = source.find(marker)
         indent = "    "
     elif target == "calendar":
-        position = source.rfind("\\n};")
+        position = source.rfind("\n};")
         indent = "  "
     else:
         raise ValueError(f"Destino de jornada desconocido: {target}")
     if position < 0:
         raise RuntimeError(f"No se encontró el punto de inserción para la jornada {round_number} en {target}")
-    block = f"{indent}{round_number}:[\\n" + "\\n".join(rows) + f"\\n{indent}],\\n"
+    block = f"{indent}{round_number}:[\n" + "\n".join(rows) + f"\n{indent}],\n"
     return source[:position] + block + source[position:], True
 
 def apply(source: str, round_number: int, matches: list[dict], *, include_details: bool = True) -> tuple[str, int]:
