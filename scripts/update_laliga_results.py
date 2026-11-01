@@ -487,7 +487,7 @@ def main() -> int:
 
     detected_round = max(progressed_rounds, default=active_round)
     if detected_round != active_round:
-        source = re.sub(r"currentRound:\\d+", f"currentRound:{detected_round}", source, count=1)
+        source = re.sub(r"currentRound:\d+", f"currentRound:{detected_round}", source, count=1)
         print(f"Jornada activa sincronizada automáticamente: {active_round} → {detected_round}")
 
     # Conserva tres jornadas recientes y la siguiente, creando su calendario cuando falte.
