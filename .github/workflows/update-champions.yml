@@ -61,4 +61,5 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add -- champions-data.js champions-fixtures.js deportes.html
           git commit -m "Actualiza datos oficiales de Champions"
+          git pull --rebase origin main
           git push
