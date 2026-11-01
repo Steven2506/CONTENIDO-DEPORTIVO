@@ -435,7 +435,7 @@ def apply(source: str, round_number: int, matches: list[dict], *, include_detail
 
     missing = set(official) - seen
     if missing:
-        raise RuntimeError(f"Partidos oficiales sin coincidencia local: {sorted(missing)}")
+        raise RuntimeError(f"Jornada {round_number}: partidos oficiales sin coincidencia local: {sorted(missing)}; localizados: {sorted(seen)}")
     return "".join(lines), changes
 
 
