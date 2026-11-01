@@ -2,6 +2,13 @@ name: Actualizar Champions League
 
 on:
   push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-champions.yml'
+      - 'scripts/update_champions.py'
+      - 'champions-data.js'
+      - 'champions-fixtures.js'
+      - 'deportes.html'
   workflow_dispatch:
   schedule:
     - cron: "*/15 * * * *"

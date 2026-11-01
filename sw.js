@@ -41,7 +41,7 @@ const APP_SHELL=[
 const LIVE_DATA_FILES=new Set([
   "sports-data.js","laliga-current.js","laliga-calendar.js","football.js",
   "champions-data.js","champions-fixtures.js","champions-draw.js","champions-centre.js","champions.js",
-  "f1-data.js","motorsport-core.js","f1calendar.js","motogpcalendar.js","motogp-results-data.js","sports-widget.js","home.js","status.js","weather.js"
+  "f1-data.js","motorsport-core.js","f1calendar.js","motogpcalendar.js","motogp-schedule-data.js","motogp-results-data.js","sports-widget.js","home.js","status.js","weather.js"
 ]);
 
 self.addEventListener("install",event=>{

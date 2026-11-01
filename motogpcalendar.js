@@ -72,6 +72,11 @@ if(japanMotoGP)japanMotoGP.sessions=[
   {name:"Warm Up",start:"2026-10-04T09:40:00+09:00",duration:10},
   {name:"Carrera",start:"2026-10-04T14:00:00+09:00",duration:90}
 ];
+// Horarios del API oficial; las sesiones manuales siguen como respaldo.
+for(const race of motogpCalendar){
+  const official=window.MOTOGP_OFFICIAL_SESSIONS?.[String(race.round)];
+  if(Array.isArray(official)&&official.length)race.sessions=official;
+}
 function motoWeekendEnd(race){
   return motorsportRaceEnd("motogp",race);
 }
@@ -93,4 +98,3 @@ function renderMotoSessionList(race,id="motogp-sessions"){
   box.innerHTML=race.sessions.map(session=>{const state=motoSessionState(session),label=state==="live"?"En directo":state==="finished"?"Finalizada":"Próxima";return `<li class="session-row ${state}"><span><strong>${session.name}</strong><small>${formatMotoLocalTime(session.start)}</small></span><span><em>${label}</em><a href="${motoSessionCalendarUrl(race,session)}" target="_blank" rel="noopener noreferrer">＋ Calendario</a></span></li>`;}).join("");
 }
 window.MotoGPSchedule={competition:"motogp",calendar:motogpCalendar,getNextRace:getNextMotoGP,getLastRace:getLastMotoGP,nextSession:getNextMotoSession,sessionState:motoSessionState,sessionEnd:session=>motorsportSessionEnd("motogp",session)};
-
