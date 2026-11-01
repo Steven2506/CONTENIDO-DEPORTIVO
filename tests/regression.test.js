@@ -252,7 +252,8 @@ test("el sincronizador actualiza horarios oficiales y sus cachés",()=>{
   const workflow=fs.readFileSync(".github/workflows/update-laliga-results.yml","utf8");
   assert.match(updater,/CALENDAR_FILE/);
   assert.match(updater,/schedule_patch/);
-  assert.match(updater,/active_round - 1, active_round, active_round \+ 1/);
+  assert.match(updater,/active_round \\+ 9/);
+  assert.match(updater,/ensure_round/);
   assert.match(updater,/Jornada activa sincronizada automáticamente/);
   assert.match(updater,/laliga-calendar\\\.js/);
   assert.match(workflow,/node --check laliga-calendar\.js/);
