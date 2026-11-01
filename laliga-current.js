@@ -22,5 +22,4 @@
     });
     footballData.laligaRounds[round]=current;
   });
-  footballData.updated="12 de septiembre de 2026 · jornada 5 sincronizada con LALIGA";
 })();

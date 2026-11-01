@@ -145,7 +145,7 @@ def watched_rescheduled_matches(source: str, round_number: int) -> set[tuple[str
     return watched
 
 
-def official_matches(round_number: int, source: str) -> list[dict]:
+def official_matches(round_number: int, source: str, *, include_details: bool = True) -> list[dict]:
     payload = next_payload(RESULTS_URL.format(round=round_number))
     matches = payload.get("props", {}).get("pageProps", {}).get("matches")
     if not isinstance(matches, list) or len(matches) != 10:
@@ -153,7 +153,7 @@ def official_matches(round_number: int, source: str) -> list[dict]:
     watched = watched_rescheduled_matches(source, round_number)
     for match in matches:
         key = (team_name(match.get("home_team", {})), team_name(match.get("away_team", {})))
-        if match.get("status") in LIVE_STATES | FINISHED_STATES or key in watched:
+        if include_details and (match.get("status") in LIVE_STATES | FINISHED_STATES or key in watched):
             detail = next_payload(MATCH_URL.format(slug=match["slug"])).get("props", {}).get("pageProps", {}).get("match", {})
             for key in ("status", "home_score", "away_score", "period_started", "home_formation", "away_formation", "home_team", "away_team", "opta_id", "id"):
                 if key in detail:
@@ -359,6 +359,45 @@ def schedule_patch(match: dict) -> dict:
     }
 
 
+
+def ensure_round(source: str, round_number: int, matches: list[dict], *, target: str) -> tuple[str, bool]:
+    """Añade una jornada que todavía no existe en el calendario local."""
+    if has_round(source, round_number):
+        return source, False
+    rows = []
+    for match in matches:
+        home, away = team_name(match["home_team"]), team_name(match["away_team"])
+        row = {
+            **schedule_patch(match),
+            "home": home,
+            "away": away,
+            "status": "Programado",
+            "state": "scheduled",
+            "referee": None,
+            "var": None,
+        }
+        row.update(patch_for(match, include_details=False) or {})
+        if match.get("status") not in LIVE_STATES | FINISHED_STATES | POSTPONED_STATES:
+            row.update({"status": "Programado", "state": "scheduled"})
+        rendered = ",".join(
+            f"{key}:{json.dumps(value, ensure_ascii=False, separators=(',', ':'))}"
+            for key, value in row.items()
+        )
+        rows.append(f"      {{{rendered}}},")
+    if target == "data":
+        marker = "  laligaStandings:"
+        position = source.find(marker)
+        indent = "    "
+    elif target == "calendar":
+        position = source.rfind("\\n};")
+        indent = "  "
+    else:
+        raise ValueError(f"Destino de jornada desconocido: {target}")
+    if position < 0:
+        raise RuntimeError(f"No se encontró el punto de inserción para la jornada {round_number} en {target}")
+    block = f"{indent}{round_number}:[\\n" + "\\n".join(rows) + f"\\n{indent}],\\n"
+    return source[:position] + block + source[position:], True
+
 def apply(source: str, round_number: int, matches: list[dict], *, include_details: bool = True) -> tuple[str, int]:
     lines = source.splitlines(keepends=True)
     official = {}
@@ -423,35 +462,54 @@ def main() -> int:
     patch_source = PATCH_FILE.read_text(encoding="utf-8")
     calendar_source = CALENDAR_FILE.read_text(encoding="utf-8")
     active_round = current_round(source)
-    rounds = [round_number for round_number in (active_round - 1, active_round, active_round + 1) if 1 <= round_number <= 38]
-    if not rounds:
-        raise RuntimeError("No hay jornadas locales para sincronizar")
-    updated, updated_patch, updated_calendar, changes = source, patch_source, calendar_source, 0
-    verified = 0
-    official_by_round = {}
-    for target_round in rounds:
-        matches = official_matches(target_round, updated)
-        official_by_round[target_round] = matches
-        if has_round(updated, target_round):
-            updated, round_changes = apply(updated, target_round, matches)
-            changes += round_changes
-        if has_round(updated_patch, target_round):
-            updated_patch, patch_changes = apply(updated_patch, target_round, matches)
-            changes += patch_changes
-        if has_round(updated_calendar, target_round):
-            updated_calendar, calendar_changes = apply(updated_calendar, target_round, matches, include_details=False)
-            changes += calendar_changes
-        verified += len(matches)
     now = datetime.now(ZoneInfo("Europe/Madrid"))
+
+    # Recupera jornadas que hayan quedado atrás si el dato local llevaba semanas sin avanzar.
+    scan_end = min(38, active_round + 9)
+    scan_start = max(1, active_round - 1)
+    official_by_round = {}
     progressed_rounds = []
-    for target_round, matches in official_by_round.items():
-        if any(match.get("status") not in POSTPONED_STATES and isinstance(match.get("date"), str) and datetime.fromisoformat(match["date"]).astimezone(ZoneInfo("Europe/Madrid")) <= now for match in matches):
-            progressed_rounds.append(target_round)
+    for round_number in range(scan_start, scan_end + 1):
+        matches = official_matches(round_number, source, include_details=False)
+        official_by_round[round_number] = matches
+        kickoffs = []
+        for match in matches:
+            if match.get("status") in POSTPONED_STATES or not isinstance(match.get("date"), str):
+                continue
+            kickoff = datetime.fromisoformat(match["date"])
+            if kickoff.tzinfo is None:
+                raise RuntimeError("LALIGA devolvió un partido sin zona horaria")
+            kickoffs.append(kickoff.astimezone(now.tzinfo))
+        if any(kickoff <= now for kickoff in kickoffs):
+            progressed_rounds.append(round_number)
+        elif round_number > active_round and kickoffs:
+            break
+
     detected_round = max(progressed_rounds, default=active_round)
     if detected_round != active_round:
-        updated = re.sub(r"currentRound:\d+", f"currentRound:{detected_round}", updated, count=1)
-        changes += 1
+        source = re.sub(r"currentRound:\\d+", f"currentRound:{detected_round}", source, count=1)
         print(f"Jornada activa sincronizada automáticamente: {active_round} → {detected_round}")
+
+    # Conserva tres jornadas recientes y la siguiente, creando su calendario cuando falte.
+    rounds = list(range(max(1, detected_round - 3), min(38, detected_round + 1) + 1))
+    updated, updated_patch, updated_calendar, changes = source, patch_source, calendar_source, int(detected_round != active_round)
+    verified = 0
+    for target_round in rounds:
+        matches = official_by_round.get(target_round)
+        if matches is None:
+            matches = official_matches(target_round, updated, include_details=False)
+            official_by_round[target_round] = matches
+        updated, added_data = ensure_round(updated, target_round, matches, target="data")
+        updated_calendar, added_calendar = ensure_round(updated_calendar, target_round, matches, target="calendar")
+        changes += int(added_data) + int(added_calendar)
+        updated, data_changes = apply(updated, target_round, matches, include_details=target_round == detected_round)
+        updated_calendar, calendar_changes = apply(updated_calendar, target_round, matches, include_details=False)
+        changes += data_changes + calendar_changes
+        if has_round(updated_patch, target_round):
+            updated_patch, patch_changes = apply(updated_patch, target_round, matches, include_details=False)
+            changes += patch_changes
+        verified += len(matches)
+
     updated, standings_changed = apply_standings(updated, official_standings())
     changes += int(standings_changed)
     if changes:
@@ -461,7 +519,6 @@ def main() -> int:
         bust_browser_cache()
     print(f"Jornadas {rounds}: {verified} partidos verificados · clasificación oficial verificada · cambios: {changes}")
     return 0
-
 
 if __name__ == "__main__":
     try:
