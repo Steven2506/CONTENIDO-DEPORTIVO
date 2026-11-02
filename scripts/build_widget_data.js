@@ -91,6 +91,11 @@ const data={
   url:selected[0]?.href||absoluteUrl("index.html")
 };
 
+const requiredKeys=["headline","headlineDetail","url","item1Title","item1Detail","item2Title","item2Detail","item3Title","item3Detail"];
+const missingKeys=requiredKeys.filter(key=>typeof data[key]!=="string");
+if(missingKeys.length)throw new Error(`Faltan campos de la agenda: ${missingKeys.join(", ")}`);
+if(new URL(data.url).origin!==new URL(siteBase).origin)throw new Error("El enlace principal de la agenda debe apuntar al sitio WOLFGAMES.");
+
 const rendered=`${JSON.stringify(data,null,2)}\n`;
 const previous=fs.existsSync(outputFile)?fs.readFileSync(outputFile,"utf8"):"";
 if(previous!==rendered)fs.writeFileSync(outputFile,rendered,"utf8");

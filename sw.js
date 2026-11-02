@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_VERSION="wolfgames-pwa-20261102-windows-widget1";
+const CACHE_VERSION="wolfgames-pwa-20261102-offline-health2";
 const SHELL_CACHE=`${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE=`${CACHE_VERSION}-runtime`;
 const APP_SHELL=[
@@ -18,14 +18,14 @@ const APP_SHELL=[
   "./widget-data.json",
   "./widgets/wolfgames-agenda.json",
   "./widgets/wolfgames-agenda.svg",
-  "./diseno.css?v=20261102-home-compact1",
+  "./diseno.css?v=20261102-connectivity-health1",
   "./f1.css?v=20260929-f1-home1",
   "./f1-home.css?v=20260929-f1-home1",
   "./motogp-home-card.css?v=20261002-home-card1",
   "./gp.css?v=20260929-gp-countdown1",
   "./motogp-gp.css?v=20260930-motogp-ui1",
   "./motogp-home.css?v=20261001-motogp-results1",
-  "./site.js?v=20260914-performance1",
+  "./site.js?v=20261102-connectivity1",
   "./f1-data.js?v=20260929-gp-master1",
   "./motorsport-core.js?v=20260930-points8-9",
   "./f1calendar.js?v=20260930-points8-9",

@@ -40,6 +40,11 @@ jobs:
       - name: Generar datos de la agenda
         run: node scripts/build_widget_data.js
 
+      - name: Validar datos publicados para el widget
+        run: |
+          node --check scripts/build_widget_data.js
+          node -e 'const d=require("./widget-data.json"); for (const k of ["headline","headlineDetail","url","item1Title","item1Detail","item2Title","item2Detail","item3Title","item3Detail"]) if (typeof d[k] !== "string") throw new Error(`Campo inválido: ${k}`); const u=new URL(d.url); if (u.origin !== "https://steven2506.github.io") throw new Error("Enlace principal fuera del dominio WOLFGAMES");'
+
       - name: Publicar solo si cambió la agenda
         run: |
           if git diff --quiet -- widget-data.json; then

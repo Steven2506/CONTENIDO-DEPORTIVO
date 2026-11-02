@@ -173,6 +173,37 @@ test("la caché nunca antepone datos deportivos a la red",()=>{
   assert.match(worker,/offline\.html/);
 });
 
+test("el panel de estado distingue fallos de ejecución y fallos de consulta",()=>{
+  const status=fs.readFileSync("status.js","utf8"),html=fs.readFileSync("status.html","utf8");
+  assert.match(status,/Consulta no disponible/);
+  assert.match(status,/GitHub limitó temporalmente las consultas/);
+  assert.match(status,/run\.conclusion!=="success"/);
+  assert.match(status,/update-widget-data\.yml/);
+  assert.match(html,/motogp-schedule-data\.js/);
+  assert.match(html,/f1-data\.js/);
+  assert.match(status,/Calendario de F1/);
+  assert.match(status,/Calendario de MotoGP/);
+});
+
+test("el generador y su workflow validan la salida de la agenda",()=>{
+  const builder=fs.readFileSync("scripts/build_widget_data.js","utf8"),workflow=fs.readFileSync(".github/workflows/update-widget-data.yml","utf8");
+  assert.match(builder,/requiredKeys/);
+  assert.match(builder,/origin!==new URL\(siteBase\)\.origin/);
+  assert.match(workflow,/Validar datos publicados para el widget/);
+  assert.match(workflow,/Campo inválido/);
+});
+
+test("la app comunica pérdida y recuperación de conexión y ofrece reintento offline",()=>{
+  const site=fs.readFileSync("site.js","utf8"),offline=fs.readFileSync("offline.html","utf8"),css=fs.readFileSync("diseno.css","utf8");
+  assert.match(site,/navigator\.onLine/);
+  assert.match(site,/addEventListener\("offline"/);
+  assert.match(site,/addEventListener\("online"/);
+  assert.match(site,/aria-live","polite"/);
+  assert.match(offline,/Reintentar conexión/);
+  assert.match(offline,/Abrir la versión guardada/);
+  assert.match(css,/\.connection-notice\.is-offline/);
+});
+
 test("todas las páginas activas cargan la misma versión PWA",()=>{
   const pages=["index.html","directos.html","deportes.html","F1.html","MotoGP.html","sobremi.html","status.html"];
   const worker=fs.readFileSync("sw.js","utf8");
@@ -180,7 +211,7 @@ test("todas las páginas activas cargan la misma versión PWA",()=>{
   assert(cssVersion,"la shell PWA debe declarar la versión activa de diseno.css");
   for(const page of pages){
     const html=fs.readFileSync(page,"utf8");
-    assert.match(html,/site\.js\?v=20260914-performance1/,page);
+    assert.match(html,/site\.js\?v=20261102-connectivity1/,page);
     assert(html.includes(`diseno.css?v=${cssVersion}`),`${page} no usa la hoja de estilo de la shell PWA`);
   }
   const site=fs.readFileSync("site.js","utf8");

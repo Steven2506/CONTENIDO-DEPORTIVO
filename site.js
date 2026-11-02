@@ -56,6 +56,21 @@ window.WolfTimezone=WolfTimezone;
   ];
   const current = location.pathname.split("/").pop() || "index.html";
   const header = document.querySelector("[data-site-header]");
+  const connectivityNotice=document.createElement("div");
+  connectivityNotice.className="connection-notice";
+  connectivityNotice.setAttribute("role","status");
+  connectivityNotice.setAttribute("aria-live","polite");
+  connectivityNotice.hidden=true;
+  header?.before(connectivityNotice);
+  let onlineNoticeTimer;
+  const updateConnectivityNotice=()=>{
+    clearTimeout(onlineNoticeTimer);
+    if(!navigator.onLine){connectivityNotice.textContent="Sin conexión: se muestra el contenido guardado; los resultados y horarios pueden estar desactualizados.";connectivityNotice.hidden=false;connectivityNotice.classList.add("is-offline");return;}
+    if(connectivityNotice.classList.contains("is-offline")){connectivityNotice.textContent="Conexión restablecida.";connectivityNotice.classList.remove("is-offline");connectivityNotice.hidden=false;onlineNoticeTimer=setTimeout(()=>{connectivityNotice.hidden=true;},5000);}
+  };
+  window.addEventListener("online",updateConnectivityNotice);
+  window.addEventListener("offline",updateConnectivityNotice);
+  updateConnectivityNotice();
   if (header) {
     const title = header.dataset.title || "WOLFGAMES";
     const menuLinks = links.map(([href, label]) => {

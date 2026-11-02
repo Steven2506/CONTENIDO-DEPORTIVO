@@ -6,20 +6,23 @@ const watched=[
 {name:"Actualizar Champions League",workflow:"update-champions.yml",label:"Champions League",maxAge:6},
 {name:"Actualizar árbitros RFEF",workflow:"update-referees.yml",label:"Árbitros y VAR",maxAge:8},
 {name:"Actualizar horarios MotoGP",workflow:"update-motogp-schedule.yml",label:"Horarios MotoGP",maxAge:18},
+{name:"Actualizar agenda del widget Windows",workflow:"update-widget-data.yml",label:"Agenda del widget",maxAge:1},
 {name:"Validar web",workflow:"validate-site.yml",label:"Pruebas automáticas",maxAge:48},
 {name:"pages build and deployment",workflow:"338916504",label:"Publicación GitHub Pages",maxAge:48}
 ];
 const esc=value=>String(value==null?"":value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 const dateText=value=>new Intl.DateTimeFormat("es-ES",{dateStyle:"medium",timeStyle:"short",timeZone:window.WolfTimezone&&WolfTimezone.get?WolfTimezone.get():"Europe/Madrid"}).format(new Date(value));
 const ageHours=value=>(Date.now()-new Date(value).getTime())/36e5;
-function resultState(run,maxAge){if(!run)return{kind:"warning",label:"Sin información"};if(run.status!=="completed")return{kind:"running",label:"En curso"};if(run.conclusion!=="success")return{kind:"error",label:"Error"};if(ageHours(run.updated_at||run.created_at)>maxAge)return{kind:"warning",label:"Sin ejecución reciente"};return{kind:"ok",label:"Operativo"};}
-function workflowCard(item,run){const state=resultState(run,item.maxAge),detail=run?dateText(run.updated_at||run.created_at):"GitHub no devolvió ejecuciones";return '<article class="health-card '+state.kind+'"><div class="health-card-heading"><span class="health-dot" aria-hidden="true"></span><span class="health-badge">'+state.label+'</span></div><h3>'+item.label+'</h3><p>Última comprobación: '+detail+'</p></article>';}
-function dataChecks(){const league=Object.values(typeof footballData!=="undefined"&&footballData.laligaRounds?footballData.laligaRounds:{}).flat(),champions=typeof officialChampionsFixtures!=="undefined"?officialChampionsFixtures:[],all=[...league,...champions],finalWithoutScore=all.filter(match=>(match.state==="finished"||match.status==="Finalizado")&&(!Number.isInteger(match.homeScore)||!Number.isInteger(match.awayScore))),staleLive=all.filter(match=>match.state==="live"&&match.iso&&Date.now()-new Date(match.iso).getTime()>4*36e5),badMinutes=league.filter(match=>{if(match.minute==null)return false;if(typeof match.minute==="number")return match.minute<0||match.minute>130;const parsed=String(match.minute).match(/^(45|90|105|120)\+(\d{1,2})$/);return !parsed||Number(parsed[2])>20;}),scheduled=all.filter(match=>match.state==="scheduled"||!match.state).length;return[
+function resultState(result,maxAge){if(result?.error)return{kind:"warning",label:"Consulta no disponible"};const run=result?.run;if(!run)return{kind:"warning",label:"Sin ejecuciones"};if(run.status!=="completed")return{kind:"running",label:"En curso"};if(run.conclusion!=="success")return{kind:"error",label:"Error"};if(ageHours(run.updated_at||run.created_at)>maxAge)return{kind:"warning",label:"Sin ejecución reciente"};return{kind:"ok",label:"Operativo"};}
+function workflowCard(item,result){const run=result?.run,state=resultState(result,item.maxAge),detail=run?`Última ejecución: ${dateText(run.updated_at||run.created_at)}`:result?.error?result.error:"GitHub no ha devuelto ejecuciones";return '<article class="health-card '+state.kind+'"><div class="health-card-heading"><span class="health-dot" aria-hidden="true"></span><span class="health-badge">'+state.label+'</span></div><h3>'+item.label+'</h3><p>'+esc(detail)+'</p></article>';}
+function dataChecks(){const league=Object.values(typeof footballData!=="undefined"&&footballData.laligaRounds?footballData.laligaRounds:{}).flat(),champions=typeof officialChampionsFixtures!=="undefined"?officialChampionsFixtures:[],all=[...league,...champions],finalWithoutScore=all.filter(match=>(match.state==="finished"||match.status==="Finalizado")&&(!Number.isInteger(match.homeScore)||!Number.isInteger(match.awayScore))),staleLive=all.filter(match=>match.state==="live"&&match.iso&&Date.now()-new Date(match.iso).getTime()>4*36e5),badMinutes=league.filter(match=>{if(match.minute==null)return false;if(typeof match.minute==="number")return match.minute<0||match.minute>130;const parsed=String(match.minute).match(/^(45|90|105|120)\+(\d{1,2})$/);return !parsed||Number(parsed[2])>20;}),scheduled=all.filter(match=>match.state==="scheduled"||!match.state).length,f1=typeof F1_CALENDAR!=="undefined"?F1_CALENDAR:[],moto=window.MotoGPSchedule?.calendar||[],futureRaces=races=>races.filter(race=>{const date=new Date(race.date||race.sessions?.[0]?.[1]||race.sessions?.[0]?.start).getTime();return Number.isFinite(date)&&date>Date.now()-4*36e5;}).length;return[
 {label:"Marcadores finales",ok:!finalWithoutScore.length,value:finalWithoutScore.length?finalWithoutScore.length+" incompletos":all.filter(m=>m.state==="finished"||m.status==="Finalizado").length+" verificados"},
 {label:"Partidos en directo",ok:!staleLive.length,value:staleLive.length?staleLive.length+" atascados":"Sin directos atascados"},
 {label:"Minutos y añadidos",ok:!badMinutes.length,value:badMinutes.length?badMinutes.length+" incoherentes":"Formatos correctos"},
 {label:"Calendario disponible",ok:league.length>0&&champions.length>0,value:league.length+" LALIGA · "+champions.length+" Champions"},
-{label:"Próximos encuentros",ok:scheduled>0,value:scheduled+" programados"}];}
+{label:"Próximos encuentros",ok:scheduled>0,value:scheduled+" programados"},
+{label:"Calendario de F1",ok:f1.length>0&&futureRaces(f1)>0,value:f1.length?`${futureRaces(f1)} grandes premios próximos`:"Calendario no cargado"},
+{label:"Calendario de MotoGP",ok:moto.length>0&&futureRaces(moto)>0,value:moto.length?`${futureRaces(moto)} grandes premios próximos`:"Calendario no cargado"}];}
 function renderData(){const checks=dataChecks();document.getElementById("data-health").innerHTML=checks.map(check=>'<article class="health-card '+(check.ok?"ok":"error")+'"><div class="health-card-heading"><span class="health-dot" aria-hidden="true"></span><span class="health-badge">'+(check.ok?"Correcto":"Atención")+'</span></div><h3>'+check.label+'</h3><p>'+check.value+'</p></article>').join("");return checks.every(check=>check.ok);}
 async function refresh(){
   const button=document.getElementById("health-refresh");
@@ -27,7 +30,7 @@ async function refresh(){
   button.textContent="Actualizando…";
   const dataOk=renderData();
   try{
-    const cached=JSON.parse(sessionStorage.getItem("wolf-health-runs")||"null");
+    const cached=JSON.parse(sessionStorage.getItem("wolf-health-runs-v2")||"null");
     let runs;
     if(cached&&Date.now()-cached.savedAt<120000){
       runs=cached.runs;
@@ -36,16 +39,16 @@ async function refresh(){
         try{
           const url=API+encodeURIComponent(item.workflow)+"/runs?per_page=1&branch=main";
           const response=await fetch(url,{headers:{Accept:"application/vnd.github+json"},signal:AbortSignal.timeout(8000)});
-          if(!response.ok)throw new Error("GitHub respondió "+response.status);
+          if(!response.ok)throw new Error(response.status===403?"GitHub limitó temporalmente las consultas (403). Reintenta en unos minutos.":`GitHub respondió ${response.status}.`);
           const payload=await response.json();
-          return payload.workflow_runs?.[0]||null;
-        }catch(error){return null;}
+          return {run:payload.workflow_runs?.[0]||null};
+        }catch(error){return {run:null,error:error.name==="TimeoutError"?"La consulta a GitHub tardó demasiado.":error.message||"No se pudo consultar GitHub."};}
       }));
-      sessionStorage.setItem("wolf-health-runs",JSON.stringify({savedAt:Date.now(),runs}));
+      sessionStorage.setItem("wolf-health-runs-v2",JSON.stringify({savedAt:Date.now(),runs}));
     }
-    const states=watched.map((item,index)=>({item,run:runs[index]}));
-    document.getElementById("workflow-health").innerHTML=states.map(entry=>workflowCard(entry.item,entry.run)).join("");
-    const workflowsOk=states.every(entry=>resultState(entry.run,entry.item.maxAge).kind==="ok"),allOk=dataOk&&workflowsOk;
+    const states=watched.map((item,index)=>({item,result:runs[index]}));
+    document.getElementById("workflow-health").innerHTML=states.map(entry=>workflowCard(entry.item,entry.result)).join("");
+    const workflowsOk=states.every(entry=>resultState(entry.result,entry.item.maxAge).kind==="ok"),allOk=dataOk&&workflowsOk;
     document.getElementById("health-light").className="health-light "+(allOk?"ok":"warning");
     document.getElementById("health-title").textContent=allOk?"Todos los sistemas operativos":"El sistema requiere atención";
     document.getElementById("health-detail").textContent=allOk?"Automatizaciones recientes y datos deportivos coherentes.":"Revisa las tarjetas marcadas antes de confiar en la siguiente actualización.";
