@@ -1,21 +1,21 @@
 /* Datos de MotoGP obtenidos de publicaciones oficiales; los campos no incluidos siguen pendientes. */
 window.MOTOGP_OFFICIAL_RESULTS={
   season:2026,
-  updatedAt:"2026-10-01",
+  updatedAt:"2026-11-02",
   currentStandings:{
-    afterRound:15,
-    updatedAt:"2026-09-20",
-    sourceUrl:"https://www.motogp.com/en/news/2026/09/28/vorschau-der-titelkampf-spitzt-sich-zu-wir-fliegen-nach-motegi/1095167",
+    afterRound:19,
+    updatedAt:"2026-11-01",
+    sourceUrl:"https://www.motogp.com/en/news/2026/10/31/exhibicion-magistral-marc-marquez-conquista-malasia-y-tendra-su-primer-match-point-en-qatar/1179524",
     ridersSourceUrl:"https://www.motogp.com/en/world-standing/2026/motogp/championship-standings",
     riders:[
-      {position:1,name:"Jorge Martín",team:"Aprilia Racing",points:306},
-      {position:2,name:"Marc Márquez",team:"Ducati Lenovo Team",points:294},
-      {position:3,name:"Marco Bezzecchi",team:"Aprilia Racing",points:264}
+      {position:1,name:"Marc Márquez",team:"Ducati Lenovo Team",points:399},
+      {position:2,name:"Jorge Martín",team:"Aprilia Racing",points:355},
+      {position:3,name:"Marco Bezzecchi",team:"Aprilia Racing",points:332}
     ],
     constructors:[
-      {position:1,name:"Aprilia",points:442},
-      {position:2,name:"Ducati",points:432},
-      {position:3,name:"KTM",points:277}
+      {position:1,name:"Aprilia",points:503},
+      {position:2,name:"Ducati",points:491},
+      {position:3,name:"KTM",points:311}
     ],
     constructorsSourceUrl:"https://www.motogp.com/en/world-standing/2026/motogp/constructor-standings"
   },
@@ -214,6 +214,24 @@ window.MOTOGP_OFFICIAL_RESULTS={
       race:{winner:"Pedro Acosta",podium:["Pedro Acosta","Jorge Martín","Marco Bezzecchi"],fastestLap:null,retirements:null,safetyCar:null,redFlag:null},
       conditions:{sky:"Despejado",track:"Seco",airTemperatureC:23,groundTemperatureC:16,humidityPercent:39},
       championship:{ridersLeader:"Jorge Martín",leadOverSecondPoints:12}
+    },
+    19:{
+      source:"MotoGP.com · clasificación oficial del GP de Malasia",
+      sourceUrls:["https://www.motogp.com/en/gp-results/2026/mal/motogp/rac/classification","https://www.motogp.com/en/news/2026/10/31/exhibicion-magistral-marc-marquez-conquista-malasia-y-tendra-su-primer-match-point-en-qatar/1179524"],
+      sessions:{
+        Sprint:{classificationType:"podium",rows:[
+          {position:1,rider:"Pedro Acosta",team:"Red Bull KTM Factory Racing"},
+          {position:2,rider:"Marc Márquez",team:"Ducati Lenovo Team"},
+          {position:3,rider:"Marco Bezzecchi",team:"Aprilia Racing"}
+        ]},
+        Carrera:{classificationType:"top-results",rows:[
+          {position:1,rider:"Marc Márquez",team:"Ducati Lenovo Team",result:"40:14.236",points:25},
+          {position:2,rider:"Pedro Acosta",team:"Red Bull KTM Factory Racing",result:"+4.172",points:20},
+          {position:3,rider:"Álex Márquez",team:"BK8 Gresini Racing MotoGP",result:"+5.955",points:16}
+        ]}
+      },
+      race:{winner:"Marc Márquez",podium:["Marc Márquez","Pedro Acosta","Álex Márquez"]},
+      championship:{ridersLeader:"Marc Márquez",leadOverSecondPoints:44}
     }
   }
 };
