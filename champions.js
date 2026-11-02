@@ -35,7 +35,10 @@ function switchChampionsView(button){
   document.querySelectorAll("[data-champions-panel]").forEach(panel=>panel.hidden=panel.dataset.championsPanel!==target);
 }
 function renderChampions(){
-  document.getElementById("champions-updated").textContent=`Actualizado: ${championsData.updated}`;
+  const latestPlayed=typeof officialChampionsFixtures!=="undefined"?officialChampionsFixtures.filter(match=>match.state==="finished"&&match.iso).map(match=>match.iso.slice(0,10)).sort().at(-1):null;
+  const playedThrough=latestPlayed?new Intl.DateTimeFormat("es-ES",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}).format(new Date(`${latestPlayed}T12:00:00Z`)):null;
+  const syncAt=String(championsData.updated||"").split(" · ")[0];
+  document.getElementById("champions-updated").textContent=playedThrough?`Clasificación y resultados hasta el ${playedThrough} · sincronizados el ${syncAt}`:`Datos UEFA sincronizados el ${syncAt}`;
   const selector=document.getElementById("champions-round-select");
   selector.innerHTML=championsData.rounds.map(item=>`<option value="${item.round}"${item.round===championsState.round?" selected":""}>Jornada ${item.round} · ${item.label}</option>`).join("");
   document.getElementById("champions-standing").innerHTML=`<table class="standing-table champions-standing-table"><thead><tr><th>Pos.</th><th>Equipo</th><th>PJ</th><th>PG</th><th>PE</th><th>PP</th><th>GF</th><th>GC</th><th>DG</th><th>PTS</th></tr></thead><tbody>${championsData.standings.map(row=>`<tr class="champions-zone-${row.pos<=8?"direct":row.pos<=24?"playoff":"out"}" data-team="${championsEscape(row.team)}"><td><b>${row.pos}</b></td><th scope="row">${championsEscape(row.team)}</th><td>${row.played}</td><td>${row.won}</td><td>${row.drawn}</td><td>${row.lost}</td><td>${row.gf}</td><td>${row.ga}</td><td>${row.gd>0?`+${row.gd}`:row.gd}</td><td><strong>${row.points}</strong></td></tr>`).join("")}</tbody></table>`;
