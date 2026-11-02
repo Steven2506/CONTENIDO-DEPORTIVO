@@ -11,7 +11,7 @@ on:
       - 'deportes.html'
   workflow_dispatch:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "7,22,37,52 * * * *"
 
 permissions:
   contents: write
