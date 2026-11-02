@@ -22,6 +22,12 @@ WOLFGAMES funciona como PWA bajo el alcance `/CONTENIDO-DEPORTIVO/`. Los documen
 
 Al cambiar el service worker debe incrementarse `CACHE_VERSION`. Cuando hay una versión instalada activa, la interfaz ofrece al usuario actualizarla y recarga después de que el nuevo worker toma el control.
 
+## Widget de Windows 11
+
+La PWA publica una agenda deportiva para el panel de Widgets de Windows 11. Edge presenta la plantilla Adaptive Card y el service worker actualiza su contenido al instalarse, reanudarse o recibir una sincronización periódica. `scripts/build_widget_data.js` genera el resumen público de marcadores y próximas sesiones; el workflow `update-widget-data.yml` lo vuelve a generar cada quince minutos y cuando cambian las fuentes deportivas.
+
+El widget muestra hasta tres partidos o sesiones en hora peninsular española y abre la página de WOLFGAMES asociada al primer evento. La frecuencia real de actualización la controla Windows y puede ser menos frecuente que el intervalo solicitado.
+
 ## Rendimiento
 
 - Los datos deportivos solo se cargan en las páginas que los necesitan.
