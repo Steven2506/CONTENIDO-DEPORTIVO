@@ -1,0 +1,54 @@
+name: Actualizar agenda del widget Windows
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-widget-data.yml'
+      - 'scripts/build_widget_data.js'
+      - 'sports-data.js'
+      - 'laliga-calendar.js'
+      - 'champions-data.js'
+      - 'champions-fixtures.js'
+      - 'f1-data.js'
+      - 'motogpcalendar.js'
+      - 'motogp-schedule-data.js'
+  workflow_dispatch:
+  schedule:
+    - cron: '13,28,43,58 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: football-data-sync
+  cancel-in-progress: false
+
+jobs:
+  update-widget-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+
+      - name: Generar datos de la agenda
+        run: node scripts/build_widget_data.js
+
+      - name: Publicar solo si cambió la agenda
+        run: |
+          if git diff --quiet -- widget-data.json; then
+            echo 'La agenda del widget no ha cambiado.'
+            exit 0
+          fi
+          git config user.name 'WOLFGAMES Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -- widget-data.json
+          git commit -m 'Actualiza datos del widget deportivo'
+          git pull --rebase origin main
+          git push
