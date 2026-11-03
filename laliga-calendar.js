@@ -122,7 +122,7 @@ const laligaCalendar={
   11:[
     {date:"Domingo, 1 de noviembre",time:"21:00",iso:"2026-11-01T21:00:00+01:00",home:"Athletic Club",away:"Real Sociedad",venue:"Estadio San Mamés",status:"Finalizado",referee:null,var:null,state:"finished",homeScore:2,awayScore:1},
     {date:"Sábado, 31 de octubre",time:"18:30",iso:"2026-10-31T18:30:00+01:00",home:"Real Betis",away:"Málaga CF",venue:"Estadio La Cartuja",status:"Finalizado",referee:null,var:null,state:"finished",homeScore:2,awayScore:1},
-    {date:"Lunes, 2 de noviembre",time:"21:00",iso:"2026-11-02T21:00:00+01:00",home:"RC Deportivo",away:"CA Osasuna",venue:"Estadio ABANCA-RIAZOR",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Lunes, 2 de noviembre",time:"21:00",iso:"2026-11-02T21:00:00+01:00",home:"RC Deportivo",away:"CA Osasuna",venue:"Estadio ABANCA-RIAZOR",status:"Finalizado",referee:null,var:null,state:"finished",homeScore:2,awayScore:1},
     {date:"Domingo, 1 de noviembre",time:"18:30",iso:"2026-11-01T18:30:00+01:00",home:"Elche CF",away:"Valencia CF",venue:"Estadio Martínez Valero",status:"Finalizado",referee:null,var:null,state:"finished",homeScore:0,awayScore:1},
     {date:"Sábado, 31 de octubre",time:"21:00",iso:"2026-10-31T21:00:00+01:00",home:"FC Barcelona",away:"Deportivo Alavés",venue:"Spotify Camp Nou",status:"Finalizado",referee:null,var:null,state:"finished",homeScore:6,awayScore:1},
     {date:"Domingo, 1 de noviembre",time:"14:00",iso:"2026-11-01T14:00:00+01:00",home:"Getafe CF",away:"Sevilla FC",venue:"Coliseum",status:"Finalizado",referee:null,var:null,state:"finished",homeScore:3,awayScore:1},
