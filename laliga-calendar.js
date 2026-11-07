@@ -140,7 +140,7 @@ const laligaCalendar={
     {date:"Sábado, 7 de noviembre",time:"18:30",iso:"2026-11-07T18:30:00+01:00",home:"CA Osasuna",away:"Athletic Club",venue:"Estadio El Sadar",status:"Finalizado",referee:null,var:null,state:"finished",homeScore:1,awayScore:1},
     {date:"Domingo, 8 de noviembre",time:"16:15",iso:"2026-11-08T16:15:00+01:00",home:"Real Sociedad",away:"Rayo Vallecano",venue:"Anoeta",status:"Programado",referee:null,var:null,state:"scheduled"},
     {date:"Viernes, 6 de noviembre",time:"21:00",iso:"2026-11-06T21:00:00+01:00",home:"Sevilla FC",away:"Deportivo Alavés",venue:"Ramón Sánchez-Pizjuán",status:"Finalizado",referee:null,var:null,state:"finished",homeScore:0,awayScore:0},
-    {date:"Sábado, 7 de noviembre",time:"21:00",iso:"2026-11-07T21:00:00+01:00",home:"Valencia CF",away:"Real Madrid",venue:"Camp de Mestalla",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Sábado, 7 de noviembre",time:"21:00",iso:"2026-11-07T21:00:00+01:00",home:"Valencia CF",away:"Real Madrid",venue:"Camp de Mestalla",status:"Finalizado",referee:null,var:null,state:"finished",homeScore:0,awayScore:3},
     {date:"Domingo, 8 de noviembre",time:"18:30",iso:"2026-11-08T18:30:00+01:00",home:"Villarreal CF",away:"Getafe CF",venue:"Estadio de la Cerámica",status:"Programado",referee:null,var:null,state:"scheduled"}
   ],
   13:[
