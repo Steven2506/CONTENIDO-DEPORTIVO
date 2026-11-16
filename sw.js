@@ -18,7 +18,7 @@ const APP_SHELL=[
   "./widget-data.json",
   "./widgets/wolfgames-agenda.json",
   "./widgets/wolfgames-agenda.svg",
-  "./diseno.css",
+  "./diseno.css?v=20261102-connectivity-health1",
   "./f1.css",
   "./f1-home.css",
   "./motogp-home-card.css",
