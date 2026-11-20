@@ -1,11 +1,11 @@
 {
-  "headline": "Próximas citas",
+  "headline": "1 en directo",
   "headlineDetail": "Fútbol, F1 y MotoGP · hora peninsular española",
-  "item1Title": "GP Portugal 🇵🇹 · Practice",
-  "item1Detail": "MOTOGP · vie, 20 nov, 16:00",
-  "item2Title": "GP Valencia 🇪🇸 · Practice",
-  "item2Detail": "MOTOGP · vie, 20 nov, 16:00",
-  "item3Title": "Athletic Club – RCD Espanyol de Barcelona",
-  "item3Detail": "LALIGA · vie, 20 nov, 21:00",
-  "url": "https://steven2506.github.io/CONTENIDO-DEPORTIVO/motogp-gp.html?id=portugal"
+  "item1Title": "Athletic Club 0–0 RCD Espanyol de Barcelona · 0–0",
+  "item1Detail": "LALIGA · EN DIRECTO",
+  "item2Title": "GP Las Vegas · Libres 3",
+  "item2Detail": "FÓRMULA 1 · sáb, 21 nov, 01:30",
+  "item3Title": "GP Las Vegas · Clasificación",
+  "item3Detail": "FÓRMULA 1 · sáb, 21 nov, 05:00",
+  "url": "https://steven2506.github.io/CONTENIDO-DEPORTIVO/deportes.html"
 }
