@@ -145,7 +145,7 @@ const laligaCalendar={
   ],
   13:[
     {date:"Sábado, 21 de noviembre",time:"14:00",iso:"2026-11-21T14:00:00+01:00",home:"Deportivo Alavés",away:"RC Deportivo",venue:"Mendizorroza",status:"Programado",referee:null,var:null,state:"scheduled"},
-    {date:"Viernes, 20 de noviembre",time:"21:00",iso:"2026-11-20T21:00:00+01:00",home:"Athletic Club",away:"RCD Espanyol de Barcelona",venue:"Estadio San Mamés",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Viernes, 20 de noviembre",time:"21:00",iso:"2026-11-20T21:00:00+01:00",home:"Athletic Club",away:"RCD Espanyol de Barcelona",venue:"Estadio San Mamés",status:"En directo",referee:null,var:null,state:"live",homeScore:0,awayScore:0,period:"HalfTime",details:{"source":"LALIGA / Opta","lineups":{"home":{"formation":"4231","manager":"Terzic","starters":[{"number":1,"name":"Unai Simon"},{"number":17,"name":"Yuri"},{"number":14,"name":"Laporte"},{"number":5,"name":"Yeray"},{"number":15,"name":"H. Rincón"},{"number":7,"name":"Berenguer"},{"number":28,"name":"Canales"},{"number":8,"name":"O. Sancet"},{"number":6,"name":"Prados"},{"number":10,"name":"Williams Jr"},{"number":9,"name":"Williams"}],"substitutes":[]},"away":{"formation":"532","manager":"Eder Sarabia","starters":[{"number":1,"name":"Àngel Fortuño"},{"number":36,"name":"A. Santiago"},{"number":6,"name":"Cabrera"},{"number":23,"name":"El Hilali"},{"number":5,"name":"Riedel"},{"number":3,"name":"Quilindschy"},{"number":21,"name":"R. Hinojo"},{"number":26,"name":"Bauza"},{"number":10,"name":"Pol Lozano"},{"number":11,"name":"Pere Milla"},{"number":9,"name":"Roberto"}],"substitutes":[]}},"stats":{"home":{"possession":49.3,"passes":203,"shots":6,"shotsOnTarget":3,"yellowCards":0,"redCards":0},"away":{"possession":50.7,"passes":203,"shots":4,"shotsOnTarget":2,"yellowCards":0,"redCards":0}},"events":[]}},
     {date:"Domingo, 22 de noviembre",time:"14:00",iso:"2026-11-22T14:00:00+01:00",home:"FC Barcelona",away:"Villarreal CF",venue:"Spotify Camp Nou",status:"Programado",referee:null,var:null,state:"scheduled"},
     {date:"Domingo, 22 de noviembre",time:"21:00",iso:"2026-11-22T21:00:00+01:00",home:"Getafe CF",away:"Atlético de Madrid",venue:"Coliseum",status:"Programado",referee:null,var:null,state:"scheduled"},
     {date:"Lunes, 23 de noviembre",time:"21:00",iso:"2026-11-23T21:00:00+01:00",home:"Levante UD",away:"Elche CF",venue:"Estadio Ciutat de València",status:"Programado",referee:null,var:null,state:"scheduled"},
@@ -156,16 +156,16 @@ const laligaCalendar={
     {date:"Sábado, 21 de noviembre",time:"18:30",iso:"2026-11-21T18:30:00+01:00",home:"Sevilla FC",away:"Real Betis",venue:"Ramón Sánchez-Pizjuán",status:"Programado",referee:null,var:null,state:"scheduled"}
   ],
   14:[
-    {date:"Domingo, 29 de noviembre",time:"Por confirmar",iso:null,home:"Real Betis",away:"Rayo Vallecano",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 29 de noviembre",time:"Por confirmar",iso:null,home:"Celta",away:"Villarreal CF",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 29 de noviembre",time:"Por confirmar",iso:null,home:"RC Deportivo",away:"FC Barcelona",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 29 de noviembre",time:"Por confirmar",iso:null,home:"Elche CF",away:"Atlético de Madrid",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 29 de noviembre",time:"Por confirmar",iso:null,home:"RCD Espanyol de Barcelona",away:"Getafe CF",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 29 de noviembre",time:"Por confirmar",iso:null,home:"Levante UD",away:"R. Racing Club",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 29 de noviembre",time:"Por confirmar",iso:null,home:"Málaga CF",away:"Athletic Club",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 29 de noviembre",time:"Por confirmar",iso:null,home:"Real Madrid",away:"Deportivo Alavés",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 29 de noviembre",time:"Por confirmar",iso:null,home:"Real Sociedad",away:"Sevilla FC",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
-    {date:"Domingo, 29 de noviembre",time:"Por confirmar",iso:null,home:"Valencia CF",away:"CA Osasuna",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null}
+    {date:"Sábado, 28 de noviembre",time:"14:00",iso:"2026-11-28T14:00:00+01:00",home:"Real Betis",away:"Rayo Vallecano",venue:"Estadio La Cartuja",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Domingo, 29 de noviembre",time:"18:30",iso:"2026-11-29T18:30:00+01:00",home:"Celta",away:"Villarreal CF",venue:"Estadio ABANCA Balaídos",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Domingo, 29 de noviembre",time:"16:15",iso:"2026-11-29T16:15:00+01:00",home:"RC Deportivo",away:"FC Barcelona",venue:"Estadio ABANCA-RIAZOR",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Sábado, 28 de noviembre",time:"18:30",iso:"2026-11-28T18:30:00+01:00",home:"Elche CF",away:"Atlético de Madrid",venue:"Estadio Martínez Valero",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Lunes, 30 de noviembre",time:"21:00",iso:"2026-11-30T21:00:00+01:00",home:"RCD Espanyol de Barcelona",away:"Getafe CF",venue:"RCDE Stadium",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Viernes, 27 de noviembre",time:"21:00",iso:"2026-11-27T21:00:00+01:00",home:"Levante UD",away:"R. Racing Club",venue:"Estadio Ciutat de València",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Sábado, 28 de noviembre",time:"16:15",iso:"2026-11-28T16:15:00+01:00",home:"Málaga CF",away:"Athletic Club",venue:"La Rosaleda",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Sábado, 28 de noviembre",time:"21:00",iso:"2026-11-28T21:00:00+01:00",home:"Real Madrid",away:"Deportivo Alavés",venue:"Bernabéu",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Domingo, 29 de noviembre",time:"21:00",iso:"2026-11-29T21:00:00+01:00",home:"Real Sociedad",away:"Sevilla FC",venue:"Anoeta",status:"Programado",referee:null,var:null,state:"scheduled"},
+    {date:"Domingo, 29 de noviembre",time:"14:00",iso:"2026-11-29T14:00:00+01:00",home:"Valencia CF",away:"CA Osasuna",venue:"Camp de Mestalla",status:"Programado",referee:null,var:null,state:"scheduled"}
   ],
   15:[
     {date:"Domingo, 6 de diciembre",time:"Por confirmar",iso:null,home:"Deportivo Alavés",away:"RCD Espanyol de Barcelona",venue:"Por confirmar",status:"Calendario oficial",referee:null,var:null},
