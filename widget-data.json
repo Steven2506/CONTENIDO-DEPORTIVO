@@ -1,11 +1,11 @@
 {
-  "headline": "1 en directo",
+  "headline": "Próximas citas",
   "headlineDetail": "Fútbol, F1 y MotoGP · hora peninsular española",
-  "item1Title": "Rayo Vallecano 0–1 Valencia CF · 0–1",
-  "item1Detail": "LALIGA · EN DIRECTO",
-  "item2Title": "Real Madrid – Celta",
-  "item2Detail": "LALIGA · sáb, 21 nov, 21:00",
-  "item3Title": "GP Las Vegas · Carrera",
-  "item3Detail": "FÓRMULA 1 · dom, 22 nov, 05:00",
-  "url": "https://steven2506.github.io/CONTENIDO-DEPORTIVO/deportes.html"
+  "item1Title": "GP Las Vegas · Carrera",
+  "item1Detail": "FÓRMULA 1 · dom, 22 nov, 05:00",
+  "item2Title": "GP Portugal 🇵🇹 · Warm Up",
+  "item2Detail": "MOTOGP · dom, 22 nov, 10:00",
+  "item3Title": "GP Valencia 🇪🇸 · Warm Up",
+  "item3Detail": "MOTOGP · dom, 22 nov, 10:40",
+  "url": "https://steven2506.github.io/CONTENIDO-DEPORTIVO/F1.html"
 }
