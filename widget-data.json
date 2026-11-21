@@ -1,11 +1,11 @@
 {
-  "headline": "1 en directo",
+  "headline": "Próximas citas",
   "headlineDetail": "Fútbol, F1 y MotoGP · hora peninsular española",
-  "item1Title": "Athletic Club 0–0 RCD Espanyol de Barcelona · 0–0",
-  "item1Detail": "LALIGA · EN DIRECTO",
-  "item2Title": "GP Las Vegas · Libres 3",
-  "item2Detail": "FÓRMULA 1 · sáb, 21 nov, 01:30",
-  "item3Title": "GP Las Vegas · Clasificación",
-  "item3Detail": "FÓRMULA 1 · sáb, 21 nov, 05:00",
-  "url": "https://steven2506.github.io/CONTENIDO-DEPORTIVO/deportes.html"
+  "item1Title": "GP Las Vegas · Clasificación",
+  "item1Detail": "FÓRMULA 1 · sáb, 21 nov, 05:00",
+  "item2Title": "GP Portugal 🇵🇹 · FP2",
+  "item2Detail": "MOTOGP · sáb, 21 nov, 11:10",
+  "item3Title": "GP Valencia 🇪🇸 · FP2",
+  "item3Detail": "MOTOGP · sáb, 21 nov, 11:10",
+  "url": "https://steven2506.github.io/CONTENIDO-DEPORTIVO/F1.html"
 }
